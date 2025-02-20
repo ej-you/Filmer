@@ -1,15 +1,23 @@
 package settings
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
+	"time"
 )
 
 
 // данные REST API
 var Port string = os.Getenv("SERVER_PORT")
 var JwtSecret string = os.Getenv("JWT_SECRET")
+
+// время истечения действия токена
+var TokenExpiredTime time.Duration = time.Minute * 2
+
+// строка подключения к БД
+var CockroachNodeAddr string = fmt.Sprintf("user=%s host=%s port=%s dbname=%s sslmode=disable", os.Getenv("DB_USER"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_NAME"))
 
 // разрешённые источники и методы
 var CorsAllowedOrigins string = os.Getenv("SERVER_CORS_ALLOWED_ORIGINS")
@@ -30,3 +38,5 @@ var ErrorLog *log.Logger = func() *log.Logger {
 	logWriter := io.MultiWriter(os.Stderr, file)
 	return log.New(logWriter, "[ERROR]\t", log.Ldate|log.Ltime)
 }()
+// настройка инфо-логера
+var InfoLog *log.Logger = log.New(os.Stdout, "[INFO]\t", log.Ldate|log.Ltime)

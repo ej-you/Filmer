@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	fiber "github.com/gofiber/fiber/v2"
 	fiberCORS "github.com/gofiber/fiber/v2/middleware/cors"
@@ -11,11 +12,22 @@ import (
 	coreErrors "server/core/errors"
 	coreServices "server/core/services"
 	coreUrls "server/core/urls"
+	"server/db"
 	"server/settings"
 )
 
 
 func main() {
+	// если при запуске указан аргумент "migrate"
+	args := os.Args
+	if len(args) > 1 {
+		// проведение миграций БД без запуска самого приложения
+		if args[1] == "migrate" {
+			db.Migrate()
+			return
+		}
+	}
+
 	// инициализация приложения
 	app := fiber.New(fiber.Config{
 		AppName: "Filmer API v1.0.0",
@@ -31,7 +43,7 @@ func main() {
 	// логгер
 	app.Use(fiberLogger.New(fiberLogger.Config{
 		TimeFormat: "2006-01-02T15:04:05-0700",
-		Format: "${time} | ${status} | ${latency} | ${method} | ${path} | ${error}\n",
+		Format: "${time} | ${pid} | ${status} | ${latency} | ${method} | ${path} | ${error}\n",
 	}))
 	// восстановление паник
 	app.Use(fiberRecover.New())
