@@ -22,6 +22,7 @@ func main() {
 	// проверка, что эти переменные окружения заданы
 	env.MustBePresented(
 		"SERVER_PORT", "JWT_SECRET",
+		"REDIS_HOST", "REDIS_PORT",
 		"DB_USER", "DB_HOST", "DB_PORT", "DB_NAME",
 		"SERVER_CORS_ALLOWED_ORIGINS", "SERVER_CORS_ALLOWED_METHODS",
 		"KINOPOISK_API_UNOFFICIAL_KEY", "KINOPOISK_API_KEY",
@@ -67,6 +68,5 @@ func main() {
 	// настройка URL
 	coreUrls.InitRoutes(api)
 
-	defer app.Shutdown()
 	settings.ErrorLog.Fatal(app.Listen(fmt.Sprintf(":%s", settings.Port)))
 }

@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"fmt"
+
 	fiber "github.com/gofiber/fiber/v2"
 
 	coreValidator "server/core/validator"
@@ -27,11 +29,11 @@ func Login(ctx *fiber.Ctx) error {
 
 	// парсинг JSON-body
 	if err = ctx.BodyParser(&dataIn); err != nil {
-		return err
+		return fmt.Errorf("login user: %w", err)
 	}
 	// валидация полученной структуры
 	if err = coreValidator.GetValidator().Validate(&dataIn); err != nil {
-		return err
+		return fmt.Errorf("login user: %w", err)
 	}
 
 	// получение юзера из БД по email
@@ -39,19 +41,19 @@ func Login(ctx *fiber.Ctx) error {
 	if err = selectResult.Error; err != nil {
 		// если ошибка в ненахождении записи
 		if err.Error() == "record not found" {
-			return fiber.NewError(404, "user with such email was not found")
+			return fmt.Errorf("login user: %w", fiber.NewError(404, "user with such email was not found"))
 		}
-		return fiber.NewError(500, "failed to create user: " + err.Error())
+		return fmt.Errorf("login user: %w", fiber.NewError(500, "failed to create user: " + err.Error()))
 	}
 	// сверка введённого пароля с хэшем из БД
 	if !services.PasswordIsCorrect(dataIn.Password, user.Password) {
-		return fiber.NewError(400, "invalid password")
+		return fmt.Errorf("login user %s: %w", user.Email, fiber.NewError(400, "invalid password"))
 	}
 	
 	// генерация access токена
 	user.AccessToken, err = services.ObtainToken(user.ID)
 	if err != nil {
-		return err
+		return fmt.Errorf("login user %s: %w", user.Email, err)
 	}
 	return ctx.Status(200).JSON(user)
 }

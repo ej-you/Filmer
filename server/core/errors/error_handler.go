@@ -40,6 +40,11 @@ func CustomErrorHandler(ctx *fiber.Ctx, err error) error {
 			errResp.Type = "token"
 			errResp.StatusCode = 403
 			errResp.Message = "token is expired"
+		// если токен в чёрном списке
+		case errors.Is(err, jwt.ErrTokenNotValidYet):
+			errResp.Type = "token"
+			errResp.StatusCode = 403
+			errResp.Message = err.Error()
 		// если ошибка отсутствия токена
 		case errors.Is(err, fiberJWT.ErrJWTMissingOrMalformed):
 			errResp.Type = "token"

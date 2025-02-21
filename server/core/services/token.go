@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -9,6 +10,7 @@ import (
 	jwt "github.com/golang-jwt/jwt/v5"
 	fiberJWT "github.com/gofiber/contrib/jwt"
 
+	"server/redis"
 	"server/core/errors"
 	"server/settings"
 )
@@ -22,7 +24,27 @@ var AccessTokenMiddleware fiber.Handler = fiberJWT.New(fiberJWT.Config{
 })
 
 
-// выдача новогог токена для юзера
+// middleware для отказа в запросе с авторизацией, если токен в чёрном списке в кэше
+func BlacklistedTokenMiddleware(ctx *fiber.Ctx) error {
+	accessToken, ok := ctx.Locals("accessToken").(*jwt.Token)
+	if !ok {
+		return fiber.NewError(500, "failed to parse token")
+	}
+	
+	// проверяем токен на нахождение в чёрном списке
+	isBlacklisted, err := redis.GetBlacklistedToken(accessToken.Raw)
+	if err != nil {
+		return fmt.Errorf("blacklisted token middleware: %w", err)
+	}
+	// если токен в чёрном списке
+	if isBlacklisted {
+		return jwt.ErrTokenNotValidYet
+	}
+	return ctx.Next()
+}
+
+
+// выдача нового токена для юзера
 func ObtainToken(userID uuid.UUID) (string, error) {
 	tokenStruct := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"userID": userID,
@@ -43,4 +65,9 @@ func ParseUserIDFromContext(ctx *fiber.Ctx) uuid.UUID {
 
 	stringUserID := claims["userID"].(string)
 	return uuid.MustParse(stringUserID)
+}
+
+// парсинг токена, сохранённого в контексте
+func ParseRawTokenFromContext(ctx *fiber.Ctx) string {
+	return ctx.Locals("accessToken").(*jwt.Token).Raw
 }

@@ -14,7 +14,7 @@ type SearchFilmsIn struct {
 	// слово для поиска
 	Query 	string `query:"q" validate:"required" example:"дэдпул"`
 	// страница
-	Page 	int `query:"page" validate:"min=0" example:"1" minLength:"0"`
+	Page 	int `query:"page" validate:"required,min=1" example:"1"`
 }
 
 
@@ -26,20 +26,15 @@ func SearchFilms(ctx *fiber.Ctx) error {
 
 	// парсинг query-параметров
 	if err = ctx.QueryParser(&dataIn); err != nil {
-		return err
+		return fmt.Errorf("search films: %w", err)
 	}
 	// валидация полученной структуры
 	if err = coreValidator.GetValidator().Validate(&dataIn); err != nil {
-		return err
-	}
-	// если страница не задана, то выставляем 1 по умолчанию
-	if dataIn.Page == 0 {
-		dataIn.Page = 1
+		return fmt.Errorf("search films: %w", err)
 	}
 
 	if err = kinopoiskAPI.SearchFilmsByKeyword(dataIn.Query, dataIn.Page, &searchedFilms); err != nil {
-		return err
+		return fmt.Errorf("search films: %w", err)
 	}
-	fmt.Println("len searchedFilms:", len(searchedFilms.Films))
 	return ctx.JSON(searchedFilms)
 }

@@ -10,6 +10,7 @@ import (
 
 func AppRoutes(router fiber.Router) {
 	router.Use(services.AccessTokenMiddleware)
+	router.Use(services.BlacklistedTokenMiddleware)
 
 	router.Get("/search", handlers.SearchFilms)
 	router.Get("/:id", handlers.GetFilmInfo)

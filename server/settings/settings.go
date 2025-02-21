@@ -16,6 +16,9 @@ var JwtSecret string = os.Getenv("JWT_SECRET")
 // время истечения действия токена
 var TokenExpiredTime time.Duration = time.Minute * 5
 
+// строка подключения к redis
+var RedisAddr string = os.Getenv("REDIS_HOST") + ":" + os.Getenv("REDIS_PORT")
+
 // строка подключения к БД
 var CockroachNodeAddr string = fmt.Sprintf("user=%s host=%s port=%s dbname=%s sslmode=disable", os.Getenv("DB_USER"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_NAME"))
 
