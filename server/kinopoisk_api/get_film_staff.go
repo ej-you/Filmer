@@ -45,9 +45,11 @@ func GetFilmStaff(filmID int, outStruct *FilmStaff) error {
 
 	var rawFilmStaffSlice RawFilmStaffSlice
 	// отправка запроса и обработка ответа
-	if err := newAPI.sendRequest(&rawFilmStaffSlice); err != nil {
-		return err
+	err := newAPI.sendRequest(&rawFilmStaffSlice)
+	if err != nil {
+		return fmt.Errorf("request to %q: %w", newAPI.URL, err)
 	}
+	return nil
 
 	// инициализация срезов для персонала
 	outStruct.Directors = make([]Person, 0)

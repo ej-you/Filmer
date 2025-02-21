@@ -48,7 +48,11 @@ func GetFilmInfo(filmID int, outStruct *RawFilmInfo) error {
 		APIKey: settings.KinopoiskApiUnofficialKey,
 	}
 	// отправка запроса и обработка ответа
-	return newAPI.sendRequest(outStruct)
+	err := newAPI.sendRequest(outStruct)
+	if err != nil {
+		return fmt.Errorf("request to %q: %w", newAPI.URL, err)
+	}
+	return nil
 
 	// // заполнение обработанной структуры
 	// outStruct.ID = rawFilmInfo.KinopoiskID

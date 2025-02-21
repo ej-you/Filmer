@@ -127,6 +127,8 @@ func easyjson9e2e77eaDecodeServerKinopoiskApi1(in *jlexer.Lexer, out *SearchedFi
 			}
 		case "total":
 			out.Total = int(in.Int())
+		case "limit":
+			out.Limit = int(in.Int())
 		case "page":
 			out.Page = int(in.Int())
 		case "pages":
@@ -165,6 +167,11 @@ func easyjson9e2e77eaEncodeServerKinopoiskApi1(out *jwriter.Writer, in SearchedF
 		const prefix string = ",\"total\":"
 		out.RawString(prefix)
 		out.Int(int(in.Total))
+	}
+	{
+		const prefix string = ",\"limit\":"
+		out.RawString(prefix)
+		out.Int(int(in.Limit))
 	}
 	{
 		const prefix string = ",\"page\":"

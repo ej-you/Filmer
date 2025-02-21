@@ -7,10 +7,13 @@ import (
 
 	"github.com/mailru/easyjson"
 	fiber "github.com/gofiber/fiber/v2"
+	retryHTTP "github.com/hashicorp/go-retryablehttp"
 )
 
 
-const sendRequestTimeout = 3*time.Second
+const retryAttemps = 2 // кол-во попыток после первой неудачной
+const minRetryWait = 2*time.Second // минимальное время ожидания между повторными попытками
+const sendRequestTimeout = 3*time.Second // таймаут на запрос
 
 
 // структура для парсинга JSON-ответа от API с ошибкой
@@ -32,22 +35,20 @@ func (api *apiGetRequest) parseError(response *http.Response) error {
 
 	// декодирование ответа с ошибкой в структуру
 	if err := easyjson.UnmarshalFromReader(response.Body, &rawErr); err != nil {
-		return fiber.NewError(500, fmt.Sprintf("failed to decode error answer: request to %q: %v", api.URL, err))
+		return fiber.NewError(500, fmt.Sprintf("parse error: failed to decode error answer: %v", err))
 	}
-	// возврат Fiber-ошибки
-	return fiber.NewError(response.StatusCode, rawErr.Message)
+	// возврат обработанной ошибки
+	return fmt.Errorf("parse error: %w", fiber.NewError(response.StatusCode, rawErr.Message))
 }
 
 // отправка запроса и обработка ответа (outStruct - указатель на структуру)
 func (api *apiGetRequest) sendRequest(outStruct easyjson.Unmarshaler) error {
 	var err error
 
-	client := &http.Client{Timeout: sendRequestTimeout}
-
 	// создание запроса
 	req, err := http.NewRequest("GET", api.URL, nil)
 	if err != nil {
-		return fiber.NewError(500, fmt.Sprintf("failed to send request to %q: %v", api.URL, err))
+		return fiber.NewError(500, fmt.Sprintf("failed to send request: %v", err))
 	}
 	// добавление API ключа в заголовок запроса
 	req.Header.Set("X-API-KEY", api.APIKey)
@@ -59,10 +60,22 @@ func (api *apiGetRequest) sendRequest(outStruct easyjson.Unmarshaler) error {
 	}
 	req.URL.RawQuery = queryParams.Encode()
 
-	// отправка запроса
-	resp, err := client.Do(req)
+	// клиент и его настройка на auto-retry
+	client := retryHTTP.NewClient()
+	client.HTTPClient = &http.Client{Timeout: sendRequestTimeout}
+	client.RetryWaitMin = minRetryWait
+	client.RetryMax = retryAttemps
+	client.Logger = nil
+
+	// оборачивание запроса для auto-retry
+	retryReq, err := retryHTTP.FromRequest(req)
 	if err != nil {
-		return fiber.NewError(500, fmt.Sprintf("failed to do request to %q: %v", api.URL, err))
+		return fiber.NewError(500, fmt.Sprintf("failed to wrap request for retry: %v", err))
+	}
+	// отправка запроса
+	resp, err := client.Do(retryReq)
+	if err != nil {
+		return fiber.NewError(500, fmt.Sprintf("failed to do request: %v", err))
 	}
 	defer resp.Body.Close()
 	// если получен ответ с ошибкой
@@ -73,7 +86,7 @@ func (api *apiGetRequest) sendRequest(outStruct easyjson.Unmarshaler) error {
 
 	// при успешном запросе - декодирование ответа в структуру
 	if err := easyjson.UnmarshalFromReader(resp.Body, outStruct); err != nil {
-		return fiber.NewError(500, fmt.Sprintf("failed to decode answer: request to %q: %v", api.URL, err))
+		return fiber.NewError(500, fmt.Sprintf("failed to decode answer: %v", err))
 	}
 	return nil
 }

@@ -6,8 +6,7 @@ import (
 )
 
 
-// кол-во фильмов на странице
-const filmsPerPage = "25"
+const filmsPerPage = "25" // кол-во фильмов на странице
 
 
 // структуры для парсинга ответа от API
@@ -37,6 +36,7 @@ type Film struct {
 type SearchedFilms struct {
 	Films	[]Film `json:"docs"`
 	Total	int `json:"total"`
+	Limit	int `json:"limit"`
 	Page	int `json:"page"`
 	Pages	int `json:"pages"`
 }
@@ -54,5 +54,9 @@ func SearchFilmsByKeyword(query string, page int, outStruct *SearchedFilms) erro
 		},
 	}
 	// отправка запроса и обработка ответа
-	return newAPI.sendRequest(outStruct)
+	err := newAPI.sendRequest(outStruct)
+	if err != nil {
+		return fmt.Errorf("request to %q: %w", newAPI.URL, err)
+	}
+	return nil
 }
