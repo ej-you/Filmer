@@ -21,6 +21,7 @@ type SignUpIn struct {
 }
 
 
+// регистрация нового юзера
 func SignUp(ctx *fiber.Ctx) error {
 	var err error
 	var dataIn SignUpIn

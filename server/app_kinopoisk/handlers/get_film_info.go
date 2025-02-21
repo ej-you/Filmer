@@ -7,6 +7,14 @@ import (
 	"server/core/services"
 )
 
+// var filmTypes = map[string]string {
+// 	"FILM": "фильм",
+// 	"TV_SERIES": "сериал",
+// 	"VIDEO": "видео",
+// 	"MINI_SERIES": "мини-сериал",
+// 	"TV_SHOW": "сериал",
+// }
+
 
 func GetFilmInfo(ctx *fiber.Ctx) error {
 	return ctx.JSON(kinopoiskAPI.Person{

@@ -44,7 +44,7 @@ func TestSearchFilmsByKeyword(t *testing.T) {
 		if err != nil {
 			errorLog(t, err)
 		} else {
-			successLog(t, "Result films: %v", films)
+			successLog(t, "Result films: %+v", films)
 		}
 	}
 	logExecTime(t, &startTime)
@@ -57,14 +57,14 @@ func TestGetFilmInfo(t *testing.T) {
 	
 	t.Log("Get info about film 'Deadpool' with ID 462360")
 	{
-		var filmInfo FilmInfo
+		var filmInfo RawFilmInfo
 
 		err := GetFilmInfo(462360, &filmInfo)
 		
 		if err != nil {
 			errorLog(t, err)
 		} else {
-			successLog(t, "Gotten film info: %v", filmInfo)
+			successLog(t, "Gotten film info: %+v", filmInfo)
 		}
 	}
 	logExecTime(t, &startTime)
@@ -84,7 +84,7 @@ func TestGetFilmStaff(t *testing.T) {
 		if err != nil {
 			errorLog(t, err)
 		} else {
-			successLog(t, "Gotten film staff: %v", filmStaff)
+			successLog(t, "Gotten film staff: %+v", filmStaff)
 		}
 	}
 	logExecTime(t, &startTime)

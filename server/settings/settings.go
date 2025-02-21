@@ -14,7 +14,7 @@ var Port string = os.Getenv("SERVER_PORT")
 var JwtSecret string = os.Getenv("JWT_SECRET")
 
 // время истечения действия токена
-var TokenExpiredTime time.Duration = time.Minute * 2
+var TokenExpiredTime time.Duration = time.Minute * 5
 
 // строка подключения к БД
 var CockroachNodeAddr string = fmt.Sprintf("user=%s host=%s port=%s dbname=%s sslmode=disable", os.Getenv("DB_USER"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_NAME"))
@@ -23,7 +23,8 @@ var CockroachNodeAddr string = fmt.Sprintf("user=%s host=%s port=%s dbname=%s ss
 var CorsAllowedOrigins string = os.Getenv("SERVER_CORS_ALLOWED_ORIGINS")
 var CorsAllowedMethods string = os.Getenv("SERVER_CORS_ALLOWED_METHODS")
 
-// Kinopoisk API
+// Kinopoisk APIs
+var KinopoiskApiUnofficialKey string = os.Getenv("KINOPOISK_API_UNOFFICIAL_KEY")
 var KinopoiskApiKey string = os.Getenv("KINOPOISK_API_KEY")
 
 

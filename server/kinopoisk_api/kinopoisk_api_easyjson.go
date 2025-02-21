@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson9e2e77eaDecodeServerKinopoiskApi(in *jlexer.Lexer, out *SearchedFilms) {
+func easyjson9e2e77eaDecodeServerKinopoiskApi(in *jlexer.Lexer, out *kinopoiskApiError) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -36,11 +36,73 @@ func easyjson9e2e77eaDecodeServerKinopoiskApi(in *jlexer.Lexer, out *SearchedFil
 			continue
 		}
 		switch key {
-		case "searchFilmsCountResult":
-			out.SearchFilmsCountResult = int(in.Int())
-		case "pagesCount":
-			out.PagesCount = int(in.Int())
-		case "films":
+		case "message":
+			out.Message = string(in.String())
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson9e2e77eaEncodeServerKinopoiskApi(out *jwriter.Writer, in kinopoiskApiError) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"message\":"
+		out.RawString(prefix[1:])
+		out.String(string(in.Message))
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v kinopoiskApiError) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjson9e2e77eaEncodeServerKinopoiskApi(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v kinopoiskApiError) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjson9e2e77eaEncodeServerKinopoiskApi(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *kinopoiskApiError) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjson9e2e77eaDecodeServerKinopoiskApi(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *kinopoiskApiError) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjson9e2e77eaDecodeServerKinopoiskApi(l, v)
+}
+func easyjson9e2e77eaDecodeServerKinopoiskApi1(in *jlexer.Lexer, out *SearchedFilms) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeFieldName(false)
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "docs":
 			if in.IsNull() {
 				in.Skip()
 				out.Films = nil
@@ -63,6 +125,12 @@ func easyjson9e2e77eaDecodeServerKinopoiskApi(in *jlexer.Lexer, out *SearchedFil
 				}
 				in.Delim(']')
 			}
+		case "total":
+			out.Total = int(in.Int())
+		case "page":
+			out.Page = int(in.Int())
+		case "pages":
+			out.Pages = int(in.Int())
 		default:
 			in.SkipRecursive()
 		}
@@ -73,23 +141,13 @@ func easyjson9e2e77eaDecodeServerKinopoiskApi(in *jlexer.Lexer, out *SearchedFil
 		in.Consumed()
 	}
 }
-func easyjson9e2e77eaEncodeServerKinopoiskApi(out *jwriter.Writer, in SearchedFilms) {
+func easyjson9e2e77eaEncodeServerKinopoiskApi1(out *jwriter.Writer, in SearchedFilms) {
 	out.RawByte('{')
 	first := true
 	_ = first
 	{
-		const prefix string = ",\"searchFilmsCountResult\":"
+		const prefix string = ",\"docs\":"
 		out.RawString(prefix[1:])
-		out.Int(int(in.SearchFilmsCountResult))
-	}
-	{
-		const prefix string = ",\"pagesCount\":"
-		out.RawString(prefix)
-		out.Int(int(in.PagesCount))
-	}
-	{
-		const prefix string = ",\"films\":"
-		out.RawString(prefix)
 		if in.Films == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
 			out.RawString("null")
 		} else {
@@ -103,33 +161,48 @@ func easyjson9e2e77eaEncodeServerKinopoiskApi(out *jwriter.Writer, in SearchedFi
 			out.RawByte(']')
 		}
 	}
+	{
+		const prefix string = ",\"total\":"
+		out.RawString(prefix)
+		out.Int(int(in.Total))
+	}
+	{
+		const prefix string = ",\"page\":"
+		out.RawString(prefix)
+		out.Int(int(in.Page))
+	}
+	{
+		const prefix string = ",\"pages\":"
+		out.RawString(prefix)
+		out.Int(int(in.Pages))
+	}
 	out.RawByte('}')
 }
 
 // MarshalJSON supports json.Marshaler interface
 func (v SearchedFilms) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson9e2e77eaEncodeServerKinopoiskApi(&w, v)
+	easyjson9e2e77eaEncodeServerKinopoiskApi1(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v SearchedFilms) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson9e2e77eaEncodeServerKinopoiskApi(w, v)
+	easyjson9e2e77eaEncodeServerKinopoiskApi1(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *SearchedFilms) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson9e2e77eaDecodeServerKinopoiskApi(&r, v)
+	easyjson9e2e77eaDecodeServerKinopoiskApi1(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *SearchedFilms) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson9e2e77eaDecodeServerKinopoiskApi(l, v)
+	easyjson9e2e77eaDecodeServerKinopoiskApi1(l, v)
 }
-func easyjson9e2e77eaDecodeServerKinopoiskApi1(in *jlexer.Lexer, out *RawFilmStaffSlice) {
+func easyjson9e2e77eaDecodeServerKinopoiskApi2(in *jlexer.Lexer, out *RawFilmStaffSlice) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		in.Skip()
@@ -157,7 +230,7 @@ func easyjson9e2e77eaDecodeServerKinopoiskApi1(in *jlexer.Lexer, out *RawFilmSta
 		in.Consumed()
 	}
 }
-func easyjson9e2e77eaEncodeServerKinopoiskApi1(out *jwriter.Writer, in RawFilmStaffSlice) {
+func easyjson9e2e77eaEncodeServerKinopoiskApi2(out *jwriter.Writer, in RawFilmStaffSlice) {
 	if in == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
 		out.RawString("null")
 	} else {
@@ -175,27 +248,27 @@ func easyjson9e2e77eaEncodeServerKinopoiskApi1(out *jwriter.Writer, in RawFilmSt
 // MarshalJSON supports json.Marshaler interface
 func (v RawFilmStaffSlice) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson9e2e77eaEncodeServerKinopoiskApi1(&w, v)
+	easyjson9e2e77eaEncodeServerKinopoiskApi2(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v RawFilmStaffSlice) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson9e2e77eaEncodeServerKinopoiskApi1(w, v)
+	easyjson9e2e77eaEncodeServerKinopoiskApi2(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *RawFilmStaffSlice) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson9e2e77eaDecodeServerKinopoiskApi1(&r, v)
+	easyjson9e2e77eaDecodeServerKinopoiskApi2(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *RawFilmStaffSlice) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson9e2e77eaDecodeServerKinopoiskApi1(l, v)
+	easyjson9e2e77eaDecodeServerKinopoiskApi2(l, v)
 }
-func easyjson9e2e77eaDecodeServerKinopoiskApi2(in *jlexer.Lexer, out *RawFilmStaff) {
+func easyjson9e2e77eaDecodeServerKinopoiskApi3(in *jlexer.Lexer, out *RawFilmStaff) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -234,7 +307,7 @@ func easyjson9e2e77eaDecodeServerKinopoiskApi2(in *jlexer.Lexer, out *RawFilmSta
 		in.Consumed()
 	}
 }
-func easyjson9e2e77eaEncodeServerKinopoiskApi2(out *jwriter.Writer, in RawFilmStaff) {
+func easyjson9e2e77eaEncodeServerKinopoiskApi3(out *jwriter.Writer, in RawFilmStaff) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -269,27 +342,27 @@ func easyjson9e2e77eaEncodeServerKinopoiskApi2(out *jwriter.Writer, in RawFilmSt
 // MarshalJSON supports json.Marshaler interface
 func (v RawFilmStaff) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson9e2e77eaEncodeServerKinopoiskApi2(&w, v)
+	easyjson9e2e77eaEncodeServerKinopoiskApi3(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v RawFilmStaff) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson9e2e77eaEncodeServerKinopoiskApi2(w, v)
+	easyjson9e2e77eaEncodeServerKinopoiskApi3(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *RawFilmStaff) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson9e2e77eaDecodeServerKinopoiskApi2(&r, v)
+	easyjson9e2e77eaDecodeServerKinopoiskApi3(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *RawFilmStaff) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson9e2e77eaDecodeServerKinopoiskApi2(l, v)
+	easyjson9e2e77eaDecodeServerKinopoiskApi3(l, v)
 }
-func easyjson9e2e77eaDecodeServerKinopoiskApi3(in *jlexer.Lexer, out *RawFilmInfo) {
+func easyjson9e2e77eaDecodeServerKinopoiskApi4(in *jlexer.Lexer, out *RawFilmInfo) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -312,8 +385,6 @@ func easyjson9e2e77eaDecodeServerKinopoiskApi3(in *jlexer.Lexer, out *RawFilmInf
 			out.KinopoiskID = int(in.Int())
 		case "nameRu":
 			out.Title = string(in.String())
-		case "posterUrlPreview":
-			out.ImgUrl = string(in.String())
 		case "ratingKinopoisk":
 			out.RatingKinopoisk = float64(in.Float64())
 		case "webUrl":
@@ -334,15 +405,15 @@ func easyjson9e2e77eaDecodeServerKinopoiskApi3(in *jlexer.Lexer, out *RawFilmInf
 				in.Delim('[')
 				if out.Genres == nil {
 					if !in.IsDelim(']') {
-						out.Genres = make([]Genre, 0, 4)
+						out.Genres = make([]GenreUnofficial, 0, 4)
 					} else {
-						out.Genres = []Genre{}
+						out.Genres = []GenreUnofficial{}
 					}
 				} else {
 					out.Genres = (out.Genres)[:0]
 				}
 				for !in.IsDelim(']') {
-					var v7 Genre
+					var v7 GenreUnofficial
 					(v7).UnmarshalEasyJSON(in)
 					out.Genres = append(out.Genres, v7)
 					in.WantComma()
@@ -359,7 +430,7 @@ func easyjson9e2e77eaDecodeServerKinopoiskApi3(in *jlexer.Lexer, out *RawFilmInf
 		in.Consumed()
 	}
 }
-func easyjson9e2e77eaEncodeServerKinopoiskApi3(out *jwriter.Writer, in RawFilmInfo) {
+func easyjson9e2e77eaEncodeServerKinopoiskApi4(out *jwriter.Writer, in RawFilmInfo) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -372,11 +443,6 @@ func easyjson9e2e77eaEncodeServerKinopoiskApi3(out *jwriter.Writer, in RawFilmIn
 		const prefix string = ",\"nameRu\":"
 		out.RawString(prefix)
 		out.String(string(in.Title))
-	}
-	{
-		const prefix string = ",\"posterUrlPreview\":"
-		out.RawString(prefix)
-		out.String(string(in.ImgUrl))
 	}
 	{
 		const prefix string = ",\"ratingKinopoisk\":"
@@ -430,27 +496,159 @@ func easyjson9e2e77eaEncodeServerKinopoiskApi3(out *jwriter.Writer, in RawFilmIn
 // MarshalJSON supports json.Marshaler interface
 func (v RawFilmInfo) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson9e2e77eaEncodeServerKinopoiskApi3(&w, v)
+	easyjson9e2e77eaEncodeServerKinopoiskApi4(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v RawFilmInfo) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson9e2e77eaEncodeServerKinopoiskApi3(w, v)
+	easyjson9e2e77eaEncodeServerKinopoiskApi4(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *RawFilmInfo) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson9e2e77eaDecodeServerKinopoiskApi3(&r, v)
+	easyjson9e2e77eaDecodeServerKinopoiskApi4(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *RawFilmInfo) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson9e2e77eaDecodeServerKinopoiskApi3(l, v)
+	easyjson9e2e77eaDecodeServerKinopoiskApi4(l, v)
 }
-func easyjson9e2e77eaDecodeServerKinopoiskApi4(in *jlexer.Lexer, out *Person) {
+func easyjson9e2e77eaDecodeServerKinopoiskApi5(in *jlexer.Lexer, out *Rating) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeFieldName(false)
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "kp":
+			out.Kinopoisk = float64(in.Float64())
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson9e2e77eaEncodeServerKinopoiskApi5(out *jwriter.Writer, in Rating) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"kp\":"
+		out.RawString(prefix[1:])
+		out.Float64(float64(in.Kinopoisk))
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v Rating) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjson9e2e77eaEncodeServerKinopoiskApi5(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v Rating) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjson9e2e77eaEncodeServerKinopoiskApi5(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *Rating) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjson9e2e77eaDecodeServerKinopoiskApi5(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *Rating) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjson9e2e77eaDecodeServerKinopoiskApi5(l, v)
+}
+func easyjson9e2e77eaDecodeServerKinopoiskApi6(in *jlexer.Lexer, out *Poster) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeFieldName(false)
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "url":
+			out.URL = string(in.String())
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson9e2e77eaEncodeServerKinopoiskApi6(out *jwriter.Writer, in Poster) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"url\":"
+		out.RawString(prefix[1:])
+		out.String(string(in.URL))
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v Poster) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjson9e2e77eaEncodeServerKinopoiskApi6(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v Poster) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjson9e2e77eaEncodeServerKinopoiskApi6(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *Poster) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjson9e2e77eaDecodeServerKinopoiskApi6(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *Poster) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjson9e2e77eaDecodeServerKinopoiskApi6(l, v)
+}
+func easyjson9e2e77eaDecodeServerKinopoiskApi7(in *jlexer.Lexer, out *Person) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -495,7 +693,7 @@ func easyjson9e2e77eaDecodeServerKinopoiskApi4(in *jlexer.Lexer, out *Person) {
 		in.Consumed()
 	}
 }
-func easyjson9e2e77eaEncodeServerKinopoiskApi4(out *jwriter.Writer, in Person) {
+func easyjson9e2e77eaEncodeServerKinopoiskApi7(out *jwriter.Writer, in Person) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -529,93 +727,27 @@ func easyjson9e2e77eaEncodeServerKinopoiskApi4(out *jwriter.Writer, in Person) {
 // MarshalJSON supports json.Marshaler interface
 func (v Person) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson9e2e77eaEncodeServerKinopoiskApi4(&w, v)
+	easyjson9e2e77eaEncodeServerKinopoiskApi7(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v Person) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson9e2e77eaEncodeServerKinopoiskApi4(w, v)
+	easyjson9e2e77eaEncodeServerKinopoiskApi7(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *Person) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson9e2e77eaDecodeServerKinopoiskApi4(&r, v)
+	easyjson9e2e77eaDecodeServerKinopoiskApi7(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *Person) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson9e2e77eaDecodeServerKinopoiskApi4(l, v)
+	easyjson9e2e77eaDecodeServerKinopoiskApi7(l, v)
 }
-func easyjson9e2e77eaDecodeServerKinopoiskApi5(in *jlexer.Lexer, out *KinopoiskApiError) {
-	isTopLevel := in.IsStart()
-	if in.IsNull() {
-		if isTopLevel {
-			in.Consumed()
-		}
-		in.Skip()
-		return
-	}
-	in.Delim('{')
-	for !in.IsDelim('}') {
-		key := in.UnsafeFieldName(false)
-		in.WantColon()
-		if in.IsNull() {
-			in.Skip()
-			in.WantComma()
-			continue
-		}
-		switch key {
-		case "message":
-			out.Message = string(in.String())
-		default:
-			in.SkipRecursive()
-		}
-		in.WantComma()
-	}
-	in.Delim('}')
-	if isTopLevel {
-		in.Consumed()
-	}
-}
-func easyjson9e2e77eaEncodeServerKinopoiskApi5(out *jwriter.Writer, in KinopoiskApiError) {
-	out.RawByte('{')
-	first := true
-	_ = first
-	{
-		const prefix string = ",\"message\":"
-		out.RawString(prefix[1:])
-		out.String(string(in.Message))
-	}
-	out.RawByte('}')
-}
-
-// MarshalJSON supports json.Marshaler interface
-func (v KinopoiskApiError) MarshalJSON() ([]byte, error) {
-	w := jwriter.Writer{}
-	easyjson9e2e77eaEncodeServerKinopoiskApi5(&w, v)
-	return w.Buffer.BuildBytes(), w.Error
-}
-
-// MarshalEasyJSON supports easyjson.Marshaler interface
-func (v KinopoiskApiError) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson9e2e77eaEncodeServerKinopoiskApi5(w, v)
-}
-
-// UnmarshalJSON supports json.Unmarshaler interface
-func (v *KinopoiskApiError) UnmarshalJSON(data []byte) error {
-	r := jlexer.Lexer{Data: data}
-	easyjson9e2e77eaDecodeServerKinopoiskApi5(&r, v)
-	return r.Error()
-}
-
-// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *KinopoiskApiError) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson9e2e77eaDecodeServerKinopoiskApi5(l, v)
-}
-func easyjson9e2e77eaDecodeServerKinopoiskApi6(in *jlexer.Lexer, out *Genre) {
+func easyjson9e2e77eaDecodeServerKinopoiskApi8(in *jlexer.Lexer, out *GenreUnofficial) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -646,7 +778,7 @@ func easyjson9e2e77eaDecodeServerKinopoiskApi6(in *jlexer.Lexer, out *Genre) {
 		in.Consumed()
 	}
 }
-func easyjson9e2e77eaEncodeServerKinopoiskApi6(out *jwriter.Writer, in Genre) {
+func easyjson9e2e77eaEncodeServerKinopoiskApi8(out *jwriter.Writer, in GenreUnofficial) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -659,29 +791,95 @@ func easyjson9e2e77eaEncodeServerKinopoiskApi6(out *jwriter.Writer, in Genre) {
 }
 
 // MarshalJSON supports json.Marshaler interface
+func (v GenreUnofficial) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjson9e2e77eaEncodeServerKinopoiskApi8(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v GenreUnofficial) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjson9e2e77eaEncodeServerKinopoiskApi8(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *GenreUnofficial) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjson9e2e77eaDecodeServerKinopoiskApi8(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *GenreUnofficial) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjson9e2e77eaDecodeServerKinopoiskApi8(l, v)
+}
+func easyjson9e2e77eaDecodeServerKinopoiskApi9(in *jlexer.Lexer, out *Genre) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeFieldName(false)
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "name":
+			out.Genre = string(in.String())
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson9e2e77eaEncodeServerKinopoiskApi9(out *jwriter.Writer, in Genre) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"name\":"
+		out.RawString(prefix[1:])
+		out.String(string(in.Genre))
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
 func (v Genre) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson9e2e77eaEncodeServerKinopoiskApi6(&w, v)
+	easyjson9e2e77eaEncodeServerKinopoiskApi9(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v Genre) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson9e2e77eaEncodeServerKinopoiskApi6(w, v)
+	easyjson9e2e77eaEncodeServerKinopoiskApi9(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *Genre) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson9e2e77eaDecodeServerKinopoiskApi6(&r, v)
+	easyjson9e2e77eaDecodeServerKinopoiskApi9(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *Genre) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson9e2e77eaDecodeServerKinopoiskApi6(l, v)
+	easyjson9e2e77eaDecodeServerKinopoiskApi9(l, v)
 }
-func easyjson9e2e77eaDecodeServerKinopoiskApi7(in *jlexer.Lexer, out *FilmStaff) {
+func easyjson9e2e77eaDecodeServerKinopoiskApi10(in *jlexer.Lexer, out *FilmStaff) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -723,29 +921,6 @@ func easyjson9e2e77eaDecodeServerKinopoiskApi7(in *jlexer.Lexer, out *FilmStaff)
 				}
 				in.Delim(']')
 			}
-		case "producers":
-			if in.IsNull() {
-				in.Skip()
-				out.Producers = nil
-			} else {
-				in.Delim('[')
-				if out.Producers == nil {
-					if !in.IsDelim(']') {
-						out.Producers = make([]Person, 0, 1)
-					} else {
-						out.Producers = []Person{}
-					}
-				} else {
-					out.Producers = (out.Producers)[:0]
-				}
-				for !in.IsDelim(']') {
-					var v11 Person
-					(v11).UnmarshalEasyJSON(in)
-					out.Producers = append(out.Producers, v11)
-					in.WantComma()
-				}
-				in.Delim(']')
-			}
 		case "actors":
 			if in.IsNull() {
 				in.Skip()
@@ -762,9 +937,9 @@ func easyjson9e2e77eaDecodeServerKinopoiskApi7(in *jlexer.Lexer, out *FilmStaff)
 					out.Actors = (out.Actors)[:0]
 				}
 				for !in.IsDelim(']') {
-					var v12 Person
-					(v12).UnmarshalEasyJSON(in)
-					out.Actors = append(out.Actors, v12)
+					var v11 Person
+					(v11).UnmarshalEasyJSON(in)
+					out.Actors = append(out.Actors, v11)
 					in.WantComma()
 				}
 				in.Delim(']')
@@ -779,7 +954,7 @@ func easyjson9e2e77eaDecodeServerKinopoiskApi7(in *jlexer.Lexer, out *FilmStaff)
 		in.Consumed()
 	}
 }
-func easyjson9e2e77eaEncodeServerKinopoiskApi7(out *jwriter.Writer, in FilmStaff) {
+func easyjson9e2e77eaEncodeServerKinopoiskApi10(out *jwriter.Writer, in FilmStaff) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -790,27 +965,11 @@ func easyjson9e2e77eaEncodeServerKinopoiskApi7(out *jwriter.Writer, in FilmStaff
 			out.RawString("null")
 		} else {
 			out.RawByte('[')
-			for v13, v14 := range in.Directors {
-				if v13 > 0 {
+			for v12, v13 := range in.Directors {
+				if v12 > 0 {
 					out.RawByte(',')
 				}
-				(v14).MarshalEasyJSON(out)
-			}
-			out.RawByte(']')
-		}
-	}
-	{
-		const prefix string = ",\"producers\":"
-		out.RawString(prefix)
-		if in.Producers == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
-			out.RawString("null")
-		} else {
-			out.RawByte('[')
-			for v15, v16 := range in.Producers {
-				if v15 > 0 {
-					out.RawByte(',')
-				}
-				(v16).MarshalEasyJSON(out)
+				(v13).MarshalEasyJSON(out)
 			}
 			out.RawByte(']')
 		}
@@ -822,11 +981,11 @@ func easyjson9e2e77eaEncodeServerKinopoiskApi7(out *jwriter.Writer, in FilmStaff
 			out.RawString("null")
 		} else {
 			out.RawByte('[')
-			for v17, v18 := range in.Actors {
-				if v17 > 0 {
+			for v14, v15 := range in.Actors {
+				if v14 > 0 {
 					out.RawByte(',')
 				}
-				(v18).MarshalEasyJSON(out)
+				(v15).MarshalEasyJSON(out)
 			}
 			out.RawByte(']')
 		}
@@ -837,27 +996,27 @@ func easyjson9e2e77eaEncodeServerKinopoiskApi7(out *jwriter.Writer, in FilmStaff
 // MarshalJSON supports json.Marshaler interface
 func (v FilmStaff) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson9e2e77eaEncodeServerKinopoiskApi7(&w, v)
+	easyjson9e2e77eaEncodeServerKinopoiskApi10(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v FilmStaff) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson9e2e77eaEncodeServerKinopoiskApi7(w, v)
+	easyjson9e2e77eaEncodeServerKinopoiskApi10(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *FilmStaff) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson9e2e77eaDecodeServerKinopoiskApi7(&r, v)
+	easyjson9e2e77eaDecodeServerKinopoiskApi10(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *FilmStaff) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson9e2e77eaDecodeServerKinopoiskApi7(l, v)
+	easyjson9e2e77eaDecodeServerKinopoiskApi10(l, v)
 }
-func easyjson9e2e77eaDecodeServerKinopoiskApi8(in *jlexer.Lexer, out *FilmInfo) {
+func easyjson9e2e77eaDecodeServerKinopoiskApi11(in *jlexer.Lexer, out *Film) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -878,173 +1037,12 @@ func easyjson9e2e77eaDecodeServerKinopoiskApi8(in *jlexer.Lexer, out *FilmInfo) 
 		switch key {
 		case "id":
 			out.ID = int(in.Int())
-		case "title":
-			out.Title = string(in.String())
-		case "imgUrl":
-			out.ImgUrl = string(in.String())
-		case "rating":
-			out.Rating = string(in.String())
-		case "webUrl":
-			out.WebUrl = string(in.String())
-		case "year":
-			out.Year = string(in.String())
-		case "filmLength":
-			out.FilmLength = string(in.String())
-		case "description":
-			out.Description = string(in.String())
-		case "type":
-			out.Type = string(in.String())
-		case "genres":
-			if in.IsNull() {
-				in.Skip()
-				out.Genres = nil
-			} else {
-				in.Delim('[')
-				if out.Genres == nil {
-					if !in.IsDelim(']') {
-						out.Genres = make([]string, 0, 4)
-					} else {
-						out.Genres = []string{}
-					}
-				} else {
-					out.Genres = (out.Genres)[:0]
-				}
-				for !in.IsDelim(']') {
-					var v19 string
-					v19 = string(in.String())
-					out.Genres = append(out.Genres, v19)
-					in.WantComma()
-				}
-				in.Delim(']')
-			}
-		default:
-			in.SkipRecursive()
-		}
-		in.WantComma()
-	}
-	in.Delim('}')
-	if isTopLevel {
-		in.Consumed()
-	}
-}
-func easyjson9e2e77eaEncodeServerKinopoiskApi8(out *jwriter.Writer, in FilmInfo) {
-	out.RawByte('{')
-	first := true
-	_ = first
-	{
-		const prefix string = ",\"id\":"
-		out.RawString(prefix[1:])
-		out.Int(int(in.ID))
-	}
-	{
-		const prefix string = ",\"title\":"
-		out.RawString(prefix)
-		out.String(string(in.Title))
-	}
-	{
-		const prefix string = ",\"imgUrl\":"
-		out.RawString(prefix)
-		out.String(string(in.ImgUrl))
-	}
-	{
-		const prefix string = ",\"rating\":"
-		out.RawString(prefix)
-		out.String(string(in.Rating))
-	}
-	{
-		const prefix string = ",\"webUrl\":"
-		out.RawString(prefix)
-		out.String(string(in.WebUrl))
-	}
-	{
-		const prefix string = ",\"year\":"
-		out.RawString(prefix)
-		out.String(string(in.Year))
-	}
-	{
-		const prefix string = ",\"filmLength\":"
-		out.RawString(prefix)
-		out.String(string(in.FilmLength))
-	}
-	{
-		const prefix string = ",\"description\":"
-		out.RawString(prefix)
-		out.String(string(in.Description))
-	}
-	{
-		const prefix string = ",\"type\":"
-		out.RawString(prefix)
-		out.String(string(in.Type))
-	}
-	{
-		const prefix string = ",\"genres\":"
-		out.RawString(prefix)
-		if in.Genres == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
-			out.RawString("null")
-		} else {
-			out.RawByte('[')
-			for v20, v21 := range in.Genres {
-				if v20 > 0 {
-					out.RawByte(',')
-				}
-				out.String(string(v21))
-			}
-			out.RawByte(']')
-		}
-	}
-	out.RawByte('}')
-}
-
-// MarshalJSON supports json.Marshaler interface
-func (v FilmInfo) MarshalJSON() ([]byte, error) {
-	w := jwriter.Writer{}
-	easyjson9e2e77eaEncodeServerKinopoiskApi8(&w, v)
-	return w.Buffer.BuildBytes(), w.Error
-}
-
-// MarshalEasyJSON supports easyjson.Marshaler interface
-func (v FilmInfo) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson9e2e77eaEncodeServerKinopoiskApi8(w, v)
-}
-
-// UnmarshalJSON supports json.Unmarshaler interface
-func (v *FilmInfo) UnmarshalJSON(data []byte) error {
-	r := jlexer.Lexer{Data: data}
-	easyjson9e2e77eaDecodeServerKinopoiskApi8(&r, v)
-	return r.Error()
-}
-
-// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *FilmInfo) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson9e2e77eaDecodeServerKinopoiskApi8(l, v)
-}
-func easyjson9e2e77eaDecodeServerKinopoiskApi9(in *jlexer.Lexer, out *Film) {
-	isTopLevel := in.IsStart()
-	if in.IsNull() {
-		if isTopLevel {
-			in.Consumed()
-		}
-		in.Skip()
-		return
-	}
-	in.Delim('{')
-	for !in.IsDelim('}') {
-		key := in.UnsafeFieldName(false)
-		in.WantColon()
-		if in.IsNull() {
-			in.Skip()
-			in.WantComma()
-			continue
-		}
-		switch key {
-		case "filmId":
-			out.FilmID = int(in.Int())
-		case "nameRu":
+		case "name":
 			out.Title = string(in.String())
 		case "type":
 			out.Type = string(in.String())
 		case "year":
-			out.Year = string(in.String())
+			out.Year = int(in.Int())
 		case "genres":
 			if in.IsNull() {
 				in.Skip()
@@ -1061,17 +1059,17 @@ func easyjson9e2e77eaDecodeServerKinopoiskApi9(in *jlexer.Lexer, out *Film) {
 					out.Genres = (out.Genres)[:0]
 				}
 				for !in.IsDelim(']') {
-					var v22 Genre
-					(v22).UnmarshalEasyJSON(in)
-					out.Genres = append(out.Genres, v22)
+					var v16 Genre
+					(v16).UnmarshalEasyJSON(in)
+					out.Genres = append(out.Genres, v16)
 					in.WantComma()
 				}
 				in.Delim(']')
 			}
+		case "poster":
+			(out.Poster).UnmarshalEasyJSON(in)
 		case "rating":
-			out.Rating = string(in.String())
-		case "posterUrlPreview":
-			out.ImgUrl = string(in.String())
+			(out.Rating).UnmarshalEasyJSON(in)
 		default:
 			in.SkipRecursive()
 		}
@@ -1082,17 +1080,17 @@ func easyjson9e2e77eaDecodeServerKinopoiskApi9(in *jlexer.Lexer, out *Film) {
 		in.Consumed()
 	}
 }
-func easyjson9e2e77eaEncodeServerKinopoiskApi9(out *jwriter.Writer, in Film) {
+func easyjson9e2e77eaEncodeServerKinopoiskApi11(out *jwriter.Writer, in Film) {
 	out.RawByte('{')
 	first := true
 	_ = first
 	{
-		const prefix string = ",\"filmId\":"
+		const prefix string = ",\"id\":"
 		out.RawString(prefix[1:])
-		out.Int(int(in.FilmID))
+		out.Int(int(in.ID))
 	}
 	{
-		const prefix string = ",\"nameRu\":"
+		const prefix string = ",\"name\":"
 		out.RawString(prefix)
 		out.String(string(in.Title))
 	}
@@ -1104,7 +1102,7 @@ func easyjson9e2e77eaEncodeServerKinopoiskApi9(out *jwriter.Writer, in Film) {
 	{
 		const prefix string = ",\"year\":"
 		out.RawString(prefix)
-		out.String(string(in.Year))
+		out.Int(int(in.Year))
 	}
 	{
 		const prefix string = ",\"genres\":"
@@ -1113,24 +1111,24 @@ func easyjson9e2e77eaEncodeServerKinopoiskApi9(out *jwriter.Writer, in Film) {
 			out.RawString("null")
 		} else {
 			out.RawByte('[')
-			for v23, v24 := range in.Genres {
-				if v23 > 0 {
+			for v17, v18 := range in.Genres {
+				if v17 > 0 {
 					out.RawByte(',')
 				}
-				(v24).MarshalEasyJSON(out)
+				(v18).MarshalEasyJSON(out)
 			}
 			out.RawByte(']')
 		}
 	}
 	{
-		const prefix string = ",\"rating\":"
+		const prefix string = ",\"poster\":"
 		out.RawString(prefix)
-		out.String(string(in.Rating))
+		(in.Poster).MarshalEasyJSON(out)
 	}
 	{
-		const prefix string = ",\"posterUrlPreview\":"
+		const prefix string = ",\"rating\":"
 		out.RawString(prefix)
-		out.String(string(in.ImgUrl))
+		(in.Rating).MarshalEasyJSON(out)
 	}
 	out.RawByte('}')
 }
@@ -1138,23 +1136,23 @@ func easyjson9e2e77eaEncodeServerKinopoiskApi9(out *jwriter.Writer, in Film) {
 // MarshalJSON supports json.Marshaler interface
 func (v Film) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson9e2e77eaEncodeServerKinopoiskApi9(&w, v)
+	easyjson9e2e77eaEncodeServerKinopoiskApi11(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v Film) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson9e2e77eaEncodeServerKinopoiskApi9(w, v)
+	easyjson9e2e77eaEncodeServerKinopoiskApi11(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *Film) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson9e2e77eaDecodeServerKinopoiskApi9(&r, v)
+	easyjson9e2e77eaDecodeServerKinopoiskApi11(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *Film) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson9e2e77eaDecodeServerKinopoiskApi9(l, v)
+	easyjson9e2e77eaDecodeServerKinopoiskApi11(l, v)
 }

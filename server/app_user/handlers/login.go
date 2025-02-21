@@ -19,6 +19,7 @@ type LoginIn struct {
 }
 
 
+// вход существующего юзера
 func Login(ctx *fiber.Ctx) error {
 	var err error
 	var dataIn LoginIn

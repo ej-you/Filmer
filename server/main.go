@@ -8,6 +8,7 @@ import (
 	fiberCORS "github.com/gofiber/fiber/v2/middleware/cors"
 	fiberLogger "github.com/gofiber/fiber/v2/middleware/logger"
 	fiberRecover "github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/ej-you/go-utils/env"
 
 	coreErrors "server/core/errors"
 	coreServices "server/core/services"
@@ -18,6 +19,14 @@ import (
 
 
 func main() {
+	// проверка, что эти переменные окружения заданы
+	env.MustBePresented(
+		"SERVER_PORT", "JWT_SECRET",
+		"DB_USER", "DB_HOST", "DB_PORT", "DB_NAME",
+		"SERVER_CORS_ALLOWED_ORIGINS", "SERVER_CORS_ALLOWED_METHODS",
+		"KINOPOISK_API_UNOFFICIAL_KEY", "KINOPOISK_API_KEY",
+	)
+
 	// если при запуске указан аргумент "migrate"
 	args := os.Args
 	if len(args) > 1 {

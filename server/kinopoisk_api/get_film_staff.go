@@ -2,13 +2,8 @@ package kinopoisk_api
 
 import (
 	"fmt"
-	"net/http"
-
-	fiber "github.com/gofiber/fiber/v2"
+	"server/settings"
 )
-
-
-const getFilmStaffUrl = apiUrl + "/v1/staff"
 
 
 // структуры для парсинга ответа от API
@@ -34,44 +29,34 @@ type Person struct {
 //easyjson:json
 type FilmStaff struct {
 	Directors 	[]Person `json:"directors"`
-	Producers 	[]Person `json:"producers"`
 	Actors 		[]Person `json:"actors"`
 }
 
 
 // получение информации о персонале фильма по его ID
 func GetFilmStaff(filmID int, outStruct *FilmStaff) error {
-	// создание запроса
-	req, err := http.NewRequest("GET", getFilmStaffUrl, nil)
-	if err != nil {
-		return fiber.NewError(500, fmt.Sprintf("failed to send request to %q: %v", getFilmStaffUrl, err))
+	newAPI := apiGetRequest{
+		URL: "https://kinopoiskapiunofficial.tech/api/v1/staff",
+		APIKey: settings.KinopoiskApiUnofficialKey,
+		QueryParams: map[string]string{
+			"filmId": fmt.Sprint(filmID),
+		},
 	}
-	// добавление query-параметров
-	queryParams := req.URL.Query()
-	queryParams.Add("filmId", fmt.Sprint(filmID))
-	req.URL.RawQuery = queryParams.Encode()
 
 	var rawFilmStaffSlice RawFilmStaffSlice
 	// отправка запроса и обработка ответа
-	if err := sendRequest(req, getFilmStaffUrl, &rawFilmStaffSlice); err != nil {
+	if err := newAPI.sendRequest(&rawFilmStaffSlice); err != nil {
 		return err
 	}
 
 	// инициализация срезов для персонала
 	outStruct.Directors = make([]Person, 0)
-	outStruct.Producers = make([]Person, 0)
 	outStruct.Actors = make([]Person, 0, 30)
 	// сортировка персонала по срезам
 	for _, rawFilmStaff := range rawFilmStaffSlice {
 		switch rawFilmStaff.ProfessionKey {
 			case "DIRECTOR":
 				outStruct.Directors = append(outStruct.Directors, Person{
-					ID: rawFilmStaff.StaffID,
-					Name: rawFilmStaff.Name,
-					ImgUrl: rawFilmStaff.ImgUrl,
-				})
-			case "PRODUCER":
-				outStruct.Producers = append(outStruct.Producers, Person{
 					ID: rawFilmStaff.StaffID,
 					Name: rawFilmStaff.Name,
 					ImgUrl: rawFilmStaff.ImgUrl,
