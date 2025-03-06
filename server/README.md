@@ -12,7 +12,9 @@ JWT_SECRET="samplelrhksgvi8n54kJWTgl58ehvyooSECREThielghi"
 SERVER_CORS_ALLOWED_ORIGINS="*"
 SERVER_CORS_ALLOWED_METHODS="GET,POST"
 
+# JWT token expired duration
 TOKEN_EXPIRED="1h"
+# Kinopoisk movie data expired duration
 KINOPOISK_API_DATA_EXPIRED="360h"
 
 # Key from Kinopoisk API Unofficial

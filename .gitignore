@@ -4,7 +4,7 @@
 # Environments
 .env
 env/
-/server/config/*.env
+*.env
 
 # local notes
 notes.txt
