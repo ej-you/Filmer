@@ -1,7 +1,7 @@
 # Filmer server
 
 
-### Server part use `clean architecture` described in [README_ARCH](./README_ARCH.md)
+### Server part use `clean architecture` described in [README_ARCH](./docs/README_ARCH.md)
 
 ### Needed `env` variables:
 
