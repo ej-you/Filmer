@@ -1,0 +1,10 @@
+# Logs
+*.log
+
+# Environments
+.env
+env/
+/server/config/*.env
+
+# local notes
+notes.txt

@@ -1,0 +1,712 @@
+basePath: /api/v1
+consumes:
+- application/json
+definitions:
+  app_user.LoginIn:
+    description: данные для входа юзера
+    properties:
+      email:
+        description: почта юзера
+        example: user@gmail.com
+        maxLength: 100
+        type: string
+      password:
+        description: пароль юзера
+        example: qwerty123
+        maxLength: 50
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  app_user.SignUpIn:
+    description: данные для регистрации юзера
+    properties:
+      email:
+        description: почта юзера
+        example: user@gmail.com
+        maxLength: 100
+        type: string
+      password:
+        description: пароль юзера
+        example: qwerty123
+        maxLength: 50
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  kinopoisk_api.Film:
+    description: получаемые данные о фильме (при поиске фильмов)
+    properties:
+      genres:
+        description: жанры фильма
+        items:
+          $ref: '#/definitions/kinopoisk_api.Genre'
+        type: array
+      id:
+        description: kinopoisk ID фильма
+        example: 301
+        type: integer
+      name:
+        description: название фильма
+        example: Матрица
+        type: string
+      poster:
+        allOf:
+        - $ref: '#/definitions/kinopoisk_api.Poster'
+        description: постер фильма
+      rating:
+        allOf:
+        - $ref: '#/definitions/kinopoisk_api.Rating'
+        description: рейтинг фильма
+      type:
+        description: тип фильма
+        example: movie
+        type: string
+      year:
+        description: год выхода фильма
+        example: 1999
+        type: integer
+    type: object
+  kinopoisk_api.Genre:
+    description: жанр фильма (при поиске фильмов)
+    properties:
+      name:
+        example: боевик
+        type: string
+    type: object
+  kinopoisk_api.Poster:
+    description: ссылка на постер фильма (при поиске фильмов)
+    properties:
+      url:
+        example: https://image.openmoviedb.com/kinopoisk-images/4774061/cf1970bc-3f08-4e0e-a095-2fb57c3aa7c6/orig
+        type: string
+    type: object
+  kinopoisk_api.Rating:
+    description: рейтинг фильма (при поиске фильмов)
+    properties:
+      kp:
+        example: 8.498
+        type: number
+    type: object
+  kinopoisk_api.SearchedFilms:
+    description: получаемые данные (при поиске фильмов)
+    properties:
+      docs:
+        description: информация о фильме
+        items:
+          $ref: '#/definitions/kinopoisk_api.Film'
+        type: array
+      limit:
+        description: количество фильмов на каждой странице
+        example: 25
+        type: integer
+      page:
+        description: номер страницы
+        example: 1
+        type: integer
+      pages:
+        description: всего страниц
+        example: 12
+        type: integer
+      total:
+        description: всего найдено результатов
+        example: 300
+        type: integer
+    type: object
+  schemas.FilmStaff:
+    description: информация о персонале фильма
+    properties:
+      actors:
+        description: актёры фильма (до 30 максимум)
+        items:
+          $ref: '#/definitions/schemas.Person'
+        type: array
+      directors:
+        description: режиссёры фильма
+        items:
+          $ref: '#/definitions/schemas.Person'
+        type: array
+    type: object
+  schemas.Genre:
+    description: жанр фильма
+    properties:
+      genre:
+        description: жанр фильма
+        example: боевик
+        type: string
+    type: object
+  schemas.Movie:
+    description: получаемые данные о фильме
+    properties:
+      description:
+        description: описание фильма
+        example: 'Жизнь Томаса Андерсона разделена на две части: днём он — самый обычный
+          офисный работник, получающий нагоняи от начальства, а ночью превращается
+          в хакера по имени Нео, и нет места в сети, куда он бы не смог проникнуть.
+          Но однажды всё меняется. Томас узнаёт ужасающую правду о реальности.'
+        type: string
+      filmLength:
+        description: длина фильма
+        example: "2:16"
+        type: string
+      genres:
+        description: жанры фильма
+        items:
+          $ref: '#/definitions/schemas.Genre'
+        type: array
+      id:
+        description: uuid фильма
+        example: 0a54d171-7b07-41d1-bf5e-0ebe2b64b65a
+        type: string
+      imgURL:
+        description: ссылка на картинку фильма
+        example: https://kinopoiskapiunofficial.tech/images/posters/kp_small/301.jpg
+        type: string
+      kinopoiskID:
+        description: kinopoisk ID фильма
+        example: 301
+        type: integer
+      personal:
+        allOf:
+        - $ref: '#/definitions/schemas.FilmStaff'
+        description: персонал фильма
+      rating:
+        description: рейтинг фильма
+        example: 8.5
+        type: number
+      title:
+        description: название фильма
+        example: Матрица
+        type: string
+      type:
+        description: тип фильма (фильм, сериал, видео, мини-сериал)
+        example: фильм
+        type: string
+      updatedAt:
+        description: дата последнего обновления информации от Kinopoisk API (в формате
+          RFC3339)
+        example: "2025-02-28T22:00:05.225526936Z"
+        type: string
+      webURL:
+        description: ссылка на страницу фильма на Kinopoisk
+        example: https://www.kinopoisk.ru/film/301/
+        type: string
+      year:
+        description: год выхода фильма
+        example: 1999
+        type: integer
+    type: object
+  schemas.Person:
+    description: информация об одном человеке
+    properties:
+      id:
+        description: kinopoisk ID человека
+        example: 7836
+        type: integer
+      imgUrl:
+        description: ссылка на картинку человека
+        example: https://st.kp.yandex.net/images/actor_iphone/iphone360_7836.jpg
+        type: string
+      name:
+        description: имя человека
+        example: Киану Ривз
+        type: string
+      role:
+        description: роль (у актёра)
+        example: Neo
+        type: string
+    type: object
+  schemas.User:
+    description: получаемые данные о юзере
+    properties:
+      accessToken:
+        description: access токен, генерируемый после успешной аутентификации
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDA3NjA0MzIsInVzZXJJRCI6IjU4MzU0ZGJhLWUyY2MtNDI4My04MjAxLWNjZGRiZTkzOGExNSJ9.VwA9d9lao0Xgl5c3H9VNM8JVtUKDs47YEItb6MZlkCw
+        type: string
+      email:
+        description: почта юзера
+        example: user@gmail.com
+        type: string
+    type: object
+  schemas.UserMovie:
+    description: получаемые данные о фильме юзера
+    properties:
+      movie:
+        $ref: '#/definitions/schemas.Movie'
+      stared:
+        description: в избранном ли фильм
+        example: true
+        type: boolean
+      status:
+        description: в каком списке фильм (0 - ничего, 1 - хочу посмотреть, 2 - посмотрел)
+        example: 1
+        type: integer
+    type: object
+host: 127.0.0.1:3000
+info:
+  contact: {}
+  description: This is a Filmer API for Kinopoisk API and DB
+  license:
+    name: MIT Licence
+    url: https://github.com/ej-you/Filmer/blob/master/LICENCE
+  title: Filmer API
+  version: 1.0.0
+paths:
+  /films/{movieID}/clear:
+    post:
+      description: Удаление фильма юзера из списков "хочу посмотреть" и "посмотрел"
+        по ID фильма
+      operationId: films-set-clear
+      parameters:
+      - description: ID фильма
+        in: path
+        name: movieID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.UserMovie'
+        "401":
+          description: Пустой или неправильный токен
+        "403":
+          description: Истекший или невалидный токен
+        "404":
+          description: Фильм не найден
+      security:
+      - JWT: []
+      summary: Удаление фильма юзера из списков "хочу посмотреть" и "посмотрел"
+      tags:
+      - films
+  /films/{movieID}/star:
+    post:
+      description: Добавление фильма юзера в избранное по ID фильма
+      operationId: films-set-star
+      parameters:
+      - description: ID фильма
+        in: path
+        name: movieID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.UserMovie'
+        "401":
+          description: Пустой или неправильный токен
+        "403":
+          description: Истекший или невалидный токен
+        "404":
+          description: Фильм не найден
+      security:
+      - JWT: []
+      summary: Добавление фильма юзера в избранное
+      tags:
+      - films
+  /films/{movieID}/unstar:
+    post:
+      description: Удаление фильма юзера из избранного по ID фильма
+      operationId: films-set-unstar
+      parameters:
+      - description: ID фильма
+        in: path
+        name: movieID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.UserMovie'
+        "401":
+          description: Пустой или неправильный токен
+        "403":
+          description: Истекший или невалидный токен
+        "404":
+          description: Фильм не найден
+      security:
+      - JWT: []
+      summary: Удаление фильма юзера из избранного
+      tags:
+      - films
+  /films/{movieID}/want:
+    post:
+      description: Добавление фильма юзера в список "хочу посмотреть" по ID фильма
+      operationId: films-set-want
+      parameters:
+      - description: ID фильма
+        in: path
+        name: movieID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.UserMovie'
+        "401":
+          description: Пустой или неправильный токен
+        "403":
+          description: Истекший или невалидный токен
+        "404":
+          description: Фильм не найден
+      security:
+      - JWT: []
+      summary: Добавление фильма юзера в список "хочу посмотреть"
+      tags:
+      - films
+  /films/{movieID}/watched:
+    post:
+      description: Добавление фильма юзера в список "посмотрел" по ID фильма
+      operationId: films-set-watched
+      parameters:
+      - description: ID фильма
+        in: path
+        name: movieID
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.UserMovie'
+        "401":
+          description: Пустой или неправильный токен
+        "403":
+          description: Истекший или невалидный токен
+        "404":
+          description: Фильм не найден
+      security:
+      - JWT: []
+      summary: Добавление фильма юзера в список "посмотрел"
+      tags:
+      - films
+  /films/stared:
+    get:
+      description: Получение избранных фильмов юзера с пагинацией и настраиваемой
+        сортировкой и фильтрацией
+      operationId: films-get-stared
+      parameters:
+      - description: 'страница поиска (Например: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'поле для сортировки (Например: year | По умолчанию: updated_at
+          | Допустимые значения: title, rating, year, updated_at)'
+        in: query
+        name: sortField
+        type: string
+      - description: 'направление сортировки (Например: desc | По умолчанию: asc [для
+          updated_at: desc] | Допустимые значения: asc, desc)'
+        in: query
+        name: sortOrder
+        type: string
+      - description: 'минимальный рейтинг (Например: 7.5 | Допустимые значения: 0
+          и больше)'
+        in: query
+        name: ratingFrom
+        type: number
+      - description: 'минимальный год (Например: 1991 | Допустимые значения: 1500..3000)'
+        in: query
+        name: yearFrom
+        type: integer
+      - description: 'максимальный год (Например: 2014 | Допустимые значения: 1500..3000)'
+        in: query
+        name: yearTo
+        type: integer
+      - description: 'тип фильма (Например: сериал | Допустимые значения: фильм, сериал,
+          видео, мини-сериал)'
+        in: query
+        name: type
+        type: string
+      - collectionFormat: multi
+        description: 'жанры фильмов (Например: боевик)'
+        in: query
+        items:
+          type: string
+        name: genres
+        type: array
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.UserMovie'
+        "401":
+          description: Пустой или неправильный токен
+        "403":
+          description: Истекший или невалидный токен
+      security:
+      - JWT: []
+      summary: Получение избранных фильмов юзера
+      tags:
+      - films
+  /films/want:
+    get:
+      description: Получение фильмов юзера из списка "хочу посмотреть" с пагинацией
+        и настраиваемой сортировкой и фильтрацией
+      operationId: films-get-want
+      parameters:
+      - description: 'страница поиска (Например: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'поле для сортировки (Например: year | По умолчанию: updated_at
+          | Допустимые значения: title, rating, year, updated_at)'
+        in: query
+        name: sortField
+        type: string
+      - description: 'направление сортировки (Например: desc | По умолчанию: asc [для
+          updated_at: desc] | Допустимые значения: asc, desc)'
+        in: query
+        name: sortOrder
+        type: string
+      - description: 'минимальный рейтинг (Например: 7.5 | Допустимые значения: 0
+          и больше)'
+        in: query
+        name: ratingFrom
+        type: number
+      - description: 'минимальный год (Например: 1991 | Допустимые значения: 1500..3000)'
+        in: query
+        name: yearFrom
+        type: integer
+      - description: 'максимальный год (Например: 2014 | Допустимые значения: 1500..3000)'
+        in: query
+        name: yearTo
+        type: integer
+      - description: 'тип фильма (Например: сериал | Допустимые значения: фильм, сериал,
+          видео, мини-сериал)'
+        in: query
+        name: type
+        type: string
+      - collectionFormat: multi
+        description: 'жанры фильмов (Например: боевик)'
+        in: query
+        items:
+          type: string
+        name: genres
+        type: array
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.UserMovie'
+        "401":
+          description: Пустой или неправильный токен
+        "403":
+          description: Истекший или невалидный токен
+      security:
+      - JWT: []
+      summary: Получение фильмов юзера из списка "хочу посмотреть"
+      tags:
+      - films
+  /films/watched:
+    get:
+      description: Получение фильмов юзера из списка "посмотрел" с пагинацией и настраиваемой
+        сортировкой и фильтрацией
+      operationId: films-get-watched
+      parameters:
+      - description: 'страница поиска (Например: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'поле для сортировки (Например: year | По умолчанию: updated_at
+          | Допустимые значения: title, rating, year, updated_at)'
+        in: query
+        name: sortField
+        type: string
+      - description: 'направление сортировки (Например: desc | По умолчанию: asc [для
+          updated_at: desc] | Допустимые значения: asc, desc)'
+        in: query
+        name: sortOrder
+        type: string
+      - description: 'минимальный рейтинг (Например: 7.5 | Допустимые значения: 0
+          и больше)'
+        in: query
+        name: ratingFrom
+        type: number
+      - description: 'минимальный год (Например: 1991 | Допустимые значения: 1500..3000)'
+        in: query
+        name: yearFrom
+        type: integer
+      - description: 'максимальный год (Например: 2014 | Допустимые значения: 1500..3000)'
+        in: query
+        name: yearTo
+        type: integer
+      - description: 'тип фильма (Например: сериал | Допустимые значения: фильм, сериал,
+          видео, мини-сериал)'
+        in: query
+        name: type
+        type: string
+      - collectionFormat: multi
+        description: 'жанры фильмов (Например: боевик)'
+        in: query
+        items:
+          type: string
+        name: genres
+        type: array
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.UserMovie'
+        "401":
+          description: Пустой или неправильный токен
+        "403":
+          description: Истекший или невалидный токен
+      security:
+      - JWT: []
+      summary: Получение фильмов юзера из списка "посмотрел"
+      tags:
+      - films
+  /kinopoisk/films/{kinopoiskID}:
+    get:
+      description: Получение информации о фильме по его kinopoisk ID
+      operationId: kinopoisk-get-film-info
+      parameters:
+      - description: kinopoisk ID фильма
+        in: path
+        name: kinopoiskID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.UserMovie'
+        "401":
+          description: Пустой или неправильный токен
+        "402":
+          description: Превышен дневной лимит запросов к Kinopoisk API
+        "403":
+          description: Истекший или невалидный токен
+        "404":
+          description: Фильм не найден
+        "429":
+          description: Слишком много запросов. Лимит 5 запросов в секунду
+      security:
+      - JWT: []
+      summary: Получение информации о фильме
+      tags:
+      - kinopoisk-films
+  /kinopoisk/films/search:
+    get:
+      description: Поиск фильмов по ключевому слову с пагинацией
+      operationId: kinopoisk-search-films
+      parameters:
+      - description: 'ключевое слово (Например: матрица)'
+        in: query
+        name: q
+        required: true
+        type: string
+      - description: 'страница поиска (Например: 1)'
+        in: query
+        name: page
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/kinopoisk_api.SearchedFilms'
+        "401":
+          description: Пустой или неправильный токен
+        "402":
+          description: Превышен дневной лимит запросов к Kinopoisk API
+        "403":
+          description: Истекший или невалидный токен
+        "404":
+          description: Фильмы не найдены
+        "429":
+          description: Слишком много запросов. Лимит 5 запросов в секунду
+      security:
+      - JWT: []
+      summary: Поиск фильмов
+      tags:
+      - kinopoisk-films
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: Вход для существующего юзера по почте и паролю
+      operationId: user-login
+      parameters:
+      - description: LoginIn
+        in: body
+        name: LoginIn
+        required: true
+        schema:
+          $ref: '#/definitions/app_user.LoginIn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/schemas.User'
+        "400":
+          description: Неверный пароль для учетной записи юзера
+        "404":
+          description: Юзер с введенной почтой не найдены
+      summary: Вход для юзера
+      tags:
+      - user
+  /user/logout:
+    post:
+      description: Выход юзера (помещение JWT-token'а текущей сессии юзера в черный
+        список)
+      operationId: user-logout
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Пустой или неправильный токен
+        "403":
+          description: Истекший или невалидный токен
+      security:
+      - JWT: []
+      summary: Выход юзера
+      tags:
+      - user
+  /user/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: Регистрация нового юзера с почтой и паролем
+      operationId: user-sign-up
+      parameters:
+      - description: SignUpIn
+        in: body
+        name: SignUpIn
+        required: true
+        schema:
+          $ref: '#/definitions/app_user.SignUpIn'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/schemas.User'
+        "409":
+          description: Юзер с введенной почтой уже зарегистрирован
+      summary: Регистрация юзера
+      tags:
+      - user
+produces:
+- application/json
+schemes:
+- http
+securityDefinitions:
+  JWT:
+    description: JWT security accessToken. Please, add it in the format "Bearer {AccessToken}"
+      to authorize your requests.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
