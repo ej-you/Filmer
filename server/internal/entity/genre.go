@@ -5,16 +5,15 @@ import (
 )
 
 
-// модель жанра
+// movie genre model
 //easyjson:json
-// @description жанр фильма
+// @description movie genre
 type Genre struct {
-	// uuid фильма
+	// movie uuid
 	MovieID	uuid.UUID 	`gorm:"not null;type:uuid;primaryKey" json:"-"`
-	// жанр фильма
+	// movie genre
 	Genre	string		`gorm:"not null;type:VARCHAR(50);primaryKey" json:"genre" example:"боевик"`
 	
-	// ассоциация c фильмом, к которому относится этот жанр
 	Movie	Movie		`gorm:"not null;foreignKey:MovieID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"-"`
 }
 func (Genre) TableName() string {

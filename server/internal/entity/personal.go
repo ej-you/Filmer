@@ -8,47 +8,46 @@ import (
 )
 
 
-// информация о персонале фильма
 //easyjson:json
-// @description информация об одном человеке
+// @description one person info
 type Person struct {
-	// kinopoisk ID человека
+	// person kinopoisk ID
 	ID		int 	`json:"id" example:"7836"`
-	// имя человека
+	// person name
 	Name	string 	`json:"name" example:"Киану Ривз"`
-	// роль (у актёра)
+	// person role (if person is actor)
 	Role	*string	`json:"role,ommitempty" example:"Neo"`
-	// ссылка на картинку человека
+	// person img URL
 	ImgUrl 	string 	`json:"imgUrl" example:"https://st.kp.yandex.net/images/actor_iphone/iphone360_7836.jpg"`
 }
 
 //easyjson:json
-// @description информация о персонале фильма
-type FilmStaff struct {
-	// режиссёры фильма
+// @description movie staff info
+type MovieStaff struct {
+	// movie directors
 	Directors 	[]Person `json:"directors"`
-	// актёры фильма (до 30 максимум)
+	// movie actors (up to 30)
 	Actors 		[]Person `json:"actors"`
 }
 
-// метод для чтения JSONB из БД и преобразования в структуру FilmStaff
-func (this *FilmStaff) Scan(value interface{}) error {
+// Read JSONB from DB and transformit to MovieStaff struct
+func (this *MovieStaff) Scan(value interface{}) error {
 	bytes, ok := value.([]byte)
 	if !ok {
-		return fmt.Errorf("failed to scan FilmStaff: expected []byte, got %T", value)
+		return fmt.Errorf("failed to scan MovieStaff: expected []byte, got %T", value)
 	}
 	return easyjson.Unmarshal(bytes, this)
 }
 
-// метод для сохранения FilmStaff в виде JSONB в БД
-func (this FilmStaff) Value() (driver.Value, error) {
+// Save MovieStaff as JSONB into DB
+func (this MovieStaff) Value() (driver.Value, error) {
 	return easyjson.Marshal(this)
 }
 
 
-// структуры для парсинга ответа от API
+// for parsing API response
 //easyjson:json
-type RawFilmStaff struct {
+type RawMovieStaff struct {
 	StaffID			int		`json:"staffId"`
 	Name			string	`json:"nameRu"`
 	Description		string	`json:"description"`
@@ -57,4 +56,4 @@ type RawFilmStaff struct {
 }
 
 //easyjson:json
-type RawFilmStaffSlice []RawFilmStaff
+type RawMovieStaffSlice []RawMovieStaff

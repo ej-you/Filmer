@@ -22,17 +22,17 @@ CREATE TABLE movies (
     web_url VARCHAR(255) NOT NULL,
     rating DECIMAL(2,1) NULL,
     year SMALLINT NULL,
-    film_length VARCHAR(10) NULL,
+    movie_length VARCHAR(10) NULL,
     description STRING NULL,
     type VARCHAR(20) NULL,
-    personal JSONB NOT NULL,
+    staff JSONB NOT NULL,
     updated_at TIMESTAMP NOT NULL,
 
     CONSTRAINT movies_pkey PRIMARY KEY (id ASC),
     UNIQUE INDEX uni_movies_kinopoisk_id (kinopoisk_id ASC),
 
     FAMILY f1 (id, kinopoisk_id, title, img_url, rating, year, type, updated_at),
-    FAMILY f2 (web_url, film_length, description, personal)
+    FAMILY f2 (web_url, movie_length, description, staff)
 );
 
 CREATE TABLE genres (
