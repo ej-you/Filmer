@@ -18,13 +18,12 @@ type (
 	}
 
 	App struct {
-		Name					string `env:"APP_NAME" env-default:"Filmer API" env-description:"app name for server (default: Filmer API)"`
-		Port					string `env:"SERVER_PORT" env-default:"8000" env-description:"server port (default: 8000)"`
-		CorsAllowedOrigins		string `env-required:"true" env:"SERVER_CORS_ALLOWED_ORIGINS" env-description:"cors allowed origins"`
-		CorsAllowedMethods		string `env-required:"true" env:"SERVER_CORS_ALLOWED_METHODS" env-description:"cors allowed methods"`
-		JwtSecret				string `env-required:"true" env:"JWT_SECRET" env-description:"secret for JWT-token signature"`
-		TokenExpired			time.Duration `env:"TOKEN_EXPIRED" env-default:"30m" env-description:"JWT-token expired duration (default: 30m)"`
-		KinopoiskAPIDataExpired time.Duration `env:"KINOPOISK_API_DATA_EXPIRED" env-default:"360h" env-description:"kinopoisk API data update duration (default: 360h)"`
+		Name				string `env:"APP_NAME" env-default:"Filmer API" env-description:"app name for server (default: Filmer API)"`
+		Port				string `env:"SERVER_PORT" env-default:"8000" env-description:"server port (default: 8000)"`
+		CorsAllowedOrigins	string `env-required:"true" env:"SERVER_CORS_ALLOWED_ORIGINS" env-description:"cors allowed origins"`
+		CorsAllowedMethods	string `env-required:"true" env:"SERVER_CORS_ALLOWED_METHODS" env-description:"cors allowed methods"`
+		JwtSecret			string `env-required:"true" env:"JWT_SECRET" env-description:"secret for JWT-token signature"`
+		TokenExpired		time.Duration `env:"TOKEN_EXPIRED" env-default:"30m" env-description:"JWT-token expired duration (default: 30m)"`
 	}
 
 	Cache struct {
@@ -44,6 +43,7 @@ type (
 	KinopoiskAPI struct {
 		UnofficialKey	string `env-required:"true" env:"KINOPOISK_API_UNOFFICIAL_KEY" env-description:"key from Kinopoisk API Unofficial"`
 		Key				string `env-required:"true" env:"KINOPOISK_API_KEY" env-description:"key from Kinopoisk API"`
+		DataExpired 	time.Duration `env:"KINOPOISK_API_DATA_EXPIRED" env-default:"360h" env-description:"kinopoisk API data update duration (default: 360h)"`
 	}
 )
 
@@ -52,7 +52,8 @@ var once sync.Once
 var cfg = new(Config)
 
 
-// возвращает конфиг приложения, загруженный из ENV-переменных
+// Config constructor
+// Returns app config loaded from ENV-vars
 func NewConfig() *Config {
 	once.Do(func() {
 		if err := cleanenv.ReadEnv(cfg); err != nil {

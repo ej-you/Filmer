@@ -14,107 +14,106 @@ import (
 
 
 const (
-	retryAttemps = 2 // кол-во попыток после первой неудачной
-	minRetryWait = 2*time.Second // минимальное время ожидания между повторными попытками
-	sendRequestTimeout = 3*time.Second // таймаут на запрос	
+	retryAttemps = 2 // attemps amount after first failed
+	minRetryWait = 2*time.Second // min wait time between retries
+	sendRequestTimeout = 3*time.Second // request timeout	
 )
 
 
-// интерфейс клиента Kinopoisk API
+// Kinopoisk API client interface
 type KinopoiskAPI interface {
 	SendGET(outStruct any) error
 }
 
 
-// структура для создания GET-запросов к API
+// Kinopoisk API client for GET-requests
 type KinopoiskAPIGet struct {
-	URL 		string
-	APIKey 		string
-	QueryParams map[string]string
+	url 		string
+	apiKey 		string
+	queryParams map[string]string
 	jsonify		jsonify.JSONify
 }
 
-// конструктор для типа интерфейса KinopoiskAPI
+// KinopoiskAPI constructor
 func NewKinopoiskAPI(url, apiKey string, queryParams map[string]string, jsonify jsonify.JSONify) KinopoiskAPI {
 	return &KinopoiskAPIGet{
-		URL: url,
-		APIKey: apiKey,
-		QueryParams: queryParams,
+		url: url,
+		apiKey: apiKey,
+		queryParams: queryParams,
 		jsonify: jsonify,
 	}
 }
 
-// структура для парсинга JSON-ответа от API с ошибкой
+// struct for parsing error JSON-response from API
 //easyjson:json
 type kinopoiskApiError struct {
 	Message	string `json:"message"`
 }
-// парсинг ошибки из полученного ответа
+// Parse error from response
 func (this KinopoiskAPIGet) parseError(resp *http.Response) error {
 	var rawErr kinopoiskApiError
 
 	bytesErrorMessage, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return httpError.NewHTTPError(500, fmt.Sprintf("parse error: failed to read error answer: %v", err))
+		return httpError.NewHTTPError(500, "parse error: failed to read error answer", err)
 	}
-	// декодирование ответа с ошибкой в структуру
+	// decode response to struct
 	if err := this.jsonify.Unmarshal(bytesErrorMessage, &rawErr); err != nil {
-		return httpError.NewHTTPError(500, fmt.Sprintf("parse error: failed to decode error answer: %v", err))
+		return httpError.NewHTTPError(500, "parse error: failed to decode error answer", err)
 	}
-	// возврат обработанной ошибки
-	return fmt.Errorf("parse error: %w", httpError.NewHTTPError(resp.StatusCode, rawErr.Message))
+	// return processed error
+	return httpError.NewHTTPError(resp.StatusCode, rawErr.Message, fmt.Errorf("parsed error"))
 }
 
-// отправка запроса и обработка ответа (outStruct - указатель на структуру)
+// Send request and process response (outStruct - pointer to struct)
 func (this KinopoiskAPIGet) SendGET(outStruct any) error {
 	var err error
 
-	// создание запроса
-	req, err := http.NewRequest("GET", this.URL, nil)
+	// create request
+	req, err := http.NewRequest("GET", this.url, nil)
 	if err != nil {
-		return httpError.NewHTTPError(500, fmt.Sprintf("failed to send request: %v", err))
+		return httpError.NewHTTPError(500, "failed to send request", err)
 	}
-	// добавление API ключа в заголовок запроса
-	req.Header.Set("X-API-KEY", this.APIKey)
+	// add API key to request headers
+	req.Header.Set("X-API-KEY", this.apiKey)
 
-	// добавление query-параметров
+	// add query-params
 	queryParams := req.URL.Query()
-	for k, v := range this.QueryParams {	
+	for k, v := range this.queryParams {	
 		queryParams.Add(k, v)
 	}
 	req.URL.RawQuery = queryParams.Encode()
 
-	// клиент и его настройка на auto-retry
+	// http client and auto-retry set up
 	client := retryHTTP.NewClient()
 	client.HTTPClient = &http.Client{Timeout: sendRequestTimeout}
 	client.RetryWaitMin = minRetryWait
 	client.RetryMax = retryAttemps
 	// client.Logger = settings.APILog
 
-	// оборачивание запроса для auto-retry
+	// wrap request for auto-retry
 	retryReq, err := retryHTTP.FromRequest(req)
 	if err != nil {
-		return httpError.NewHTTPError(500, fmt.Sprintf("failed to wrap request for retry: %v", err))
+		return httpError.NewHTTPError(500, "failed to wrap request for retry", err)
 	}
-	// отправка запроса
+	// send request
 	resp, err := client.Do(retryReq)
 	if err != nil {
-		return httpError.NewHTTPError(500, fmt.Sprintf("failed to do request: %v", err))
+		return httpError.NewHTTPError(500, "failed to do request", err)
 	}
 	defer resp.Body.Close()
-	// если получен ответ с ошибкой
+	// if error reqponse was received
 	if resp.StatusCode != 200 {
-		// парсинг ошибки
 		return this.parseError(resp)
 	}
 
-	// при успешном запросе - декодирование ответа в структуру
+	// if request is success - decode reqponse to struct
 	bytesData, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return httpError.NewHTTPError(500, fmt.Sprintf("failed to read answer: %v", err))
+		return httpError.NewHTTPError(500, "failed to read answer", err)
 	}
 	if err := this.jsonify.Unmarshal(bytesData, outStruct); err != nil {
-		return httpError.NewHTTPError(500, fmt.Sprintf("failed to decode answer: %v", err))
+		return httpError.NewHTTPError(500, "failed to decode answer", err)
 	}
 	return nil
 }

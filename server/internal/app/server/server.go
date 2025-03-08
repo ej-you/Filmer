@@ -20,20 +20,20 @@ import (
 	"Filmer/server/config"
 )
 
-// интерфейс сервера
+// Server interface
 type Server interface {
 	Run()
 }
 
 
-// fiber сервер
+// Fiber server
 type fiberServer struct {
 	cfg			*config.Config
 	log			logger.Logger
 	jsonify		jsonify.JSONify
 }
 
-// конструктор для типа интерфейса сервера
+// Server constructor
 func NewServer(cfg *config.Config) Server {
 	return &fiberServer{
 		cfg: cfg,
@@ -62,7 +62,7 @@ func NewServer(cfg *config.Config) Server {
 //	@name						Authorization
 //	@description				JWT security accessToken. Please, add it in the format "Bearer {AccessToken}" to authorize your requests.
 func (this fiberServer) Run() {
-	// инициализация приложения
+	// app init
 	fibertApp := fiber.New(fiber.Config{
 		AppName: fmt.Sprintf("%s v1.0.0", this.cfg.App.Name),
 		ErrorHandler: utils.CustomErrorHandler,
@@ -73,33 +73,35 @@ func (this fiberServer) Run() {
 		ServerHeader: this.cfg.App.Name,
 	})
 
-	// инициализация клиента БД
+	// DB client init
 	appDB := database.NewCockroachClient(this.cfg, this.log)
-	// инициализация кэша
+	// cache init
 	appCache := cache.NewCache(this.cfg, this.log)
-	// инициализация валидатора для входных данных
-	valid := validator.NewValidator()
+	// input data validator init
+	validator := validator.NewValidator()
 
-	// настройка базовых middlewares
+	// set up base middlewares
 	mwManager := middlewares.NewMiddlewareManager(this.cfg, appDB, appCache)
 	fibertApp.Use(mwManager.Logger())
 	fibertApp.Use(mwManager.Recover())
 	fibertApp.Use(mwManager.CORS())
 	fibertApp.Use(mwManager.Swagger())
-	
-	// настройка обработчиков
+
+	// set up handlers
 	apiV1 := fibertApp.Group("/api/v1")
-	authRouter := authHTTP.NewAuthRouter(this.cfg, appDB, appCache, valid, mwManager)
+	// auth
+	authHandlerManager := authHTTP.NewAuthHandlerManager(this.cfg, appDB, appCache, validator)
+	authRouter := authHTTP.NewAuthRouter(mwManager, authHandlerManager)
 	authRouter.SetRoutes(apiV1.Group("/user"))
 
-	// запуск сервера
+	// start server
 	go func() {
 		if err := fibertApp.Listen(fmt.Sprintf(":%s", this.cfg.App.Port)); err != nil {
 			this.log.Fatal("[FATAL] failed to start server:", err)
 		}	
 	}()
 
-	// обработка завершения процессов
+	// handle shutdown process signals
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit,
 		syscall.SIGHUP,
@@ -109,7 +111,7 @@ func (this fiberServer) Run() {
 	)
 	<-quit
 
-	// завершение работы сервера
+	// shutdown server
 	if err := fibertApp.Shutdown(); err != nil {
 		this.log.Fatal("[FATAL] failed to shutdown server:", err)
 	}

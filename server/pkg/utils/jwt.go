@@ -12,7 +12,7 @@ import (
 )
 
 
-// выдача нового токена для юзера
+// Generate new access token for user
 func ObtainToken(cfg *config.Config, userID uuid.UUID) (string, error) {
 	tokenStruct := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": userID,
@@ -21,13 +21,13 @@ func ObtainToken(cfg *config.Config, userID uuid.UUID) (string, error) {
 
 	tokenString, err := tokenStruct.SignedString([]byte(cfg.App.JwtSecret))
 	if err != nil {
-		return "", httpError.NewHTTPError(500, "failed to obtain token: " + err.Error())
+		return "", httpError.NewHTTPError(500, "failed to obtain token", err)
 	}
 	return tokenString, nil
 }
 
 
-// парсинг ID юзера из токена, сохранённого в контексте
+// Parse user ID from token saved in context
 func ParseUserIDFromContext(ctx *fiber.Ctx) uuid.UUID {
 	stringUserID, _ := ctx.Locals("accessToken").(*jwt.Token).Claims.GetSubject()
 	// claims := accessToken.Claims.(jwt.MapClaims)
@@ -35,7 +35,7 @@ func ParseUserIDFromContext(ctx *fiber.Ctx) uuid.UUID {
 	return uuid.MustParse(stringUserID)
 }
 
-// парсинг токена, сохранённого в контексте
+// Parse token saved in context
 func ParseRawTokenFromContext(ctx *fiber.Ctx) string {
 	return ctx.Locals("accessToken").(*jwt.Token).Raw
 }

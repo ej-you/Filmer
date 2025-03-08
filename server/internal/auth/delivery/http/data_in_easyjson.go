@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson8e1dc130DecodeFilmerServerInternalAuthDeliveryHttp(in *jlexer.Lexer, out *signUpIn) {
+func easyjson8e1dc130DecodeFilmerServerInternalAuthDeliveryHttp(in *jlexer.Lexer, out *authIn) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -50,7 +50,7 @@ func easyjson8e1dc130DecodeFilmerServerInternalAuthDeliveryHttp(in *jlexer.Lexer
 		in.Consumed()
 	}
 }
-func easyjson8e1dc130EncodeFilmerServerInternalAuthDeliveryHttp(out *jwriter.Writer, in signUpIn) {
+func easyjson8e1dc130EncodeFilmerServerInternalAuthDeliveryHttp(out *jwriter.Writer, in authIn) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -68,98 +68,25 @@ func easyjson8e1dc130EncodeFilmerServerInternalAuthDeliveryHttp(out *jwriter.Wri
 }
 
 // MarshalJSON supports json.Marshaler interface
-func (v signUpIn) MarshalJSON() ([]byte, error) {
+func (v authIn) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
 	easyjson8e1dc130EncodeFilmerServerInternalAuthDeliveryHttp(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
-func (v signUpIn) MarshalEasyJSON(w *jwriter.Writer) {
+func (v authIn) MarshalEasyJSON(w *jwriter.Writer) {
 	easyjson8e1dc130EncodeFilmerServerInternalAuthDeliveryHttp(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
-func (v *signUpIn) UnmarshalJSON(data []byte) error {
+func (v *authIn) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
 	easyjson8e1dc130DecodeFilmerServerInternalAuthDeliveryHttp(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *signUpIn) UnmarshalEasyJSON(l *jlexer.Lexer) {
+func (v *authIn) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson8e1dc130DecodeFilmerServerInternalAuthDeliveryHttp(l, v)
-}
-func easyjson8e1dc130DecodeFilmerServerInternalAuthDeliveryHttp1(in *jlexer.Lexer, out *loginIn) {
-	isTopLevel := in.IsStart()
-	if in.IsNull() {
-		if isTopLevel {
-			in.Consumed()
-		}
-		in.Skip()
-		return
-	}
-	in.Delim('{')
-	for !in.IsDelim('}') {
-		key := in.UnsafeFieldName(false)
-		in.WantColon()
-		if in.IsNull() {
-			in.Skip()
-			in.WantComma()
-			continue
-		}
-		switch key {
-		case "email":
-			out.Email = string(in.String())
-		case "password":
-			out.Password = string(in.String())
-		default:
-			in.SkipRecursive()
-		}
-		in.WantComma()
-	}
-	in.Delim('}')
-	if isTopLevel {
-		in.Consumed()
-	}
-}
-func easyjson8e1dc130EncodeFilmerServerInternalAuthDeliveryHttp1(out *jwriter.Writer, in loginIn) {
-	out.RawByte('{')
-	first := true
-	_ = first
-	{
-		const prefix string = ",\"email\":"
-		out.RawString(prefix[1:])
-		out.String(string(in.Email))
-	}
-	{
-		const prefix string = ",\"password\":"
-		out.RawString(prefix)
-		out.String(string(in.Password))
-	}
-	out.RawByte('}')
-}
-
-// MarshalJSON supports json.Marshaler interface
-func (v loginIn) MarshalJSON() ([]byte, error) {
-	w := jwriter.Writer{}
-	easyjson8e1dc130EncodeFilmerServerInternalAuthDeliveryHttp1(&w, v)
-	return w.Buffer.BuildBytes(), w.Error
-}
-
-// MarshalEasyJSON supports easyjson.Marshaler interface
-func (v loginIn) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson8e1dc130EncodeFilmerServerInternalAuthDeliveryHttp1(w, v)
-}
-
-// UnmarshalJSON supports json.Unmarshaler interface
-func (v *loginIn) UnmarshalJSON(data []byte) error {
-	r := jlexer.Lexer{Data: data}
-	easyjson8e1dc130DecodeFilmerServerInternalAuthDeliveryHttp1(&r, v)
-	return r.Error()
-}
-
-// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *loginIn) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson8e1dc130DecodeFilmerServerInternalAuthDeliveryHttp1(l, v)
 }

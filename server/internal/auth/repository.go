@@ -6,12 +6,12 @@ import (
 
 
 type Repository interface {
-	CreateUser(user *entity.User) (*entity.User, error)
-	FindUserByEmail(user *entity.User) (*entity.User, error)
+	CreateUser(user *entity.User) error
+	GetUserByEmail(user *entity.User) error
 }
 
 
 type CacheRepository interface {
-	SetTokenToBlacklist(token string) error // cache cache.Cache, cfg *config.Config
-	TokenIsBlacklisted(token string) (bool, error) // cache cache.Cache
+	SetTokenToBlacklist(token string) error
+	TokenIsBlacklisted(token string) (bool, error)
 }

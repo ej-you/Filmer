@@ -13,14 +13,14 @@ import (
 )
 
 
-// интерфейс Cache для кэша приложения
+// Cache interface for app cache
 type Cache interface {
 	Set(key string, value any, expiration time.Duration) error
 	GetBool(key string) (bool, error)
 }
 
 
-// реализация кэша через redis
+// Cache implementation through Redis
 type redisCache struct {
 	cfg		*config.Config
 	redis	*goRedis.Client
@@ -29,21 +29,21 @@ type redisCache struct {
 var redisCacheInstance redisCache
 var once sync.Once
 
-// конструктор для типа интерфейса Cache
+// Cache constructor
 func NewCache(cfg *config.Config, log logger.Logger) Cache {
 	once.Do(func() {
 		log.Infof("Process %d is connecting to redis on %s...", os.Getpid(), cfg.Cache.ConnString)
 
-		// создание нового клиента
+		// create new client
 		redisCacheInstance.redis = goRedis.NewClient(&goRedis.Options{
 			Addr: cfg.Cache.ConnString,
 			DB: 0,
 		})
-		// контекст для выполнения запросов к redis
+		// redis requests context контекст для выполнения запросов к redis
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
 
-		// проверка подключения
+		// check connection
 		pong, err := redisCacheInstance.redis.Ping(ctx).Result()
 		if err != nil {
 			panic(err)
@@ -55,20 +55,20 @@ func NewCache(cfg *config.Config, log logger.Logger) Cache {
 	return &redisCacheInstance
 }
 
-// установка ключа-значения в redis с переданным временем просрочки
+// set key-value into redis with expiration time
 func (this redisCache) Set(key string, value any, expiration time.Duration) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 	return this.redis.Set(ctx, key, value, expiration).Err()
 }
 
-// получение bool значения из redis по ключу
+// get bool value from redis with key
 func (this redisCache) GetBool(key string) (bool, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 	value, err := this.redis.Get(ctx, key).Bool()
 
-	// если НЕ ошибка ненахождения значения по ключу
+	// if NOT "Not found" error
 	if err != nil && !goRedis.HasErrorPrefix(err, "redis: nil") {
 		return false, err
 	}

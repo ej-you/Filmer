@@ -7,7 +7,7 @@ import (
 )
 
 
-// интерфейс логера
+// Logger interface
 type Logger interface {
 	Debug(args ...any)
 	Debugf(template string, args ...any)
@@ -20,7 +20,7 @@ type Logger interface {
 }
 
 
-// структура логера
+// Logger implementation
 type appLogger struct {
 	debugLog *log.Logger
 	infoLog *log.Logger
@@ -31,7 +31,7 @@ type appLogger struct {
 var once sync.Once
 var logger = new(appLogger)
 
-// конструктор для типа интерфейса Logger
+// Logger constructor
 func NewLogger() Logger {
 	once.Do(func() {
 		logger.debugLog = log.New(os.Stdout, "[DEBUG]\t", log.Ldate|log.Ltime)

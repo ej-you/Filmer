@@ -14,14 +14,15 @@ import (
 )
 
 
-// тип интерфейса auth.Usecase
+// auth.Usecase interface implementation
 type authUsecase struct {
 	cfg 			*config.Config
 	authRepo 		auth.Repository
 	authCacheRepo	auth.CacheRepository
 }
 
-// конструктор для типа интерфейса auth.Usecase
+// auth.Usecase constructor
+// Returns auth.Usecase interface
 func NewUsecase(cfg *config.Config, authRepo auth.Repository, authCacheRepo auth.CacheRepository) auth.Usecase {
 	return &authUsecase{
 		cfg: cfg,
@@ -30,101 +31,103 @@ func NewUsecase(cfg *config.Config, authRepo auth.Repository, authCacheRepo auth
 	}
 }
 
+// Sign up new user
+// User email (user.Email) and password (user.Password) must be presented
+// Returns *entity.UserWithToken with filled given user struct and random-generated access token
 func (this authUsecase) SignUp(user *entity.User) (*entity.UserWithToken, error) {
-	// хэширование пароля и заполнение структуры
+	// hash password
 	passwordHash, err := this.encodePassword(user.Password)
 	if err != nil {
-		return nil, fmt.Errorf("sign up: %w", err)
+		return nil, fmt.Errorf("authUsecase.SignUp: %w", err)
 	}
 	user.Password = passwordHash
 
-	// создание юзера
-	createdUser, err := this.authRepo.CreateUser(user)
+	// create user
+	err = this.authRepo.CreateUser(user)
 	if err != nil {
-		return nil, fmt.Errorf("sign up: %w", err)
+		return nil, fmt.Errorf("authUsecase.SignUp: %w", err)
 	}
 
-	// генерация access токена
-	accessToken, err := utils.ObtainToken(this.cfg, createdUser.ID)
-	if err != nil {
-		return nil, fmt.Errorf("sign up: %w", err)
-	}
-
-	return &entity.UserWithToken{
-		User: createdUser,
-		AccessToken: accessToken,
-	}, nil
-}
-
-func (this authUsecase) Login(user *entity.User) (*entity.UserWithToken, error) {
-	// введённый юзером пароль
-	enteredPasswd := user.Password
-
-	// получение юзера из БД по email
-	existsUser, err := this.authRepo.FindUserByEmail(user)
-	if err != nil {
-		return nil, fmt.Errorf("login: %w", err)
-	}
-
-	// сверка введённого пароля с хэшем из БД
-	if !this.passwordIsCorrect(enteredPasswd, existsUser.Password) {
-		return nil, fmt.Errorf("login: %w", httpError.NewHTTPError(401, "invalid password"))
-	}
-	
-	// генерация access токена
+	// generate access token
 	accessToken, err := utils.ObtainToken(this.cfg, user.ID)
 	if err != nil {
-		return nil, fmt.Errorf("login: %w", err)
+		return nil, fmt.Errorf("authUsecase.SignUp: %w", err)
 	}
 
 	return &entity.UserWithToken{
-		User: existsUser,
+		User: user,
 		AccessToken: accessToken,
 	}, nil
 }
 
+// Log in existing user
+// User email (user.Email) and password (user.Password) must be presented
+// Returns *entity.UserWithToken with filled given user struct and random-generated access token
+func (this authUsecase) Login(user *entity.User) (*entity.UserWithToken, error) {
+	// password entered by user
+	enteredPasswd := user.Password
+
+	// get user from DB with email
+	err := this.authRepo.GetUserByEmail(user)
+	if err != nil {
+		return nil, fmt.Errorf("authUsecase.Login: %w", err)
+	}
+
+	// check entered password is correct
+	if !this.passwordIsCorrect(enteredPasswd, user.Password) {
+		return nil, httpError.NewHTTPError(401, "invalid password", fmt.Errorf("authUsecase.Login"))
+	}
+	
+	// generate access token
+	accessToken, err := utils.ObtainToken(this.cfg, user.ID)
+	if err != nil {
+		return nil, fmt.Errorf("authUsecase.Login: %w", err)
+	}
+
+	return &entity.UserWithToken{
+		User: user,
+		AccessToken: accessToken,
+	}, nil
+}
+
+// Log out user by set token to blacklist
 func (this authUsecase) Logout(token string) error {
-	// помещение токена в чёрный список
+	// put token to blacklist
 	if err := this.authCacheRepo.SetTokenToBlacklist(token); err != nil {
-		return fmt.Errorf("logout: %w", err)
+		return fmt.Errorf("authUsecase.Logout: %w", err)
 	}
 	return nil
 }
 
-func (this authUsecase) FindUserByEmail(user *entity.User) (*entity.User, error) {
-	// получение юзера из БД по email
-	foundUser, err := this.authRepo.FindUserByEmail(user)
-	if err != nil {
-		return nil, fmt.Errorf("find user by email: %w", err)
-	}
-	return foundUser, nil
-}
 
+// Restrict user access with a blacklisted token
+// Return error, if error occurs OR given token in blacklist
 func (this authUsecase) RestrictBlacklistedToken(token string) error {
-	// поиск токена в черном списке
+	// search token in blacklist
 	isBlacklisted, err := this.authCacheRepo.TokenIsBlacklisted(token)
 	if err != nil {
-		return fmt.Errorf("check blacklisted token: %w", err)
+		return fmt.Errorf("authUsecase.RestrictBlacklistedToken: %w", err)
 	}
-	// если токен в чёрном списке, то возвращаем ошибку на запрет доступа
+	// return forbidden error if token is in blacklist
 	if isBlacklisted {
-		return httpError.NewHTTPError(403, "token is not valid")
+		return httpError.NewHTTPError(403, "token is not valid", fmt.Errorf("authUsecase.RestrictBlacklistedToken"))
 	}
 	return nil
 }
 
-
-// кодирование пароля в хэш
+// Encode given password
+// Returns encoded password like a hash
 func (this authUsecase) encodePassword(password []byte) ([]byte, error) {
 	hash, err := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
 	if err != nil {
-		// скорее всего, ошибка из-за слишком длинного пароля
-		return nil, fmt.Errorf("failed to encode password: %w", err)
+		// probably, password is too long
+		return nil, httpError.NewHTTPError(400, "failed to encode password", err)
 	}
 	return hash, nil
 }
 
-// проверка введённого юзером пароля на совпадение с хэшем из БД
+// Check the given password is equal to its hash from DB
+// Returns true, if password is equal
 func (this authUsecase) passwordIsCorrect(password []byte, hash []byte) bool {
 	err := bcrypt.CompareHashAndPassword(hash, password)
 	return err == nil

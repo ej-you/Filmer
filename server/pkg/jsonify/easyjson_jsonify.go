@@ -7,22 +7,22 @@ import (
 )
 
 
-// интерфейс JSON-сериализатора
+// JSON-serializer interface
 type JSONify interface {
 	Marshal(v interface{}) ([]byte, error)
 	Unmarshal(data []byte, v interface{}) error
 }
 
 
-// easyjson JSON-сериализатор
+// easyjson JSON-serializer
 type easyjsonJSONify struct {}
 
-// конструктор для типа интерфейса JSONify
+// JSONify constructor
 func NewJSONify() JSONify {
 	return new(easyjsonJSONify)
 }
 
-// для сериализации JSON с помощью easyjson
+// serialize JSON with easyjson
 func (this easyjsonJSONify) Marshal(v interface{}) ([]byte, error) {
 	if m, ok := v.(easyjson.Marshaler); ok {
 		return easyjson.Marshal(m)
@@ -30,7 +30,7 @@ func (this easyjsonJSONify) Marshal(v interface{}) ([]byte, error) {
 	return nil, fmt.Errorf("the entity to serialize does not implement easyjson.Marshaler")
 }
 
-// для десериализации JSON с помощью easyjson
+// deserialize JSON with easyjson
 func (this easyjsonJSONify) Unmarshal(data []byte, v interface{}) error {
 	if um, ok := v.(easyjson.Unmarshaler); ok {
 		return easyjson.Unmarshal(data, um)

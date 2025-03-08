@@ -25,7 +25,7 @@ import (
 )
 
 
-// интерфейс со всеми необходимыми middleware для сервера
+// Interface with all necessary middlewares for server
 type MiddlewareManager interface {
 	Logger() fiber.Handler
 	Recover() fiber.Handler
@@ -35,13 +35,13 @@ type MiddlewareManager interface {
 }
 
 
-// хранит все необходимые middleware для сервера
+// MiddlewareManager interface implementation
 type appMiddlewareManager struct {
 	cfg		*config.Config
 	authUC	auth.Usecase
 }
 
-// конструктор для типа интерфейса MiddlewareManager
+// MiddlewareManager constructor
 func NewMiddlewareManager(cfg *config.Config, dbClient *gorm.DB, cache cache.Cache) MiddlewareManager {
 	authRepo := authRepository.NewRepository(dbClient)
 	authCacheRepo := authRepository.NewCacheRepository(cfg, cache)
@@ -53,7 +53,7 @@ func NewMiddlewareManager(cfg *config.Config, dbClient *gorm.DB, cache cache.Cac
 	}
 }
 
-// middleware для логирования запросов к серверу
+// Middleware for logging requests to server
 func (this appMiddlewareManager) Logger() fiber.Handler {
 	return fiberLogger.New(fiberLogger.Config{
 		TimeFormat: "2006-01-02T15:04:05-0700",
@@ -61,12 +61,12 @@ func (this appMiddlewareManager) Logger() fiber.Handler {
 	})
 }
 
-// middleware для восстановления паник для непрерывной работы
+// Middleware for panic recovery for continuous work
 func (this appMiddlewareManager) Recover() fiber.Handler {
 	return fiberRecover.New()
 }
 
-// middleware для настройки CORS
+// CORS middleware
 func (this appMiddlewareManager) CORS() fiber.Handler {
 	return fiberCORS.New(fiberCORS.Config{
 		AllowOrigins: this.cfg.App.CorsAllowedOrigins,
@@ -74,7 +74,7 @@ func (this appMiddlewareManager) CORS() fiber.Handler {
 	})
 }
 
-// middleware для Swagger документации
+// Middleware for Swagger docs
 func (this appMiddlewareManager) Swagger() fiber.Handler {
 	return swagger.New(swagger.Config{
 		BasePath:	"/api/v1/",
@@ -85,7 +85,7 @@ func (this appMiddlewareManager) Swagger() fiber.Handler {
 	})
 }
 
-// middleware для парсинга access JWT-токена из заголовка в контекст
+// Middleware for parsing access token from headers to context and validate it
 func (this appMiddlewareManager) JWTAuth() fiber.Handler {
 	return fiberJWT.New(fiberJWT.Config{
 		ContextKey: "accessToken",
@@ -93,23 +93,23 @@ func (this appMiddlewareManager) JWTAuth() fiber.Handler {
 		SuccessHandler: this.checkBlacklistedToken(),
 		ErrorHandler: func (ctx *fiber.Ctx, err error) error {
 			switch {
-				// если ошибка истёкшего токена
+				// if token expired error
 				case errors.Is(err, jwt.ErrTokenExpired):
-					err = httpError.NewHTTPError(403, "token is expired")
-				// если ошибка отсутствия токена
+					err = httpError.NewHTTPError(403, "token is expired", err)
+				// if token is missing
 				case errors.Is(err, fiberJWT.ErrJWTMissingOrMalformed):
-					err = httpError.NewHTTPError(401, "token is missing or malformed")
+					err = httpError.NewHTTPError(401, "token is missing or malformed", err)
 			}
 			return utils.CustomErrorHandler(ctx, err)
 		},
 	})
 }
 
-// middleware для отказа в запросе с авторизацией, если токен в чёрном списке в кэше
+// Next-step middleware after JWTAuth for restrict user access with blacklisted tokens
 func (this appMiddlewareManager) checkBlacklistedToken() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		token := utils.ParseRawTokenFromContext(ctx)
-		// проверяем токен на нахождение в черном списке
+		// check token is blacklisted
 		if err := this.authUC.RestrictBlacklistedToken(token); err != nil {
 			return err
 		}

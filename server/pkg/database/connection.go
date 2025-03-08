@@ -15,16 +15,12 @@ import (
 )
 
 
-// ошибка ненахождения записи
-var NotFoundError = gorm.ErrRecordNotFound
-
-
 var once sync.Once
-// соединение с БД
+// DB connection
 var dbConnection *gorm.DB
 
 
-// конструктор для получения соединения с БД
+// DB connection constructor
 func NewCockroachClient(cfg *config.Config, appLogger logger.Logger) *gorm.DB {
 	var err error
 	
@@ -34,11 +30,11 @@ func NewCockroachClient(cfg *config.Config, appLogger logger.Logger) *gorm.DB {
 		dbConnection, err = gorm.Open(postgres.New(postgres.Config{
 			DSN: cfg.Database.ConnString,
 		}), &gorm.Config{
-			// выставляем временную зону в UTC
+			// set UTC time zone
 			NowFunc: func() time.Time {
 				return time.Now().UTC()
 			},
-			// отключаем логирование NotFound ошибок
+			// disable NotFound errors logging
 			Logger: gormLogger.New(
 				log.New(os.Stderr, "[SQL ERROR]\t", log.Ldate|log.Ltime),
 				gormLogger.Config{

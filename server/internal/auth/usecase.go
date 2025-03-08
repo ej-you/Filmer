@@ -9,6 +9,5 @@ type Usecase interface {
 	SignUp(user *entity.User) (*entity.UserWithToken, error)
 	Login(user *entity.User) (*entity.UserWithToken, error)
 	Logout(token string) error
-	FindUserByEmail(user *entity.User) (*entity.User, error)
 	RestrictBlacklistedToken(token string) error
 }

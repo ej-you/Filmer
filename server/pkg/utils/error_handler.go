@@ -10,7 +10,6 @@ import (
 )
 
 
-// структура для возврата ошибки клиенту
 //easyjson:json
 type errorResponse struct {
 	StatusCode	int `json:"-"`
@@ -18,7 +17,7 @@ type errorResponse struct {
 }
 
 
-// кастомный обработчик ошибок
+// custom error handler for server
 func CustomErrorHandler(ctx *fiber.Ctx, err error) error {
 	logger.NewLogger().Error(err)
 
@@ -28,18 +27,18 @@ func CustomErrorHandler(ctx *fiber.Ctx, err error) error {
 	var httpErr httpError.HTTPError
 
 	switch {
-		// если ошибка *fiber.Error
+		// if *fiber.Error error
 		case errors.As(err, &fiberErr):
 			errResp.StatusCode = fiberErr.Code
 			errResp.Message = fiberErr.Message
-		// если ошибка httpError.HTTPError
+		// if httpError.HTTPError error
 		case errors.As(err, &httpErr):
 			errResp.StatusCode = httpErr.StatusCode()
-			errResp.Message = httpErr.Error()
+			errResp.Message = httpErr.UserFriendlyMessage()
 		default:
 			errResp.StatusCode = 500
 			errResp.Message = err.Error()
 	}
-	// отправка структуры ошибки
+	// send error response
 	return ctx.Status(errResp.StatusCode).JSON(errResp)
 }

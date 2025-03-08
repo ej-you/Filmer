@@ -3,14 +3,40 @@ package http
 import (
 	"fmt"
 
+	"gorm.io/gorm"
 	fiber "github.com/gofiber/fiber/v2"
 
 	"Filmer/server/internal/entity"
+	"Filmer/server/pkg/cache"
 	"Filmer/server/pkg/validator"
 	"Filmer/server/pkg/utils"
+	"Filmer/server/config"
 	
 	"Filmer/server/internal/auth"
+	"Filmer/server/internal/auth/usecase"
+	"Filmer/server/internal/auth/repository"
 )
+
+
+// Auth handlers manager
+type AuthHandlerManager struct {
+	validator	validator.Validator
+    authUC		auth.Usecase
+}
+
+// AuthHandlerManager constructor
+func NewAuthHandlerManager(cfg *config.Config, dbClient *gorm.DB, cacheClient cache.Cache,
+	validator validator.Validator) *AuthHandlerManager {
+
+	authRepo := repository.NewRepository(dbClient)
+	authCacheRepo := repository.NewCacheRepository(cfg, cacheClient)
+	authUC := usecase.NewUsecase(cfg, authRepo, authCacheRepo)
+
+	return &AuthHandlerManager{
+		validator: validator,
+		authUC: authUC,
+	}
+}
 
 
 //	@summary		Регистрация юзера
@@ -23,26 +49,26 @@ import (
 //	@param			SignUpIn	body		SignUpIn	true	"SignUpIn"
 //	@success		201			{object}	schemas.User
 //	@failure		409			"Юзер с введенной почтой уже зарегистрирован"
-func SignUp(authUC auth.Usecase, valid validator.Validator) fiber.Handler {
+func (this AuthHandlerManager) SignUp() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		var err error
-		dataIn := new(signUpIn)
+		dataIn := new(authIn)
 		user := new(entity.User)
 		dataOut := new(entity.UserWithToken)
 
-		// парсинг JSON-body
+		// parse JSON-body
 		if err = ctx.BodyParser(dataIn); err != nil {
 			return fmt.Errorf("sign up: %w", err)
 		}
-		// валидация полученной структуры
-		if err = valid.Validate(dataIn); err != nil {
+		// validate parsed data
+		if err = this.validator.Validate(dataIn); err != nil {
 			return fmt.Errorf("sign up: %w", err)
 		}
 
 		user.Email = dataIn.Email
 		user.Password = []byte(dataIn.Password)
-		// регистрация нового юзера
-		dataOut, err = authUC.SignUp(user)
+		// sign up new user
+		dataOut, err = this.authUC.SignUp(user)
 		if err != nil {
 			return err
 		}
@@ -61,26 +87,26 @@ func SignUp(authUC auth.Usecase, valid validator.Validator) fiber.Handler {
 //	@success		200		{object}	schemas.User
 //	@failure		401		"Неверный пароль для учетной записи юзера"
 //	@failure		404		"Юзер с введенной почтой не найден"
-func Login(authUC auth.Usecase, valid validator.Validator) fiber.Handler {
+func (this AuthHandlerManager) Login() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		var err error
-		dataIn := new(loginIn)
+		dataIn := new(authIn)
 		user := new(entity.User)
 		dataOut := new(entity.UserWithToken)
 
-		// парсинг JSON-body
+		// parse JSON-body
 		if err = ctx.BodyParser(dataIn); err != nil {
 			return fmt.Errorf("login user: %w", err)
 		}
-		// валидация полученной структуры
-		if err = valid.Validate(dataIn); err != nil {
+		// validate parsed data
+		if err = this.validator.Validate(dataIn); err != nil {
 			return fmt.Errorf("login user: %w", err)
 		}
 
 		user.Email = dataIn.Email
 		user.Password = []byte(dataIn.Password)
-		// вход существующего юзера
-		dataOut, err = authUC.Login(user)
+		// log in existing user
+		dataOut, err = this.authUC.Login(user)
 		if err != nil {
 			return err
 		}
@@ -97,13 +123,13 @@ func Login(authUC auth.Usecase, valid validator.Validator) fiber.Handler {
 //	@success		204	"No Content"
 //	@failure		401	"Пустой или неправильный токен"
 //	@failure		403	"Истекший или невалидный токен"
-func Logout(authUC auth.Usecase) fiber.Handler {
+func (this AuthHandlerManager) Logout() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		// получение access-токена
+		// parse access token
 		token := utils.ParseRawTokenFromContext(ctx)
 
-		// помещение токена в чёрный список
-		if err := authUC.Logout(token); err != nil {
+		// put token to blacklist
+		if err := this.authUC.Logout(token); err != nil {
 			return err
 		}
 		return ctx.Status(204).Send(nil)

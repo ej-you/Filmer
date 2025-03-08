@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"fmt"
-
 	"Filmer/server/pkg/cache"
 	"Filmer/server/config"
 	httpError "Filmer/server/pkg/http_error"
@@ -11,16 +9,17 @@ import (
 )
 
 
-const blacklistKeyPrefix = "token:blacklisted:" // префикс ключа для значений черного списка
+const blacklistKeyPrefix = "token:blacklisted:" // key prefix for blacklisted tokens values
 
 
-// тип интерфейса auth.CacheRepository
+// auth.CacheRepository interface implementation
 type authCacheRepository struct {
 	cfg			*config.Config
 	cacheClient	cache.Cache
 }
 
-// конструктор для типа интерфейса auth.CacheRepository
+// auth.CacheRepository constructor
+// Returns auth.CacheRepository interface
 func NewCacheRepository(cfg *config.Config, cacheClient cache.Cache) auth.CacheRepository {
 	return &authCacheRepository{
 		cfg: cfg,
@@ -28,21 +27,21 @@ func NewCacheRepository(cfg *config.Config, cacheClient cache.Cache) auth.CacheR
 	}
 }
 
-// установка ключа-значения в кэш со временем просрочки как у токена
+// Set token to blacklist expiring at cfg.App.TokenExpired time
 func (this authCacheRepository) SetTokenToBlacklist(token string) error {
 	err := this.cacheClient.Set(blacklistKeyPrefix+token, "true", this.cfg.App.TokenExpired)
 	if err != nil {
-	    return httpError.NewHTTPError(500, "failed to add token to blacklist: " + err.Error())
+	    return httpError.NewHTTPError(500, "failed to add token to blacklist", err)
 	}
 	return nil
 }
 
-
-// получение bool значения из кэша по ключу
+// Get bool value by given key-token
+// Returns true, if given token is blacklisted
 func (this authCacheRepository) TokenIsBlacklisted(token string) (bool, error) {
 	isBlacklisted, err := this.cacheClient.GetBool(blacklistKeyPrefix+token)
 	if err != nil {
-	    return false, fmt.Errorf("find in blacklist: %w", httpError.NewHTTPError(500, "failed to get token: " + err.Error()))
+	    return false, httpError.NewHTTPError(500, "failed to get blacklisted token", err)
 	}
 	return isBlacklisted, nil
 }

@@ -1,6 +1,7 @@
 package validator
 
 import (
+	"fmt"
 	"strings"
 
 	validatorModule "github.com/go-playground/validator/v10"
@@ -13,19 +14,19 @@ import (
 )
 
 
-// интерфейс валидатора для HTTP-запросов к REST API
+// Validator interface for HTTP requests to REST API
 type Validator interface {
 	Validate(s any) error
 }
 
 
-// структура для валидации входных данных
+// Validator implementation
 type restValidator struct {
 	validatorInstance	*validatorModule.Validate
 	translator			ut.Translator
 }
 
-// конструктор для валидатора
+// Validator constructor
 func NewValidator() Validator {
 	en := enLocale.New()
 	uni := ut.New(en, en)
@@ -37,20 +38,20 @@ func NewValidator() Validator {
 	return &restValidator{validate, trans}
 }
 
-// валидация переданной через указатель структуры s с обработкой ошибок валидации в HTTPError
+// Validate given struct s (using pointer to this struct) with error handling to HTTPError
 func (this restValidator) Validate(s any) error {
 	err := this.validatorInstance.Struct(s)
 	if err == nil { // NOT err
 		return nil
 	}
 
-	// приводим ошибку к validatorModule.ValidationErrors
+	// assert error to validatorModule.ValidationErrors
 	validateErrors := err.(validatorModule.ValidationErrors)
-	// обработка сообщений ошибки
+	// handle error messages
 	rawTranstaledMap := validateErrors.Translate(this.translator)
-	// для объединенной строки
+	// for concat string
 	transtaledStringSlice := make([]string, 0, len(rawTranstaledMap))
-	// перебор ошибок и конкатенация их в строку
+	// sort out errors and concat them into string
 	var tempSlice []string
 	var key string
 	for k, v := range rawTranstaledMap {
@@ -59,5 +60,5 @@ func (this restValidator) Validate(s any) error {
 
 		transtaledStringSlice = append(transtaledStringSlice, key+": "+v)
 	}
-	return httpError.NewHTTPError(400, strings.Join(transtaledStringSlice, " | "))
+	return httpError.NewHTTPError(400, strings.Join(transtaledStringSlice, " | "), fmt.Errorf("validate error"))
 }
