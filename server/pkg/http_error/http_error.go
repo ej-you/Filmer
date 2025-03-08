@@ -1,33 +1,42 @@
 package http_errors
 
 import (
-	fiber "github.com/gofiber/fiber/v2"
+	"fmt"
 )
 
 
-// интерфейс http ошибки
+// HTTPError interface
 type HTTPError interface {
 	Error() string
+	UserFriendlyMessage() string
 	StatusCode() int
 }
 
 
-// структура http ошибки
+// HTTPError interface implementation
 type HTTPErr struct {
-	fiberError *fiber.Error
+	statusCode	int
+	message		string
+	causeErr	error
 }
 
-// конструктор для типа интерфейса HTTPError
-func NewHTTPError(statusCode int, message string) HTTPError {
+// HTTPError constructor
+func NewHTTPError(statusCode int, message string, causeErr error) HTTPError {
 	return &HTTPErr{
-		fiberError: fiber.NewError(statusCode, message),
+		statusCode: statusCode,
+		message: message,
+		causeErr: causeErr,
 	}
 }
 
 func (this HTTPErr) StatusCode() int {
-	return this.fiberError.Code
+	return this.statusCode
+}
+
+func (this HTTPErr) UserFriendlyMessage() string {
+	return this.message
 }
 
 func (this HTTPErr) Error() string {
-	return this.fiberError.Message
+	return fmt.Sprintf("%s: %v", this.message, this.causeErr)
 }
