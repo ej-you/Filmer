@@ -52,4 +52,6 @@ type SearchedMovies struct {
 	Page	int `json:"page" example:"1"`
 	// all pages amount
 	Pages	int `json:"pages" example:"12"`
+	// keyword
+	Query	string `json:"query" example:"матрица"`
 }

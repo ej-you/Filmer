@@ -795,6 +795,8 @@ func easyjson163c17a9DecodeFilmerServerInternalEntity7(in *jlexer.Lexer, out *Se
 			out.Page = int(in.Int())
 		case "pages":
 			out.Pages = int(in.Int())
+		case "query":
+			out.Query = string(in.String())
 		default:
 			in.SkipRecursive()
 		}
@@ -844,6 +846,11 @@ func easyjson163c17a9EncodeFilmerServerInternalEntity7(out *jwriter.Writer, in S
 		const prefix string = ",\"pages\":"
 		out.RawString(prefix)
 		out.Int(int(in.Pages))
+	}
+	{
+		const prefix string = ",\"query\":"
+		out.RawString(prefix)
+		out.String(string(in.Query))
 	}
 	out.RawByte('}')
 }
