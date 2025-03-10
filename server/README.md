@@ -2,6 +2,7 @@
 
 
 ### Server part use `clean architecture` described in [README_ARCH](./docs/README_ARCH.md)
+### App description can be found [there](./docs/README_APP.md)
 
 ### Needed `env` variables:
 
