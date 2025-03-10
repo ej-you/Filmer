@@ -1,5 +1,8 @@
 .PHONY: migrations
 
+go_entrypoint_path="./cmd/app/main.go"
+server_runner_path="./internal/app/server/server.go"
+
 # URL to connect to DB for migrations
 db_url = "cockroach://$(DB_USER):$(DB_PASSWD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable"
 # title of migration
@@ -10,17 +13,17 @@ title = "migration"
 # --- #
 
 dev:
-	go run ./cmd/app/main.go
+	go run $(go_entrypoint_path)
 
 # ------- #
 # SWAGGER #
 # ------- #
 
 swagger-update:
-	@swag_v2 init
+	@swag_v2 init -g $(server_runner_path)
 
 swagger-fmt:
-	@swag_v2 fmt
+	@swag_v2 fmt -g $(server_runner_path)
 
 swagger: swagger-fmt swagger-update
 

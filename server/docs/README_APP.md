@@ -47,7 +47,7 @@ If movie was not found in DB, you get movie info from API, and gotten info is sa
 Also saved movie info to DB has expiration duration.
 If saved movie info is expired, app runs background update task for it.
 
-> _!! But you get outdated info first time after dtection of expiration !!_
+> _!! But you get outdated info first time after detection of expiration !!_
 
 * answer is using entity.UserMovie struct with loaded full info of entity.UserMovie.Movie substruct
 

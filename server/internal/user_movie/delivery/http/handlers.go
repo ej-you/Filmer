@@ -48,12 +48,12 @@ func NewUserMovieHandlerManager(cfg *config.Config, jsonify jsonify.JSONify, log
 
 //	@summary		Получение информации о фильме
 //	@description	Получение информации о фильме по его kinopoisk ID
-//	@router			/kinopoisk/films/{kinopoiskID} [get]
+//	@router			/films/full-info/{kinopoiskID} [get]
 //	@id				kinopoisk-get-film-info
-//	@tags			kinopoisk-films
+//	@tags			user-movie
 //	@security		JWT
 //	@param			kinopoiskID	path		int	true	"kinopoisk ID фильма"
-//	@success		200			{object}	schemas.UserMovie
+//	@success		200			{object}	entity.UserMovie
 //	@failure		401			"Пустой или неправильный токен"
 //	@failure		402			"Превышен дневной лимит запросов к Kinopoisk API"
 //	@failure		403			"Истекший или невалидный токен"
@@ -96,7 +96,7 @@ func (this UserMovieHandlerManager) GetUserMovie() fiber.Handler {
 //	@description	Получение избранных фильмов юзера с пагинацией и настраиваемой сортировкой и фильтрацией
 //	@router			/films/stared [get]
 //	@id				films-get-stared
-//	@tags			films
+//	@tags			user-movie
 //	@security		JWT
 //	@param			page		query		int			false	"страница поиска (Например: 1)"
 //	@param			sortField	query		string		false	"поле для сортировки (Например: year | По умолчанию: updated_at | Допустимые значения: title, rating, year, updated_at)"
@@ -106,7 +106,7 @@ func (this UserMovieHandlerManager) GetUserMovie() fiber.Handler {
 //	@param			yearTo		query		int			false	"максимальный год (Например: 2014 | Допустимые значения: 1500..3000)"
 //	@param			type		query		string		false	"тип фильма (Например: сериал | Допустимые значения: фильм, сериал, видео, мини-сериал)"
 //	@param			genres		query		[]string	false	"жанры фильмов (Например: боевик)"
-//	@success		200			{object}	schemas.UserMovie
+//	@success		200			{object}	entity.UserMoviesWithCategory
 //	@failure		401			"Пустой или неправильный токен"
 //	@failure		403			"Истекший или невалидный токен"
 func (this UserMovieHandlerManager) Stared() fiber.Handler {
@@ -120,7 +120,7 @@ func (this UserMovieHandlerManager) Stared() fiber.Handler {
 //	@description	Получение фильмов юзера из списка "хочу посмотреть" с пагинацией и настраиваемой сортировкой и фильтрацией
 //	@router			/films/want [get]
 //	@id				films-get-want
-//	@tags			films
+//	@tags			user-movie
 //	@security		JWT
 //	@param			page		query		int			false	"страница поиска (Например: 1)"
 //	@param			sortField	query		string		false	"поле для сортировки (Например: year | По умолчанию: updated_at | Допустимые значения: title, rating, year, updated_at)"
@@ -130,7 +130,7 @@ func (this UserMovieHandlerManager) Stared() fiber.Handler {
 //	@param			yearTo		query		int			false	"максимальный год (Например: 2014 | Допустимые значения: 1500..3000)"
 //	@param			type		query		string		false	"тип фильма (Например: сериал | Допустимые значения: фильм, сериал, видео, мини-сериал)"
 //	@param			genres		query		[]string	false	"жанры фильмов (Например: боевик)"
-//	@success		200			{object}	schemas.UserMovie
+//	@success		200			{object}	entity.UserMoviesWithCategory
 //	@failure		401			"Пустой или неправильный токен"
 //	@failure		403			"Истекший или невалидный токен"
 func (this UserMovieHandlerManager) Want() fiber.Handler {
@@ -144,7 +144,7 @@ func (this UserMovieHandlerManager) Want() fiber.Handler {
 //	@description	Получение фильмов юзера из списка "посмотрел" с пагинацией и настраиваемой сортировкой и фильтрацией
 //	@router			/films/watched [get]
 //	@id				films-get-watched
-//	@tags			films
+//	@tags			user-movie
 //	@security		JWT
 //	@param			page		query		int			false	"страница поиска (Например: 1)"
 //	@param			sortField	query		string		false	"поле для сортировки (Например: year | По умолчанию: updated_at | Допустимые значения: title, rating, year, updated_at)"
@@ -154,7 +154,7 @@ func (this UserMovieHandlerManager) Want() fiber.Handler {
 //	@param			yearTo		query		int			false	"максимальный год (Например: 2014 | Допустимые значения: 1500..3000)"
 //	@param			type		query		string		false	"тип фильма (Например: сериал | Допустимые значения: фильм, сериал, видео, мини-сериал)"
 //	@param			genres		query		[]string	false	"жанры фильмов (Например: боевик)"
-//	@success		200			{object}	schemas.UserMovie
+//	@success		200			{object}	entity.UserMoviesWithCategory
 //	@failure		401			"Пустой или неправильный токен"
 //	@failure		403			"Истекший или невалидный токен"
 func (this UserMovieHandlerManager) Watched() fiber.Handler {

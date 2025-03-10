@@ -43,11 +43,11 @@ func NewMovieHandlerManager(cfg *config.Config, jsonify jsonify.JSONify, logger 
 //	@description	Поиск фильмов по ключевому слову с пагинацией
 //	@router			/kinopoisk/films/search [get]
 //	@id				kinopoisk-search-films
-//	@tags			kinopoisk-films
+//	@tags			movie
 //	@security		JWT
 //	@param			q		query		string	true	"ключевое слово (Например: матрица)"
 //	@param			page	query		int		true	"страница поиска (Например: 1)"
-//	@success		200		{object}	kinopoiskAPI.SearchedFilms
+//	@success		200		{object}	entity.SearchedMovies
 //	@failure		401		"Пустой или неправильный токен"
 //	@failure		402		"Превышен дневной лимит запросов к Kinopoisk API"
 //	@failure		403		"Истекший или невалидный токен"

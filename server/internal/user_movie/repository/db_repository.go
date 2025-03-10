@@ -122,7 +122,7 @@ func (this userMovieRepository) GetUserMoviesWithCategory(userMoviesWithCategory
 		Preload("Movie.Genres")
 
 	// do select query
-	selectResult := selectQuery.Debug().Find(&userMoviesWithCategory.UserMovies)
+	selectResult := selectQuery.Find(&userMoviesWithCategory.UserMovies)
 	if err := selectResult.Error; err != nil {
 		return httpError.NewHTTPError(500, "failed to get user movies with category", err)
 	}

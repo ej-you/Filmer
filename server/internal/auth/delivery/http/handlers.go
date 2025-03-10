@@ -46,9 +46,9 @@ func NewAuthHandlerManager(cfg *config.Config, dbClient *gorm.DB, cacheClient ca
 //	@tags			user
 //	@accept			json
 //	@produce		json
-//	@param			SignUpIn	body		SignUpIn	true	"SignUpIn"
-//	@success		201			{object}	schemas.User
-//	@failure		409			"Юзер с введенной почтой уже зарегистрирован"
+//	@param			authIn	body		authIn	true	"authIn"
+//	@success		201		{object}	entity.UserWithToken
+//	@failure		409		"Юзер с введенной почтой уже зарегистрирован"
 func (this AuthHandlerManager) SignUp() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		var err error
@@ -83,8 +83,8 @@ func (this AuthHandlerManager) SignUp() fiber.Handler {
 //	@tags			user
 //	@accept			json
 //	@produce		json
-//	@param			LoginIn	body		LoginIn	true	"LoginIn"
-//	@success		200		{object}	schemas.User
+//	@param			authIn	body		authIn	true	"authIn"
+//	@success		200		{object}	entity.UserWithToken
 //	@failure		401		"Неверный пароль для учетной записи юзера"
 //	@failure		404		"Юзер с введенной почтой не найден"
 func (this AuthHandlerManager) Login() fiber.Handler {

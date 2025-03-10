@@ -14,10 +14,10 @@ import (
 //	@description	Добавление фильма юзера в избранное по ID фильма
 //	@router			/films/{movieID}/star [post]
 //	@id				films-set-star
-//	@tags			films
+//	@tags			user-movie
 //	@security		JWT
 //	@param			movieID	path		string	true	"ID фильма"
-//	@success		200		{object}	schemas.UserMovie
+//	@success		200		{object}	entity.UserMovie
 //	@failure		401		"Пустой или неправильный токен"
 //	@failure		403		"Истекший или невалидный токен"
 //	@failure		404		"Фильм не найден"
@@ -31,10 +31,10 @@ func (this UserMovieHandlerManager) Star() fiber.Handler {
 //	@description	Удаление фильма юзера из избранного по ID фильма
 //	@router			/films/{movieID}/unstar [post]
 //	@id				films-set-unstar
-//	@tags			films
+//	@tags			user-movie
 //	@security		JWT
 //	@param			movieID	path		string	true	"ID фильма"
-//	@success		200		{object}	schemas.UserMovie
+//	@success		200		{object}	entity.UserMovie
 //	@failure		401		"Пустой или неправильный токен"
 //	@failure		403		"Истекший или невалидный токен"
 //	@failure		404		"Фильм не найден"
@@ -48,10 +48,10 @@ func (this UserMovieHandlerManager) Unstar() fiber.Handler {
 //	@description	Удаление фильма юзера из списков "хочу посмотреть" и "посмотрел" по ID фильма
 //	@router			/films/{movieID}/clear [post]
 //	@id				films-set-clear
-//	@tags			films
+//	@tags			user-movie
 //	@security		JWT
 //	@param			movieID	path		string	true	"ID фильма"
-//	@success		200		{object}	schemas.UserMovie
+//	@success		200		{object}	entity.UserMovie
 //	@failure		401		"Пустой или неправильный токен"
 //	@failure		403		"Истекший или невалидный токен"
 //	@failure		404		"Фильм не найден"
@@ -65,10 +65,10 @@ func (this UserMovieHandlerManager) Clear() fiber.Handler {
 //	@description	Добавление фильма юзера в список "хочу посмотреть" по ID фильма
 //	@router			/films/{movieID}/want [post]
 //	@id				films-set-want
-//	@tags			films
+//	@tags			user-movie
 //	@security		JWT
 //	@param			movieID	path		string	true	"ID фильма"
-//	@success		200		{object}	schemas.UserMovie
+//	@success		200		{object}	entity.UserMovie
 //	@failure		401		"Пустой или неправильный токен"
 //	@failure		403		"Истекший или невалидный токен"
 //	@failure		404		"Фильм не найден"
@@ -82,10 +82,10 @@ func (this UserMovieHandlerManager) SetWant() fiber.Handler {
 //	@description	Добавление фильма юзера в список "посмотрел" по ID фильма
 //	@router			/films/{movieID}/watched [post]
 //	@id				films-set-watched
-//	@tags			films
+//	@tags			user-movie
 //	@security		JWT
 //	@param			movieID	path		string	true	"ID фильма"
-//	@success		200		{object}	schemas.UserMovie
+//	@success		200		{object}	entity.UserMovie
 //	@failure		401		"Пустой или неправильный токен"
 //	@failure		403		"Истекший или невалидный токен"
 //	@failure		404		"Фильм не найден"
