@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -28,11 +29,23 @@ func ObtainToken(cfg *config.Config, userID uuid.UUID) (string, error) {
 
 
 // Parse user ID from token saved in context
-func ParseUserIDFromContext(ctx *fiber.Ctx) uuid.UUID {
-	stringUserID, _ := ctx.Locals("accessToken").(*jwt.Token).Claims.GetSubject()
-	// claims := accessToken.Claims.(jwt.MapClaims)
-	// stringUserID := claims["userID"].(string)
-	return uuid.MustParse(stringUserID)
+func ParseUserIDFromContext(ctx *fiber.Ctx) (uuid.UUID, error) {
+	// parse token from ctx
+	accessToken, ok := ctx.Locals("accessToken").(*jwt.Token)
+	if !ok {
+		return uuid.Nil, httpError.NewHTTPError(500, "failed to parse access token", fmt.Errorf("failed to parse access token"))
+	}
+	// parse user ID from token as string
+	stringUserID, err := accessToken.Claims.GetSubject()
+	if err != nil {
+		return uuid.Nil, httpError.NewHTTPError(500, "failed to parse user id from token", err)
+	}
+	// convert string user ID to UUID
+	uuidUserID, err := uuid.Parse(stringUserID)
+	if err != nil {
+		return uuid.Nil, httpError.NewHTTPError(500, "failed to parse user id", err)
+	}
+	return uuidUserID, nil
 }
 
 // Parse token saved in context

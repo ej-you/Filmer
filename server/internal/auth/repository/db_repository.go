@@ -41,6 +41,7 @@ func (this authRepository) CreateUser(user *entity.User) error {
 }
 
 // Get user by email
+// User email (user.Email) must be presented
 // Fill given user struct
 // Returns error even if user not found
 func (this authRepository) GetUserByEmail(user *entity.User) error {

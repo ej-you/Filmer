@@ -10,6 +10,7 @@ import (
 
 	authHTTP "Filmer/server/internal/auth/delivery/http"
 	movieHTTP "Filmer/server/internal/movie/delivery/http"
+	userMovieHTTP "Filmer/server/internal/user_movie/delivery/http"
 
 	"Filmer/server/internal/app/middlewares"
 	"Filmer/server/pkg/cache"
@@ -98,6 +99,10 @@ func (this fiberServer) Run() {
 	movieHandlerManager := movieHTTP.NewMovieHandlerManager(this.cfg, this.jsonify, this.log, appDB, validator)
 	movieRouter := movieHTTP.NewMovieRouter(mwManager, movieHandlerManager)
 	movieRouter.SetRoutes(apiV1.Group("/kinopoisk/films"))
+	// user movie
+	userMovieHandlerManager := userMovieHTTP.NewUserMovieHandlerManager(this.cfg, this.jsonify, this.log, appDB, validator)
+	userMovieRouter := userMovieHTTP.NewUserMovieRouter(mwManager, userMovieHandlerManager)
+	userMovieRouter.SetRoutes(apiV1.Group("/films"))
 
 	// start server
 	go func() {

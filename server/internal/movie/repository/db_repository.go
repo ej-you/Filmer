@@ -26,6 +26,7 @@ func NewRepository(dbClient *gorm.DB) movie.Repository {
 }
 
 // Find movie (without getting info about it)
+// Must be presented movie ID (movie.ID)
 // Returns true, if movie with given ID was found in DB
 func (this movieRepository) CheckMovieExists(movie *entity.Movie) (bool, error) {
 	var foundMovie int64
@@ -42,6 +43,7 @@ func (this movieRepository) CheckMovieExists(movie *entity.Movie) (bool, error) 
 }
 
 // Get movie by its kinopoisk ID
+// Must be presented kinopoisk movie ID (movie.KinopoiskID)
 // Fill given movie struct
 // Returns true, if movie was found in DB, else false
 func (this movieRepository) GetMovieByKinopoiskID(movie *entity.Movie) (bool, error) {

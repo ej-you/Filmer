@@ -22,7 +22,7 @@ type UserMovie struct {
 	// last update time
 	UpdatedAt	time.Time	`gorm:"not null;type:TIMESTAMP" json:"-"`
 	
-	User		User	`gorm:"not null;foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"-"`
+	User		*User	`gorm:"not null;foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"-"`
 	Movie		*Movie	`gorm:"not null;foreignKey:MovieID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE" json:"movie,omitempty"`
 }
 func (UserMovie) TableName() string {
@@ -62,5 +62,5 @@ type UserMoviesWithCategory struct {
 	// pagination
 	Pagination	*UserMoviesPagination `json:"pagination"`
 	// found movies list
-	UserMovies	[]UserMovie `json:"films"`
+	UserMovies	[]UserMovie `json:"movies"`
 }

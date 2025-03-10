@@ -151,7 +151,7 @@ func easyjson163c17a9DecodeFilmerServerInternalEntity1(in *jlexer.Lexer, out *Us
 				}
 				(*out.Pagination).UnmarshalEasyJSON(in)
 			}
-		case "films":
+		case "movies":
 			if in.IsNull() {
 				in.Skip()
 				out.UserMovies = nil
@@ -221,7 +221,7 @@ func easyjson163c17a9EncodeFilmerServerInternalEntity1(out *jwriter.Writer, in U
 		}
 	}
 	{
-		const prefix string = ",\"films\":"
+		const prefix string = ",\"movies\":"
 		out.RawString(prefix)
 		if in.UserMovies == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
 			out.RawString("null")

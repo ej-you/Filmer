@@ -40,6 +40,7 @@ func NewKinopoiskWebAPIRepository(cfg *config.Config, jsonify jsonify.JSONify) m
 }
 
 // Search movies by keyword
+// Must be presented query (searchedMovies.Query) and page (searchedMovies.Page)
 // Fill given searchedMovies struct
 func (this movieKinopoiskWebAPIRepository) SearchMovies(searchedMovies *entity.SearchedMovies) error {
 	apiClient := kinopoiskAPI.NewKinopoiskAPI(
@@ -60,6 +61,7 @@ func (this movieKinopoiskWebAPIRepository) SearchMovies(searchedMovies *entity.S
 }
 
 // Get full movie info (including movie staff)
+// Must be presented kinopoisk movie ID (movie.KinopoiskID)
 // Fill given movie struct
 func (this movieKinopoiskWebAPIRepository) GetFullMovieByKinopoiskID(movie *entity.Movie) error {
 	var err error
@@ -67,6 +69,8 @@ func (this movieKinopoiskWebAPIRepository) GetFullMovieByKinopoiskID(movie *enti
 	if err = this.getMovieInfoByKinopoiskID(movie); err != nil {
 		return fmt.Errorf("get full movie: %w", err)
 	}
+	// init staff struct for movie
+	movie.Staff = new(entity.MovieStaff)
 	if err = this.getMovieStaffByMovieKinopoiskID(movie.KinopoiskID, movie.Staff); err != nil {
 		return fmt.Errorf("get full movie: %w", err)
 	}

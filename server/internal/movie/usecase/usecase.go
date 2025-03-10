@@ -54,6 +54,7 @@ func (this movieUsecase) CheckMovieExists(movie *entity.Movie) (bool, error) {
 }
 
 // Get movie by its kinopoisk ID
+// First try to find movie in DB. If there is no in DB then send request to API
 // Must be presented kinopoisk movie ID (movie.KinopoiskID)
 // Fill given movie struct
 // Returns true, if movie was found in DB, else false
