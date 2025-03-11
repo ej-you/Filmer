@@ -57,13 +57,15 @@ docker compose up -d
 
 ### Used tools:
 
-1. DB migrations with [migrate module](https://github.com/golang-migrate/migrate)
-2. Structs validation with [go-playground validator](https://github.com/go-playground/validator)
-3. JSON (de)serializer with [easyjson](https://github.com/mailru/easyjson)
-4. [Redis](https://github.com/redis/go-redis) as cache
-5. Swagger docs with [swaggo v2](https://github.com/swaggo/swag)
-6. [Fiber](https://docs.gofiber.io/) for RESTful API server
+1. [CockroachDB](https://www.cockroachlabs.com/) as main DB
+2. DB migrations with [migrate module](https://github.com/golang-migrate/migrate)
+3. [Redis](https://github.com/redis/go-redis) as cache
+4. [Fiber](https://docs.gofiber.io/) for RESTful API server
+5. Structs validation with [go-playground validator](https://github.com/go-playground/validator)
+6. JSON (de)serializer with [easyjson](https://github.com/mailru/easyjson)
 7. JWT as access token for user session
+8. Swagger docs with [swaggo v2](https://github.com/swaggo/swag)
+9. Golang linter - [golangci-lint](https://golangci-lint.run/)
 
 ### Third party:
 
