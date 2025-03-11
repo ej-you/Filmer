@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"fmt"
+	"net/http"
 
 	"Filmer/server/internal/entity"
 	"Filmer/server/internal/movie"
@@ -10,11 +11,10 @@ import (
 	userMovie "Filmer/server/internal/user_movie"
 )
 
-
 // userMovie.Usecase interface implementation
 type userMovieUsecase struct {
-	userMovieRepo 	userMovie.Repository
-	movieUC 		movie.Usecase
+	userMovieRepo userMovie.Repository
+	movieUC       movie.Usecase
 }
 
 // userMovie.Usecase constructor
@@ -22,7 +22,7 @@ type userMovieUsecase struct {
 func NewUsecase(userMovieRepo userMovie.Repository, movieUC movie.Usecase) userMovie.Usecase {
 	return &userMovieUsecase{
 		userMovieRepo: userMovieRepo,
-		movieUC: movieUC,
+		movieUC:       movieUC,
 	}
 }
 
@@ -30,16 +30,16 @@ func NewUsecase(userMovieRepo userMovie.Repository, movieUC movie.Usecase) userM
 // Must be presented kinopoisk movie ID (userMovie.Movie.KinopoiskID) and user ID (userMovie.UserID)
 // Fill given userMovie struct
 // Returns true, if movie was found in DB, else false
-func (this userMovieUsecase) GetUserMovieByKinopoiskID(userMovie *entity.UserMovie) error {
+func (umu userMovieUsecase) GetUserMovieByKinopoiskID(userMovie *entity.UserMovie) error {
 	// use movieUC to get movie info
-	foundInDB, err := this.movieUC.GetMovieByKinopoiskID(userMovie.Movie)
+	foundInDB, err := umu.movieUC.GetMovieByKinopoiskID(userMovie.Movie)
 	if err != nil {
 		return fmt.Errorf("userMovieUsecase.GetUserMovieByKinopoiskID: %w", err)
 	}
 	// find user movie if movie was found in DB
 	if foundInDB {
 		userMovie.MovieID = userMovie.Movie.ID
-		_, err = this.userMovieRepo.GetUserMovie(userMovie)
+		_, err = umu.userMovieRepo.GetUserMovie(userMovie)
 		if err != nil {
 			return fmt.Errorf("userMovieUsecase.GetUserMovieByKinopoiskID: %w", err)
 		}
@@ -50,22 +50,22 @@ func (this userMovieUsecase) GetUserMovieByKinopoiskID(userMovie *entity.UserMov
 // Set stared field of user movie to newStared value
 // Must be presented movie ID (userMovie.MovieID) and user ID (userMovie.UserID)
 // Fill given userMovie struct
-func (this userMovieUsecase) UpdateUserMovieStared(userMovie *entity.UserMovie, newStared bool) error {
+func (umu userMovieUsecase) UpdateUserMovieStared(userMovie *entity.UserMovie, newStared bool) error {
 	// init movie struct for user movie
 	userMovie.Movie = &entity.Movie{ID: userMovie.MovieID}
 
 	// check that movie with given id is exist in DB
-	exists, err := this.movieUC.CheckMovieExists(userMovie.Movie)
+	exists, err := umu.movieUC.CheckMovieExists(userMovie.Movie)
 	if err != nil {
 		return fmt.Errorf("userMovieUsecase.UpdateUserMovieStared: %w", err)
 	}
 	// if movie was not found
 	if !exists {
-		return httpError.NewHTTPError(404, "movie with given id was not found", fmt.Errorf("change movie stared to %v", newStared))
+		return httpError.NewHTTPError(http.StatusNotFound, "movie with given id was not found", fmt.Errorf("change movie stared to %v", newStared))
 	}
 
 	// get or create (if not exists) user movie
-	err = this.userMovieRepo.FindOrCreateUserMovie(userMovie)
+	err = umu.userMovieRepo.FindOrCreateUserMovie(userMovie)
 	if err != nil {
 		return fmt.Errorf("userMovieUsecase.UpdateUserMovieStared: %w", err)
 	}
@@ -75,7 +75,7 @@ func (this userMovieUsecase) UpdateUserMovieStared(userMovie *entity.UserMovie, 
 	}
 
 	// change stared value
-	err = this.userMovieRepo.UpdateUserMovieStared(userMovie, newStared)
+	err = umu.userMovieRepo.UpdateUserMovieStared(userMovie, newStared)
 	if err != nil {
 		return fmt.Errorf("userMovieUsecase.UpdateUserMovieStared: %w", err)
 	}
@@ -85,22 +85,22 @@ func (this userMovieUsecase) UpdateUserMovieStared(userMovie *entity.UserMovie, 
 // Set status field of user movie to newStatus value
 // Must be presented movie ID (userMovie.MovieID) and user ID (userMovie.UserID)
 // Fill given userMovie struct
-func (this userMovieUsecase) UpdateUserMovieStatus(userMovie *entity.UserMovie, newStatus int8) error {
+func (umu userMovieUsecase) UpdateUserMovieStatus(userMovie *entity.UserMovie, newStatus int8) error {
 	// init movie struct for user movie
 	userMovie.Movie = &entity.Movie{ID: userMovie.MovieID}
 
 	// check that movie with given id is exist in DB
-	exists, err := this.movieUC.CheckMovieExists(userMovie.Movie)
+	exists, err := umu.movieUC.CheckMovieExists(userMovie.Movie)
 	if err != nil {
 		return fmt.Errorf("userMovieUsecase.UpdateUserMovieStatus: %w", err)
 	}
 	// if movie was not found
 	if !exists {
-		return httpError.NewHTTPError(404, "movie with given id was not found", fmt.Errorf("change movie status to %v", newStatus))
+		return httpError.NewHTTPError(http.StatusNotFound, "movie with given id was not found", fmt.Errorf("change movie status to %v", newStatus))
 	}
 
 	// get or create (if not exists) user movie
-	err = this.userMovieRepo.FindOrCreateUserMovie(userMovie)
+	err = umu.userMovieRepo.FindOrCreateUserMovie(userMovie)
 	if err != nil {
 		return fmt.Errorf("userMovieUsecase.UpdateUserMovieStatus: %w", err)
 	}
@@ -110,7 +110,7 @@ func (this userMovieUsecase) UpdateUserMovieStatus(userMovie *entity.UserMovie, 
 	}
 
 	// change status value
-	err = this.userMovieRepo.UpdateUserMovieStatus(userMovie, newStatus)
+	err = umu.userMovieRepo.UpdateUserMovieStatus(userMovie, newStatus)
 	if err != nil {
 		return fmt.Errorf("userMovieUsecase.UpdateUserMovieStatus: %w", err)
 	}
@@ -120,11 +120,11 @@ func (this userMovieUsecase) UpdateUserMovieStatus(userMovie *entity.UserMovie, 
 // Get user movies in given category (stared || want || watched)
 // Must be presented category (userMoviesCat.Category) and user ID (userMoviesCat.UserID)
 // Fill given userMoviesCat struct
-func (this userMovieUsecase) GetUserMoviesWithCategory(userMoviesCat *entity.UserMoviesWithCategory) error {
+func (umu userMovieUsecase) GetUserMoviesWithCategory(userMoviesCat *entity.UserMoviesWithCategory) error {
 	if userMoviesCat.Category != "stared" && userMoviesCat.Category != "want" && userMoviesCat.Category != "watched" {
-		return httpError.NewHTTPError(500, "invalid movies category", fmt.Errorf("invalid movies category"))
+		return httpError.NewHTTPError(http.StatusInternalServerError, "invalid movies category", fmt.Errorf("invalid movies category"))
 	}
-	if err := this.userMovieRepo.GetUserMoviesWithCategory(userMoviesCat); err != nil {
+	if err := umu.userMovieRepo.GetUserMoviesWithCategory(userMoviesCat); err != nil {
 		return fmt.Errorf("userMovieUsecase.GetUserMoviesWithCategory: %w", err)
 	}
 	return nil

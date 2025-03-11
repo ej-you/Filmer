@@ -6,23 +6,25 @@ import (
 	"Filmer/server/internal/entity"
 )
 
-
-//easyjson:json
 // data for getting movie info
+//
+//easyjson:json
 type getFilmInfoIn struct {
 	// kinopoisk ID фильма
 	KinopoiskID int `params:"kinopoiskID" validate:"required"`
 }
 
-//easyjson:json
 // data for update movie category
+//
+//easyjson:json
 type setFilmCategoryIn struct {
 	// movie ID
 	MovieID uuid.UUID `params:"movieID" validate:"required" example:"86ae41a4-612a-4157-ba82-405872d1d264"`
 }
 
-//easyjson:json
 // data for getting user movie list with filter, sort and pagination
+//
+//easyjson:json
 type categoryFilmsIn struct {
 	// filter fields
 	entity.UserMoviesFilter

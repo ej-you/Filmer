@@ -6,26 +6,25 @@ import (
 	"Filmer/server/internal/app/middlewares"
 )
 
-
 // Auth router
 type AuthRouter struct {
-    mwManager			middlewares.MiddlewareManager
-    authHandlerManager	*AuthHandlerManager
+	mwManager          middlewares.MiddlewareManager
+	authHandlerManager *AuthHandlerManager
 }
 
 // AuthRouter constructor
 func NewAuthRouter(mwManager middlewares.MiddlewareManager, authHandlerManager *AuthHandlerManager) *AuthRouter {
-    return &AuthRouter{
-    	mwManager: mwManager,
-    	authHandlerManager: authHandlerManager,
-    }
+	return &AuthRouter{
+		mwManager:          mwManager,
+		authHandlerManager: authHandlerManager,
+	}
 }
 
-// Set routes for handlers in this.authHandlerManager
-func (this AuthRouter) SetRoutes(router fiber.Router) {
-	router.Post("/sign-up", this.authHandlerManager.SignUp())
-	router.Post("/login", this.authHandlerManager.Login())
+// Set routes for handlers in aRouter.authHandlerManager
+func (aRouter AuthRouter) SetRoutes(router fiber.Router) {
+	router.Post("/sign-up", aRouter.authHandlerManager.SignUp())
+	router.Post("/login", aRouter.authHandlerManager.Login())
 
-	restricted := router.Use(this.mwManager.JWTAuth())
-	restricted.Post("/logout", this.authHandlerManager.Logout())
+	restricted := router.Use(aRouter.mwManager.JWTAuth())
+	restricted.Post("/logout", aRouter.authHandlerManager.Logout())
 }

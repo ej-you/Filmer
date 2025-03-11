@@ -2,15 +2,15 @@ package repository
 
 import (
 	"errors"
+	"net/http"
 
 	"gorm.io/gorm"
 
 	"Filmer/server/internal/entity"
 	httpError "Filmer/server/pkg/http_error"
-	
+
 	"Filmer/server/internal/movie"
 )
-
 
 // movie.Repository interface implementation
 type movieRepository struct {
@@ -28,12 +28,12 @@ func NewRepository(dbClient *gorm.DB) movie.Repository {
 // Find movie (without getting info about it)
 // Must be presented movie ID (movie.ID)
 // Returns true, if movie with given ID was found in DB
-func (this movieRepository) CheckMovieExists(movie *entity.Movie) (bool, error) {
+func (mr movieRepository) CheckMovieExists(movie *entity.Movie) (bool, error) {
 	var foundMovie int64
 
-	selectCountResult := this.dbClient.Table(movie.TableName()).Where("id = ?", movie.ID).Count(&foundMovie)
+	selectCountResult := mr.dbClient.Table(movie.TableName()).Where("id = ?", movie.ID).Count(&foundMovie)
 	if err := selectCountResult.Error; err != nil {
-		return false, httpError.NewHTTPError(500, "failed to find movie with given id", err)
+		return false, httpError.NewHTTPError(http.StatusInternalServerError, "failed to find movie with given id", err)
 	}
 	// if movie was not found
 	if foundMovie == 0 {
@@ -46,15 +46,15 @@ func (this movieRepository) CheckMovieExists(movie *entity.Movie) (bool, error) 
 // Must be presented kinopoisk movie ID (movie.KinopoiskID)
 // Fill given movie struct
 // Returns true, if movie was found in DB, else false
-func (this movieRepository) GetMovieByKinopoiskID(movie *entity.Movie) (bool, error) {
-	selectResult := this.dbClient.
+func (mr movieRepository) GetMovieByKinopoiskID(movie *entity.Movie) (bool, error) {
+	selectResult := mr.dbClient.
 		Where("kinopoisk_id = ?", movie.KinopoiskID).
 		Preload("Genres").
 		First(movie)
 	if err := selectResult.Error; err != nil {
 		// if NOT "Not found" error
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			return false, httpError.NewHTTPError(500, "failed to get movie", err)
+			return false, httpError.NewHTTPError(http.StatusInternalServerError, "failed to get movie", err)
 		}
 		// if movie was not found
 		return false, nil
@@ -63,11 +63,11 @@ func (this movieRepository) GetMovieByKinopoiskID(movie *entity.Movie) (bool, er
 }
 
 // Create new movie in DB
-func (this movieRepository) SaveMovie(movie *entity.Movie) error {
+func (mr movieRepository) SaveMovie(movie *entity.Movie) error {
 	// save movie in DB
-	createResult := this.dbClient.Create(movie)
+	createResult := mr.dbClient.Create(movie)
 	if err := createResult.Error; err != nil {
-		return httpError.NewHTTPError(500, "failed to save movie", err)
+		return httpError.NewHTTPError(http.StatusInternalServerError, "failed to save movie", err)
 	}
 	return nil
 }

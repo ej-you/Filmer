@@ -6,24 +6,23 @@ import (
 	"sync"
 	"time"
 
-	"gorm.io/gorm"
 	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 	gormLogger "gorm.io/gorm/logger"
 
-	"Filmer/server/pkg/logger"
 	"Filmer/server/config"
+	"Filmer/server/pkg/logger"
 )
 
-
 var once sync.Once
+
 // DB connection
 var dbConnection *gorm.DB
-
 
 // DB connection constructor
 func NewCockroachClient(cfg *config.Config, appLogger logger.Logger) *gorm.DB {
 	var err error
-	
+
 	once.Do(func() {
 		appLogger.Infof("Process %d is connecting to CockroachDB node with %q", os.Getpid(), cfg.Database.ConnString)
 
@@ -38,14 +37,13 @@ func NewCockroachClient(cfg *config.Config, appLogger logger.Logger) *gorm.DB {
 			Logger: gormLogger.New(
 				log.New(os.Stderr, "[SQL ERROR]\t", log.Ldate|log.Ltime),
 				gormLogger.Config{
-					SlowThreshold: 200*time.Millisecond,
-					LogLevel: gormLogger.Warn,
+					LogLevel:                  gormLogger.Warn,
 					IgnoreRecordNotFoundError: true,
-					Colorful: true,
+					Colorful:                  true,
 				},
 			),
 		})
-		
+
 		if err != nil {
 			panic(err)
 		}

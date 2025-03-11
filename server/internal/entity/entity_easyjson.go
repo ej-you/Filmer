@@ -1310,7 +1310,7 @@ func easyjson163c17a9DecodeFilmerServerInternalEntity13(in *jlexer.Lexer, out *R
 		case "professionKey":
 			out.ProfessionKey = string(in.String())
 		case "posterUrl":
-			out.ImgUrl = string(in.String())
+			out.ImgURL = string(in.String())
 		default:
 			in.SkipRecursive()
 		}
@@ -1348,7 +1348,7 @@ func easyjson163c17a9EncodeFilmerServerInternalEntity13(out *jwriter.Writer, in 
 	{
 		const prefix string = ",\"posterUrl\":"
 		out.RawString(prefix)
-		out.String(string(in.ImgUrl))
+		out.String(string(in.ImgURL))
 	}
 	out.RawByte('}')
 }
@@ -1571,7 +1571,7 @@ func easyjson163c17a9DecodeFilmerServerInternalEntity15(in *jlexer.Lexer, out *P
 				*out.Role = string(in.String())
 			}
 		case "imgUrl":
-			out.ImgUrl = string(in.String())
+			out.ImgURL = string(in.String())
 		default:
 			in.SkipRecursive()
 		}
@@ -1608,7 +1608,7 @@ func easyjson163c17a9EncodeFilmerServerInternalEntity15(out *jwriter.Writer, in 
 	{
 		const prefix string = ",\"imgUrl\":"
 		out.RawString(prefix)
-		out.String(string(in.ImgUrl))
+		out.String(string(in.ImgURL))
 	}
 	out.RawByte('}')
 }

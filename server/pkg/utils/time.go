@@ -1,9 +1,11 @@
 package utils
 
-import "fmt"
-
+import (
+	"fmt"
+	"time"
+)
 
 // convert minutes to hours:minutes
 func RawMinutesToTime(minutes int) string {
-	return fmt.Sprintf("%d:%d", minutes/60, minutes%60)
+	return fmt.Sprintf("%d:%d", minutes/int(time.Hour.Minutes()), minutes%int(time.Hour.Minutes()))
 }

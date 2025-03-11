@@ -6,7 +6,6 @@ import (
 	"sync"
 )
 
-
 // Logger interface
 type Logger interface {
 	Debug(args ...any)
@@ -19,14 +18,12 @@ type Logger interface {
 	Fatalf(template string, args ...any)
 }
 
-
 // Logger implementation
 type appLogger struct {
 	debugLog *log.Logger
-	infoLog *log.Logger
+	infoLog  *log.Logger
 	errorLog *log.Logger
 }
-
 
 var once sync.Once
 var logger = new(appLogger)
@@ -41,34 +38,34 @@ func NewLogger() Logger {
 	return logger
 }
 
-func (this appLogger) Debug(args ...any) {
-	this.debugLog.Print(args...)
+func (l appLogger) Debug(args ...any) {
+	l.debugLog.Print(args...)
 }
 
-func (this appLogger) Debugf(template string, args ...any) {
-	this.debugLog.Printf(template, args...)
+func (l appLogger) Debugf(template string, args ...any) {
+	l.debugLog.Printf(template, args...)
 }
 
-func (this appLogger) Info(args ...any) {
-	this.infoLog.Println(args...)
+func (l appLogger) Info(args ...any) {
+	l.infoLog.Println(args...)
 }
 
-func (this appLogger) Infof(template string, args ...any) {
-	this.infoLog.Printf(template, args...)
+func (l appLogger) Infof(template string, args ...any) {
+	l.infoLog.Printf(template, args...)
 }
 
-func (this appLogger) Error(args ...any) {
-	this.errorLog.Println(args...)
+func (l appLogger) Error(args ...any) {
+	l.errorLog.Println(args...)
 }
 
-func (this appLogger) Errorf(template string, args ...any) {
-	this.errorLog.Printf(template, args...)
+func (l appLogger) Errorf(template string, args ...any) {
+	l.errorLog.Printf(template, args...)
 }
 
-func (this appLogger) Fatal(args ...any) {
-	this.errorLog.Fatal(args...)
+func (l appLogger) Fatal(args ...any) {
+	l.errorLog.Fatal(args...)
 }
 
-func (this appLogger) Fatalf(template string, args ...any) {
-	this.errorLog.Fatalf(template, args...)
+func (l appLogger) Fatalf(template string, args ...any) {
+	l.errorLog.Fatalf(template, args...)
 }

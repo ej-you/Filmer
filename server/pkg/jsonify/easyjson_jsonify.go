@@ -6,16 +6,14 @@ import (
 	"github.com/mailru/easyjson"
 )
 
-
 // JSON-serializer interface
 type JSONify interface {
 	Marshal(v interface{}) ([]byte, error)
 	Unmarshal(data []byte, v interface{}) error
 }
 
-
 // easyjson JSON-serializer
-type easyjsonJSONify struct {}
+type easyjsonJSONify struct{}
 
 // JSONify constructor
 func NewJSONify() JSONify {
@@ -23,7 +21,7 @@ func NewJSONify() JSONify {
 }
 
 // serialize JSON with easyjson
-func (this easyjsonJSONify) Marshal(v interface{}) ([]byte, error) {
+func (ej easyjsonJSONify) Marshal(v interface{}) ([]byte, error) {
 	if m, ok := v.(easyjson.Marshaler); ok {
 		return easyjson.Marshal(m)
 	}
@@ -31,7 +29,7 @@ func (this easyjsonJSONify) Marshal(v interface{}) ([]byte, error) {
 }
 
 // deserialize JSON with easyjson
-func (this easyjsonJSONify) Unmarshal(data []byte, v interface{}) error {
+func (ej easyjsonJSONify) Unmarshal(data []byte, v interface{}) error {
 	if um, ok := v.(easyjson.Unmarshaler); ok {
 		return easyjson.Unmarshal(data, um)
 	}

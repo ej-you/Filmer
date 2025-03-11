@@ -4,7 +4,6 @@ import (
 	"fmt"
 )
 
-
 // HTTPError interface
 type HTTPError interface {
 	Error() string
@@ -12,31 +11,30 @@ type HTTPError interface {
 	StatusCode() int
 }
 
-
 // HTTPError interface implementation
 type HTTPErr struct {
-	statusCode	int
-	message		string
-	causeErr	error
+	statusCode int
+	message    string
+	causeErr   error
 }
 
 // HTTPError constructor
 func NewHTTPError(statusCode int, message string, causeErr error) HTTPError {
 	return &HTTPErr{
 		statusCode: statusCode,
-		message: message,
-		causeErr: causeErr,
+		message:    message,
+		causeErr:   causeErr,
 	}
 }
 
-func (this HTTPErr) StatusCode() int {
-	return this.statusCode
+func (he HTTPErr) StatusCode() int {
+	return he.statusCode
 }
 
-func (this HTTPErr) UserFriendlyMessage() string {
-	return this.message
+func (he HTTPErr) UserFriendlyMessage() string {
+	return he.message
 }
 
-func (this HTTPErr) Error() string {
-	return fmt.Sprintf("%s: %v", this.message, this.causeErr)
+func (he HTTPErr) Error() string {
+	return fmt.Sprintf("%s: %v", he.message, he.causeErr)
 }

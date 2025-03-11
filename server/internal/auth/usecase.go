@@ -4,7 +4,6 @@ import (
 	"Filmer/server/internal/entity"
 )
 
-
 type Usecase interface {
 	SignUp(user *entity.User) (*entity.UserWithToken, error)
 	Login(user *entity.User) (*entity.UserWithToken, error)

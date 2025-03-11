@@ -12,6 +12,7 @@ import (
 	movieHTTP "Filmer/server/internal/movie/delivery/http"
 	userMovieHTTP "Filmer/server/internal/user_movie/delivery/http"
 
+	"Filmer/server/config"
 	"Filmer/server/internal/app/middlewares"
 	"Filmer/server/pkg/cache"
 	"Filmer/server/pkg/database"
@@ -19,7 +20,6 @@ import (
 	"Filmer/server/pkg/logger"
 	"Filmer/server/pkg/utils"
 	"Filmer/server/pkg/validator"
-	"Filmer/server/config"
 )
 
 // Server interface
@@ -27,19 +27,18 @@ type Server interface {
 	Run()
 }
 
-
 // Fiber server
 type fiberServer struct {
-	cfg			*config.Config
-	log			logger.Logger
-	jsonify		jsonify.JSONify
+	cfg     *config.Config
+	log     logger.Logger
+	jsonify jsonify.JSONify
 }
 
 // Server constructor
 func NewServer(cfg *config.Config) Server {
 	return &fiberServer{
-		cfg: cfg,
-		log: logger.NewLogger(),
+		cfg:     cfg,
+		log:     logger.NewLogger(),
 		jsonify: jsonify.NewJSONify(),
 	}
 }
@@ -59,31 +58,31 @@ func NewServer(cfg *config.Config) Server {
 //	@produce					json
 //	@query.collection.format	multi
 
-//	@securityDefinitions.apiKey	JWT
-//	@in							header
-//	@name						Authorization
-//	@description				JWT security accessToken. Please, add it in the format "Bearer {AccessToken}" to authorize your requests.
-func (this fiberServer) Run() {
+// @securityDefinitions.apiKey	JWT
+// @in							header
+// @name						Authorization
+// @description				JWT security accessToken. Please, add it in the format "Bearer {AccessToken}" to authorize your requests.
+func (s fiberServer) Run() {
 	// app init
 	fibertApp := fiber.New(fiber.Config{
-		AppName: fmt.Sprintf("%s v1.0.0", this.cfg.App.Name),
+		AppName:      fmt.Sprintf("%s v1.0.0", s.cfg.App.Name),
 		ErrorHandler: utils.CustomErrorHandler,
-		JSONEncoder: this.jsonify.Marshal,
-		JSONDecoder: this.jsonify.Unmarshal,
+		JSONEncoder:  s.jsonify.Marshal,
+		JSONDecoder:  s.jsonify.Unmarshal,
 		// https://www.f5.com/company/blog/nginx/socket-sharding-nginx-release-1-9-1
-		Prefork: false, //true,
-		ServerHeader: this.cfg.App.Name,
+		Prefork:      false, // true,
+		ServerHeader: s.cfg.App.Name,
 	})
 
 	// DB client init
-	appDB := database.NewCockroachClient(this.cfg, this.log)
+	appDB := database.NewCockroachClient(s.cfg, s.log)
 	// cache init
-	appCache := cache.NewCache(this.cfg, this.log)
+	appCache := cache.NewCache(s.cfg, s.log)
 	// input data validator init
 	validator := validator.NewValidator()
 
 	// set up base middlewares
-	mwManager := middlewares.NewMiddlewareManager(this.cfg, appDB, appCache)
+	mwManager := middlewares.NewMiddlewareManager(s.cfg, appDB, appCache)
 	fibertApp.Use(mwManager.Logger())
 	fibertApp.Use(mwManager.Recover())
 	fibertApp.Use(mwManager.CORS())
@@ -92,23 +91,23 @@ func (this fiberServer) Run() {
 	// set up handlers
 	apiV1 := fibertApp.Group("/api/v1")
 	// auth
-	authHandlerManager := authHTTP.NewAuthHandlerManager(this.cfg, appDB, appCache, validator)
+	authHandlerManager := authHTTP.NewAuthHandlerManager(s.cfg, appDB, appCache, validator)
 	authRouter := authHTTP.NewAuthRouter(mwManager, authHandlerManager)
 	authRouter.SetRoutes(apiV1.Group("/user"))
 	// movie
-	movieHandlerManager := movieHTTP.NewMovieHandlerManager(this.cfg, this.jsonify, this.log, appDB, validator)
+	movieHandlerManager := movieHTTP.NewMovieHandlerManager(s.cfg, s.jsonify, s.log, appDB, validator)
 	movieRouter := movieHTTP.NewMovieRouter(mwManager, movieHandlerManager)
 	movieRouter.SetRoutes(apiV1.Group("/kinopoisk/films"))
 	// user movie
-	userMovieHandlerManager := userMovieHTTP.NewUserMovieHandlerManager(this.cfg, this.jsonify, this.log, appDB, validator)
+	userMovieHandlerManager := userMovieHTTP.NewUserMovieHandlerManager(s.cfg, s.jsonify, s.log, appDB, validator)
 	userMovieRouter := userMovieHTTP.NewUserMovieRouter(mwManager, userMovieHandlerManager)
 	userMovieRouter.SetRoutes(apiV1.Group("/films"))
 
 	// start server
 	go func() {
-		if err := fibertApp.Listen(fmt.Sprintf(":%s", this.cfg.App.Port)); err != nil {
-			this.log.Fatal("[FATAL] failed to start server:", err)
-		}	
+		if err := fibertApp.Listen(fmt.Sprintf(":%s", s.cfg.App.Port)); err != nil {
+			s.log.Fatal("[FATAL] failed to start server:", err)
+		}
 	}()
 
 	// handle shutdown process signals
@@ -123,7 +122,7 @@ func (this fiberServer) Run() {
 
 	// shutdown server
 	if err := fibertApp.Shutdown(); err != nil {
-		this.log.Fatal("[FATAL] failed to shutdown server:", err)
+		s.log.Fatal("[FATAL] failed to shutdown server:", err)
 	}
-	this.log.Infof("Server process %d shutdown successfully!", os.Getpid())
+	s.log.Infof("Server process %d shutdown successfully!", os.Getpid())
 }
