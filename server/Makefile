@@ -15,15 +15,18 @@ title = "migration"
 dev:
 	go run $(go_entrypoint_path)
 
+lint:
+	golangci-lint run -c ./.golangci.yml ./...
+
 # ------- #
 # SWAGGER #
 # ------- #
 
 swagger-update:
-	@swag_v2 init -g $(server_runner_path)
+	@swag init -g $(server_runner_path)
 
 swagger-fmt:
-	@swag_v2 fmt -g $(server_runner_path)
+	@swag fmt -g $(server_runner_path)
 
 swagger: swagger-fmt swagger-update
 
