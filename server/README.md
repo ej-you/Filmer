@@ -64,7 +64,7 @@ docker compose up -d
 5. Structs validation with [go-playground validator](https://github.com/go-playground/validator)
 6. JSON (de)serializer with [easyjson](https://github.com/mailru/easyjson)
 7. JWT as access token for user session
-8. Swagger docs with [swaggo v2](https://github.com/swaggo/swag)
+8. Swagger docs with [swaggo](https://github.com/swaggo/swag)
 9. Golang linter - [golangci-lint](https://golangci-lint.run/)
 
 ### Third party:
