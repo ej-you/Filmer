@@ -9,6 +9,7 @@ import (
 
 	"Filmer/server/config"
 	"Filmer/server/internal/entity"
+	"Filmer/server/pkg/cache"
 	"Filmer/server/pkg/jsonify"
 	"Filmer/server/pkg/logger"
 	"Filmer/server/pkg/validator"
@@ -25,12 +26,13 @@ type MovieHandlerManager struct {
 }
 
 // MovieHandlerManager constructor
-func NewMovieHandlerManager(cfg *config.Config, jsonify jsonify.JSONify, logger logger.Logger, dbClient *gorm.DB,
+func NewMovieHandlerManager(cfg *config.Config, jsonify jsonify.JSONify, logger logger.Logger, dbClient *gorm.DB, cache cache.Cache,
 	validator validator.Validator) *MovieHandlerManager {
 
 	movieRepo := repository.NewRepository(dbClient)
+	movieCacheRepo := repository.NewCacheRepository(cache)
 	movieKinopoiskWebAPIRepo := repository.NewKinopoiskWebAPIRepository(cfg, jsonify)
-	movieUC := usecase.NewUsecase(cfg, logger, movieRepo, movieKinopoiskWebAPIRepo)
+	movieUC := usecase.NewUsecase(cfg, logger, movieRepo, movieCacheRepo, movieKinopoiskWebAPIRepo)
 
 	return &MovieHandlerManager{
 		validator: validator,

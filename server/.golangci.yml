@@ -69,6 +69,10 @@ issues:
       text: should rewrite http.NewRequestWithContext
       linters:
         - noctx
+    - path: pkg/utils/time\.go
+      text: "Magic number: 24, in <argument> detected"
+      linters:
+        - mnd
 
   fix: false
 

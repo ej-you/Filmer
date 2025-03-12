@@ -95,11 +95,11 @@ func (s fiberServer) Run() {
 	authRouter := authHTTP.NewAuthRouter(mwManager, authHandlerManager)
 	authRouter.SetRoutes(apiV1.Group("/user"))
 	// movie
-	movieHandlerManager := movieHTTP.NewMovieHandlerManager(s.cfg, s.jsonify, s.log, appDB, validator)
+	movieHandlerManager := movieHTTP.NewMovieHandlerManager(s.cfg, s.jsonify, s.log, appDB, appCache, validator)
 	movieRouter := movieHTTP.NewMovieRouter(mwManager, movieHandlerManager)
 	movieRouter.SetRoutes(apiV1.Group("/kinopoisk/films"))
 	// user movie
-	userMovieHandlerManager := userMovieHTTP.NewUserMovieHandlerManager(s.cfg, s.jsonify, s.log, appDB, validator)
+	userMovieHandlerManager := userMovieHTTP.NewUserMovieHandlerManager(s.cfg, s.jsonify, s.log, appDB, appCache, validator)
 	userMovieRouter := userMovieHTTP.NewUserMovieRouter(mwManager, userMovieHandlerManager)
 	userMovieRouter.SetRoutes(apiV1.Group("/films"))
 

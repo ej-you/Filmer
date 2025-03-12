@@ -12,7 +12,7 @@ CockroachDB store all data about users, movies, genres and user movies.
 <br>
 
 As a cache, Redis is used.
-Redis store blacklisted access tokens.
+Redis store blacklisted access tokens and api-limit-exhausted (then gotten 402 code from API)
 
 ## App description
 
@@ -65,3 +65,18 @@ There is supported filter and sort results.
 Answer is separated into pages of 10 movies per page.
 
 * answer is using entity.UserMoviesWithCategory struct with list of entity.UserMovie (with filling only light fields for entity.UserMovie.Movie)
+
+#### Extra
+
+Using API has limited access (official - 200 requests per day; unofficial - 500 requests per day).
+So, first time you got 402 error (while searching movies or getting movies info) from API.
+But after this app save api-limit-exhausted value to cache until the end of the current day and you got 402 error from app directly.
+
+<br>
+
+What this difficult way for?
+
+1. This way is more optimized (cache faster than HTTP request to remote API)
+2. This way does not imply unnecessary requests to the Kinopoisk APIs.
+
+> _Note:_ `api-limit-exhausted` values is different for official and unofficial APIs.

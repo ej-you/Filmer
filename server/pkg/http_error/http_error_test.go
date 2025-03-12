@@ -4,7 +4,6 @@ import (
 	"testing"
 )
 
-
 func TestHTTPErrorInterface(t *testing.T) {
 	t.Log("Try to init HTTPError")
 

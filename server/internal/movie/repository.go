@@ -11,6 +11,11 @@ type Repository interface {
 	SaveMovie(movie *entity.Movie) error
 }
 
+type CacheRepository interface {
+	SetAPILimit(apiName string) error
+	IsAPILimitExhausted(apiName string) (bool, error)
+}
+
 type KinopoiskWebAPIRepository interface {
 	SearchMovies(searchedMovies *entity.SearchedMovies) error
 	GetFullMovieByKinopoiskID(movie *entity.Movie) error
