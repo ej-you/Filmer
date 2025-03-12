@@ -13,30 +13,13 @@ services:
     container_name: filmer_cockroach
     volumes:
       - cockroach_data:/cockroach/cockroach-data:rw
-    expose:
-      - "26257"
     ports:
+      - "26257:26257"
       - "8080:8080"
     networks:
       filmer_network:
     command: "start-single-node --insecure"
     restart: always
-
-  server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    container_name: filmer_server
-    restart: always
-    env_file:
-      - ./server/.env
-    volumes:
-      - server_logs:/logs:rw
-    networks:
-      filmer_network:
-    depends_on:
-      - cockroach
-      - redis
 
 
 networks:
@@ -46,4 +29,3 @@ networks:
 
 volumes:
   cockroach_data:
-  server_logs:

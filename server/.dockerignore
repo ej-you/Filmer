@@ -1,0 +1,9 @@
+.env
+.golangci.yml
+
+Dockerfile
+Makefile
+
+README.md
+docs/README*
+docs/*.png

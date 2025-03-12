@@ -37,6 +37,7 @@ type (
 		Port       string `env-required:"true" env:"DB_PORT" env-description:"db port"`
 		Name       string `env-required:"true" env:"DB_NAME" env-description:"db name"`
 		ConnString string
+		ConnURL    string
 	}
 
 	KinopoiskAPI struct {
@@ -58,6 +59,13 @@ func NewConfig() *Config {
 		}
 		cfg.Database.ConnString = fmt.Sprintf(
 			"user=%s host=%s port=%s dbname=%s sslmode=disable",
+			cfg.Database.User,
+			cfg.Database.Host,
+			cfg.Database.Port,
+			cfg.Database.Name,
+		)
+		cfg.Database.ConnURL = fmt.Sprintf(
+			"cockroach://%s:@%s:%s/%s?sslmode=disable",
 			cfg.Database.User,
 			cfg.Database.Host,
 			cfg.Database.Port,
