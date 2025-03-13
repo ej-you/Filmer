@@ -32,6 +32,8 @@ services:
       - ./server/.env
     volumes:
       - server_logs:/logs:rw
+    ports:
+      - "3000:3000"
     networks:
       filmer_network:
     depends_on:

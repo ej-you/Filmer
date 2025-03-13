@@ -41,16 +41,15 @@ DB_NAME="filmer_db"
 1. Create database
 ```
 docker compose up -d cockroach
-docker exec -it cockroach ./cockroach sql --insecure --execute="CREATE DATABASE IF NOT EXISTS filmer_db;"
+docker exec -it filmer_cockroach ./cockroach sql --insecure --execute="CREATE DATABASE IF NOT EXISTS filmer_db;"
 ```
-2. Migrate DB (x2 one-step up)
-```
-make migrate-up
-make migrate-up
-```
-3. Up full app
+2. Up full app
 ```
 docker compose up -d
+```
+3. Migrate DB
+```
+docker exec -it filmer_server sh -c "/app/migrate_db"
 ```
 
 <hr>

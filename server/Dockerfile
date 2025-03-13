@@ -15,10 +15,8 @@ RUN go mod download
 # copy project files to container
 COPY . .
 
-# apply migrations
+# compile migrations maker
 RUN go build -o ./migrate_db ./cmd/app/migrate.go
-RUN /bin/sh /go/src/migrate_db
-
 # compile app
 RUN go build -o ./app_server ./cmd/app/main.go
 
@@ -33,6 +31,8 @@ RUN mkdir /logs
 
 WORKDIR /app
 # copy compiled file, files for swagger and wallet data
+COPY --from=build /go/src/migrate_db .
+COPY --from=build /go/src/migrations ./migrations
 COPY --from=build /go/src/app_server .
 COPY --from=build /go/src/docs ./docs
 

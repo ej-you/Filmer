@@ -13,6 +13,7 @@ import (
 func main() {
 	cfg := config.NewConfig()
 
+	fmt.Printf("Migrate DB %q\n", cfg.Database.ConnURL)
 	// load migrations and connect to DB
 	migrator, err := migrate.New("file://migrations", cfg.Database.ConnURL)
 	if err != nil {
@@ -20,7 +21,7 @@ func main() {
 	}
 	// make all up migrations
 	if err := migrator.Up(); err != nil {
-		fmt.Println("ERROR:", err)
+		fmt.Println("Warning: migrate error was handled:", err)
 	}
 	// close file and DB connection
 	fileCloseErr, dbCloseErr := migrator.Close()
@@ -30,4 +31,5 @@ func main() {
 	if dbCloseErr != nil {
 		panic(dbCloseErr)
 	}
+	fmt.Println("Migration is finished!")
 }

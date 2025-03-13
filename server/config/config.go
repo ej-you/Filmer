@@ -65,7 +65,7 @@ func NewConfig() *Config {
 			cfg.Database.Name,
 		)
 		cfg.Database.ConnURL = fmt.Sprintf(
-			"cockroach://%s:@%s:%s/%s?sslmode=disable",
+			"cockroach://%s@%s:%s/%s?sslmode=disable",
 			cfg.Database.User,
 			cfg.Database.Host,
 			cfg.Database.Port,
