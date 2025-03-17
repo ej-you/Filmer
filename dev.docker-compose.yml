@@ -13,8 +13,9 @@ services:
     container_name: filmer_cockroach
     volumes:
       - cockroach_data:/cockroach/cockroach-data:rw
+    expose:
+      - "26257"
     ports:
-      - "26257:26257"
       - "8080:8080"
     networks:
       filmer_network:

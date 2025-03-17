@@ -3,8 +3,8 @@ services:
     image: redis/redis-stack-server:6.2.6-v15
     container_name: filmer_redis
     restart: always
-    expose:
-      - "6379"
+    ports:
+      - "6380:6379"
     networks:
       filmer_network:
 
@@ -15,8 +15,7 @@ services:
       - cockroach_data:/cockroach/cockroach-data:rw
     expose:
       - "26257"
-    ports:
-      - "8080:8080"
+      - "8080"
     networks:
       filmer_network:
     command: "start-single-node --insecure"
@@ -32,13 +31,26 @@ services:
       - ./server/.env
     volumes:
       - server_logs:/logs:rw
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     networks:
       filmer_network:
     depends_on:
       - cockroach
       - redis
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: filmer_nginx
+    restart: always
+    expose:
+      "8050"
+    networks:
+      filmer_network:
+    depends_on:
+      - server
 
 
 networks:
