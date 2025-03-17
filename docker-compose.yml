@@ -6,7 +6,7 @@ services:
     expose:
       - "6379"
     networks:
-      filmer_network:
+      main_network:
 
   cockroach:
     image: cockroachdb/cockroach:v24.3.5
@@ -16,9 +16,9 @@ services:
     expose:
       - "26257"
     ports:
-      - "8881:8080"
+      - "127.0.0.1:8881:8080"
     networks:
-      filmer_network:
+      main_network:
     command: "start-single-node --insecure"
     restart: always
 
@@ -35,7 +35,7 @@ services:
     expose:
       - "3000"
     networks:
-      filmer_network:
+      main_network:
     depends_on:
       - cockroach
       - redis
@@ -47,15 +47,15 @@ services:
     container_name: filmer_nginx
     restart: always
     ports:
-      - "8801:80"
+      - "127.0.0.1:8801:80"
     networks:
-      filmer_network:
+      main_network:
     depends_on:
       - server
 
 
 networks:
-  filmer_network:
+  main_network:
     driver: bridge
 
 
