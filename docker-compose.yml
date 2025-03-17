@@ -16,7 +16,7 @@ services:
     expose:
       - "26257"
     ports:
-      - "8801:8080"
+      - "8881:8080"
     networks:
       filmer_network:
     command: "start-single-node --insecure"
@@ -46,8 +46,8 @@ services:
       dockerfile: Dockerfile
     container_name: filmer_nginx
     restart: always
-    expose:
-      - "8050"
+    ports:
+      - "8801:80"
     networks:
       filmer_network:
     depends_on:
