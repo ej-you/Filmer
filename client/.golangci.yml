@@ -1,0 +1,80 @@
+linters:
+  disable-all: true
+  enable:
+    - asciicheck
+    - bodyclose
+    - copyloopvar
+    - cyclop
+    - dogsled
+    - dupl
+    - errcheck
+    - errorlint
+    - funlen
+    - ginkgolinter
+    - gochecknoinits
+    - goconst
+    - gocritic
+    - gocyclo
+    - godox
+    - gofmt
+    - goimports
+    - goprintffuncname
+    - gosec
+    - ineffassign
+    - makezero
+    - misspell
+    - mnd
+    - nakedret
+    - nestif
+    - noctx
+    - prealloc
+    - revive
+    - unconvert
+    - unparam
+    - unused
+    - varnamelen
+    - whitespace
+
+
+linters-settings:
+  cyclop:
+    max-complexity: 10
+  errorlint:
+    comparison: true
+  goconst:
+    numbers: true
+    ignore-calls: false
+    ignore-strings: '.*?%s|%v|%w.*'
+  gocritic:
+    enable-all: true
+  gocyclo:
+    min-complexity: 10
+  nestif:
+    min-complexity: 3
+  prealloc:
+    simple: false
+    for-loops: true
+  whitespace:
+    multi-func: true
+
+issues:
+  exclude-dirs-use-default: false
+  exclude-dirs:
+    - docs
+  exclude-rules:
+    - linters:
+        - revive
+      text: "don't use an underscore in package name"
+    - path: third_party/kinopoisk_api/api_client\.go
+      text: should rewrite http.NewRequestWithContext
+      linters:
+        - noctx
+    - path: pkg/utils/time\.go
+      text: "Magic number: 24, in <argument> detected"
+      linters:
+        - mnd
+
+  fix: false
+
+run:
+  tests: false
