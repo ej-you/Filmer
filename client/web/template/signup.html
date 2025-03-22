@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="../static/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/base.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/signup.css">
+	<title>Sign up | Filmer</title>
+</head>
+<body>
+	<header>
+		<nav>
+			<div class="logo-container">
+				<button class="nav-elem logo"><a href="./index.html">
+					<img src="../static/img/favicon.ico" alt="logo">
+				</a></button>
+			</div>
+			<div class="right-nav-container">
+				<button class="nav-elem nav-text-button-elem">
+					<a href="#">search</a>
+				</button>
+				<button class="nav-elem nav-text-button-elem">
+					<a href="#">stared</a>
+					</button>
+				<button class="nav-elem nav-text-button-elem">
+					<a href="#">want</a>
+				</button>
+				<button class="nav-elem nav-text-button-elem">
+					<a href="#">watched</a>
+				</button>
+
+				<button class="nav-elem profile"><a href="./signup.html">
+					<img src="../static/img/profile.svg" alt="profile">
+				</a></button>
+			</div>
+		</nav>
+
+		<h1 class="title">Filmer</h1>
+	</header>
+
+	<div class="content">
+		<form action="#" method="post">
+			<div class="form-elem form-input-container">
+				<div class="form-elem form-input">
+					<label for="email">Email</label>
+					<input class="form-elem" type="text" id="email" name="email" placeholder="user@example.com">
+				</div>
+				<div class="form-elem form-input">
+					<label for="password">Password</label>
+					<input class="form-elem" type="password" id="password" name="password">
+				</div>
+				<div class="form-elem form-input">
+					<label for="password-confirm">Confirm password</label>
+					<input class="form-elem" type="password" id="password-confirm" name="password-confirm">
+				</div>
+			</div>
+			<button class="form-elem" type="submit">Sign up</button>
+
+			<div class="form-elem to-login">
+				<!-- <p>Do not have an account?</p> -->
+				<p>Already have an account?</p>
+				<a href="./login.html">Login</a>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

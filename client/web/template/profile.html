@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="../static/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/base.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/profile.css">
+	<title>Profile | Filmer</title>
+</head>
+<body>
+	<header>
+		<nav>
+			<div class="logo-container">
+				<button class="nav-elem logo"><a href="./index.html">
+					<img src="../static/img/favicon.ico" alt="logo">
+				</a></button>
+			</div>
+			<div class="right-nav-container">
+				<button class="nav-elem nav-text-button-elem">
+					<a href="#">search</a>
+				</button>
+				<button class="nav-elem nav-text-button-elem">
+					<a href="#">stared</a>
+					</button>
+				<button class="nav-elem nav-text-button-elem">
+					<a href="#">want</a>
+				</button>
+				<button class="nav-elem nav-text-button-elem">
+					<a href="#">watched</a>
+				</button>
+
+				<button class="nav-elem profile"><a href="./signup.html">
+					<img src="../static/img/profile.svg" alt="profile">
+				</a></button>
+			</div>
+		</nav>
+
+		<h1 class="title">Filmer</h1>
+	</header>
+
+	<div class="content">
+		<h4>You are already authorized as <span class="accent">user@gmail.com</span></h4>
+
+		<p id="session-expiration">
+			Your session expires in <span id="hours">2</span>h <span id="minutes">30</span>m <span id="seconds">45</span>s
+		</p>
+
+		<button class="link-button"><a href="#">Logout Now</a></button>
+	</div>
+
+	<!-- <img src="../static/img/non_poster.svg"> -->
+	<script type="text/javascript">
+		const sessionExpiration = document.getElementById("session-expiration");
+		const hours = document.getElementById("hours");
+		const minutes = document.getElementById("minutes");
+		const seconds = document.getElementById("seconds");
+
+		let expirationTime = new Date(0, 0, 0, parseInt(hours.textContent), parseInt(minutes.textContent), parseInt(seconds.textContent), 0)
+
+		function changeTime() {
+			// update date instance
+			expirationTime.setSeconds(expirationTime.getSeconds() - 1)
+
+			// get updated values
+			let timeHours = expirationTime.getHours()
+			let timeMinutes = expirationTime.getMinutes()
+			let timeSeconds = expirationTime.getSeconds()
+
+			// check if expiration time is over
+			if ((timeHours + timeMinutes + timeSeconds) == 0) {
+				sessionExpiration.textContent = "Your session has already expired!"
+				clearInterval(interval);
+			}
+
+			// update page view for user
+			hours.textContent = timeHours
+			minutes.textContent = timeMinutes
+			seconds.textContent = timeSeconds
+		};
+
+		// setInterval(changeTime, 1000);
+		const interval = setInterval(changeTime, 1000);
+	</script>
+</body>
+</html>
