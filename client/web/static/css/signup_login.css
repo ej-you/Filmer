@@ -48,18 +48,17 @@ button[type="submit"]:hover {
 	background-color: var(--gray);
 }
 
-.to-login {
+.to-signup,.to-login {
 	display: flex;
 	justify-content: center;
 }
-
-.to-login * {
+.to-signup *, .to-login * {
 	margin: auto 5px;
 }
 
-.to-login a {
+.to-signup a, .to-login a {
 	color: var(--light-red);
 }
-.to-login a:hover {
+.to-signup a:hover, .to-login a:hover {
 	text-decoration: underline;
 }
