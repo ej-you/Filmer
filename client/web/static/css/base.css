@@ -1,9 +1,12 @@
 :root {
-    --light-gray: #2e2e2e;
-    --gray: #2a2a2a;
-    --dark-gray: #1b1b1b;
-    --white: #ceceb5;
-    --light-red: #ab785b;
+	--white: #ceceb5;
+	--dark-white: #6f6f6f;
+	--light-gray: #2e2e2e;
+	--gray: #2a2a2a;
+	--dark-gray: #1b1b1b;
+	--light-black: #111111;
+
+	--light-red: #ab785b;
 }
 
 body {
@@ -104,6 +107,21 @@ nav {
 .content {
 	text-align: center;
 }
+.content > * {
+	margin: auto;
+}
+
+/* every movie poster border and size */
+.movie-poster {
+/* 	box-shadow: 0px 0px 25px 1px var(--light-black); */
+	height: 300px;
+	width: 200px;
+
+	flex-shrink: 0;
+	display: flex;
+	align-content: center;
+	align-self: center;
+}
 
 
 /* for width to 750px and less */
@@ -126,6 +144,11 @@ nav {
 	.nav-menu-button-elem a svg {
 		height: 27px;
 		width: 27px;
+	}
+
+	.movie-poster {
+		height: 165px;
+		width: 110px;
 	}
 }
 

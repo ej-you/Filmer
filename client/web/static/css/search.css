@@ -1,0 +1,155 @@
+h3 {
+	font-size: 30px;
+	user-select: none;
+}
+
+.flex-content {
+	margin: auto 15px;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.flex-content > * {
+	margin-bottom: 15px;
+}
+
+.search-form {
+	width: 100%;
+
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.form-input {
+	flex-grow: 1;
+	margin-right: 10px;
+	height: 100%;
+	padding: 6px 5px;
+    min-width: 210px;
+
+
+	font-size: 20px;
+	border: solid 3px var(--light-gray);
+	border-radius: 15px;
+	color: var(--dark-white);
+
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.form-input > * {
+	margin: auto 10px;
+}
+.form-input input {
+	flex-grow: 1;
+}
+.form-input img {
+	height: 36px;
+	width: 36px;
+}
+
+/* submit button in form */
+button[type="submit"] {
+	margin-top: 0;
+	margin-bottom: 0;
+	display: inline-block;
+	height: 100%;
+
+	flex-shrink: 1;
+	padding: 13px 3%;
+
+	font-size: 23px;
+	border-radius: 15px;
+	background-color: var(--light-gray);
+	user-select: none;
+}
+button[type="submit"]:hover {
+	background-color: var(--gray);
+}
+
+.list-movies {
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 15px;
+}
+
+.movie {
+	display: flex;
+	padding: 20px;
+	gap: 20px;
+
+	flex-grow: 1;
+	min-width: 500px;
+
+	background-color: var(--dark-gray);
+	box-shadow: 0px 0px 25px 1px var(--light-black);
+	border-radius: 20px;
+}
+.movie > * {
+	margin-left: 0;
+}
+
+/* full movie info without poster */
+.movie-info {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+
+	align-items: flex-start;
+	flex-grow: 1;
+
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.movie-info-item {
+	display: flex;
+	align-items: baseline;
+
+	margin: 3px 0;
+}
+.movie-info-item label {
+	color: var(--light-red);
+	margin-right: 5px;
+}
+
+.movie-genre-list {
+	margin: 0;
+}
+.movie-genre-list ul {
+	display: flex;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+}
+.movie-genre-list ul li {
+	margin-left: 4px;
+	margin-right: 4px;
+}
+
+
+/* for width to 750px and less */
+@media screen and (max-width: 750px) {
+	h3 {
+		font-size: 25px;
+	}
+
+	.flex-content {
+		margin: auto 10px;
+	}
+
+	.list-movies {
+		gap: 10px;
+	}
+
+	.movie {
+		min-width: 330px;
+	}
+
+	button[type="submit"] {
+		padding: 13px 5%;
+	}
+}

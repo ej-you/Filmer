@@ -4,7 +4,7 @@ let iconIsSet = false
 
 // switch menu buttons from text to icons
 function toIcons() {
-	console.log(`Изменение текста на иконки`);
+	console.log(`switch menu buttons from text to icons`);
 
 	document.querySelectorAll(".nav-menu-button-elem a").forEach((menuTextLink) => {
 		let linkID = menuTextLink.id;
@@ -33,7 +33,7 @@ function toIcons() {
 
 // switch menu buttons from icons to text
 function toText() {
-	console.log(`Изменение иконок на текст`);
+	console.log(`switch menu buttons from icons to text`);
 
 	document.querySelectorAll(".nav-menu-button-elem a").forEach((menuTextLink) => {
 		let linkID = menuTextLink.id;
