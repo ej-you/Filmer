@@ -6,6 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="../static/css/reset.css">
 	<link rel="stylesheet" type="text/css" href="../static/css/base.css">
 	<link rel="stylesheet" type="text/css" href="../static/css/profile.css">
+	<script type="text/javascript" src="../static/js/base.js"></script>
 	<title>Profile | Filmer</title>
 </head>
 <body>
@@ -17,21 +18,21 @@
 				</a></button>
 			</div>
 			<div class="right-nav-container">
-				<button class="nav-elem nav-text-button-elem">
-					<a href="#">search</a>
+				<button class="nav-elem nav-menu-button-elem">
+					<a id="menu-search-link" href="#">search</a>
 				</button>
-				<button class="nav-elem nav-text-button-elem">
-					<a href="#">stared</a>
-					</button>
-				<button class="nav-elem nav-text-button-elem">
-					<a href="#">want</a>
+				<button class="nav-elem nav-menu-button-elem">
+					<a id="menu-stared-link" href="#">stared</a>
 				</button>
-				<button class="nav-elem nav-text-button-elem">
-					<a href="#">watched</a>
+				<button class="nav-elem nav-menu-button-elem">
+					<a id="menu-want-link" href="#">want</a>
+				</button>
+				<button class="nav-elem nav-menu-button-elem">
+					<a id="menu-watched-link" href="#">watched</a>
 				</button>
 
 				<button class="nav-elem profile"><a href="./signup.html">
-					<img src="../static/img/profile.svg" alt="profile">
+					<img src="../static/img/header/profile.svg" alt="profile">
 				</a></button>
 			</div>
 		</nav>
@@ -50,37 +51,6 @@
 	</div>
 
 	<!-- <img src="../static/img/non_poster.svg"> -->
-	<script type="text/javascript">
-		const sessionExpiration = document.getElementById("session-expiration");
-		const hours = document.getElementById("hours");
-		const minutes = document.getElementById("minutes");
-		const seconds = document.getElementById("seconds");
-
-		let expirationTime = new Date(0, 0, 0, parseInt(hours.textContent), parseInt(minutes.textContent), parseInt(seconds.textContent), 0)
-
-		function changeTime() {
-			// update date instance
-			expirationTime.setSeconds(expirationTime.getSeconds() - 1)
-
-			// get updated values
-			let timeHours = expirationTime.getHours()
-			let timeMinutes = expirationTime.getMinutes()
-			let timeSeconds = expirationTime.getSeconds()
-
-			// check if expiration time is over
-			if ((timeHours + timeMinutes + timeSeconds) == 0) {
-				sessionExpiration.textContent = "Your session has already expired!"
-				clearInterval(interval);
-			}
-
-			// update page view for user
-			hours.textContent = timeHours
-			minutes.textContent = timeMinutes
-			seconds.textContent = timeSeconds
-		};
-
-		// setInterval(changeTime, 1000);
-		const interval = setInterval(changeTime, 1000);
-	</script>
+	<script type="text/javascript" src="../static/js/profile.js"></script>
 </body>
 </html>

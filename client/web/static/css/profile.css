@@ -23,3 +23,15 @@ p {
 .link-button a:hover {
 	background-color: var(--gray);
 }
+
+
+/* for width to 750px and less */
+@media screen and (max-width: 750px) {
+	h4 {
+		font-size: 21px;
+	}
+
+	.link-button a {
+		font-size: 20px;
+	}
+}

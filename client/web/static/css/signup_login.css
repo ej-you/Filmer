@@ -7,16 +7,19 @@ form {
 	margin: auto;
 }
 
+/* to set full-width for form elem */
 .form-elem {
 	width: 100%;
 }
 
+/* all inputs in form */
 .form-input-container {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 }
 
+/* every input in form */
 .form-input {
 	display: flex;
 	flex-direction: column;
@@ -36,6 +39,7 @@ label {
 	margin: 10px 10px 5px 10px;
 }
 
+/* submit button in form */
 button[type="submit"] {
 	margin: 40px 0 20px 0;
 	padding: 10px 25px;
@@ -43,11 +47,13 @@ button[type="submit"] {
 	font-size: 23px;
 	border-radius: 15px;
 	background-color: var(--light-gray);
+	user-select: none;
 }
 button[type="submit"]:hover {
 	background-color: var(--gray);
 }
 
+/* line with link to login/signup page under form */
 .to-signup,.to-login {
 	display: flex;
 	justify-content: center;
@@ -61,4 +67,15 @@ button[type="submit"]:hover {
 }
 .to-signup a:hover, .to-login a:hover {
 	text-decoration: underline;
+}
+
+/* for width to 750px and less */
+@media screen and (max-width: 750px) {
+	form {
+		width: 85%;
+	}
+
+	.link-button a {
+		font-size: 20px;
+	}
 }

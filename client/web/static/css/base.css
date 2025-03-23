@@ -16,10 +16,12 @@ body {
 h1 {
 	font-size: 55px;
 	font-weight: bold;
+	user-select: none;
 }
 
 a {
 	color: var(--white);
+	user-select: none;
 }
 
 header {
@@ -55,23 +57,33 @@ nav {
 .logo {
 	flex-grow: 1;
 }
-.logo a img {
+.logo a img, .profile a img {
 	width: 64px;
 }
 
 /* text button element of nav panel */
-.nav-text-button-elem {
+.nav-menu-button-elem {
 	margin: 10px 0;
 }
-.nav-text-button-elem a {
+.nav-menu-button-elem a {
 	border-radius: 20px;
 
-	height: 80%;
 	padding: 0 30px;
 	align-content: center;
+
+	display: flex;
+	align-items: center;
 }
-.nav-text-button-elem a:hover {
+/* .nav-menu-button-elem a:hover {
 	background-color: var(--light-gray);
+} */
+
+.nav-menu-button-elem a svg {
+	height: 36px;
+	width: 36px;
+}
+.nav-menu-button-elem a:hover svg {
+	fill: var(--light-red);
 }
 
 
@@ -92,3 +104,35 @@ nav {
 .content {
 	text-align: center;
 }
+
+
+/* for width to 750px and less */
+@media screen and (max-width: 750px) {
+	h1 {
+		font-size: 40px;
+	}
+
+	.nav-elem {
+		margin: 10px 9px;
+	}
+
+	.nav-menu-button-elem a {
+		padding: 0 5px;
+	}
+
+	.logo a img, .profile a img {
+		width: 48px;
+	}
+	.nav-menu-button-elem a svg {
+		height: 27px;
+		width: 27px;
+	}
+}
+
+/* for width from 750px and more */
+@media screen and (min-width: 750px) {
+	.nav-menu-button-elem a:hover {
+		background-color: var(--light-gray);
+	}
+}
+
