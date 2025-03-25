@@ -11,7 +11,7 @@ var userAuthData = repository.AuthIn{
 	Email:    "user1@gmail.com",
 	Password: "qwerty123",
 }
-var authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDI4MjE1NDQsInN1YiI6IjViNjk3OGVkLTZjYjQtNDk2Zi04ZGIzLTYzY2RlZDc5YTg1YyJ9.wf7S8UvU5mBenzdHIRwqwxjs0zs7ihC2qaUkxwPM1DY"
+var authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDI5Mjg0MzcsInN1YiI6IjViNjk3OGVkLTZjYjQtNDk2Zi04ZGIzLTYzY2RlZDc5YTg1YyJ9.a94t81PKNy6zFGPKVAYhTlXic5NEhTIbbUN4w-QzYRs"
 
 func TestSignUp(t *testing.T) {
 	t.Log("Test sign up with REST API")
@@ -55,4 +55,24 @@ func TestLogin(t *testing.T) {
 	}
 	t.Logf("Successfully login: %+v", apiResp)
 	authToken = (*apiResp)["accessToken"].(string)
+}
+
+func TestGetSearchMovies(t *testing.T) {
+	t.Log("Test search movies with REST API")
+
+	// init api client
+	cfg := config.NewConfig()
+	api := NewRestAPI(cfg)
+
+	// create query-params struct
+	query := repository.SearchMoviesIn{
+		Keyword: "матрица",
+		Page:    1,
+	}
+
+	apiResp, err := api.GetSearchMovies(authToken, &query)
+	if err != nil {
+		t.Fatalf("Searching movies failed: %v", err)
+	}
+	t.Logf("Successfully search movies: %+v", apiResp)
 }

@@ -1,164 +1,97 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="../static/css/reset.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/base.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/search.css">
-	<script type="text/javascript" src="../static/js/base.js"></script>
-	<title>Filmer</title>
-</head>
-<body>
-	<header>
-		<nav>
-			<div class="logo-container">
-				<button class="nav-elem logo"><a href="./index.html">
-					<img src="../static/img/favicon.ico" alt="logo">
-				</a></button>
-			</div>
-			<div class="right-nav-container">
-				<button class="nav-elem nav-menu-button-elem">
-					<a id="menu-search-link" href="./search.html">search</a>
-				</button>
-				<button class="nav-elem nav-menu-button-elem">
-					<a id="menu-stared-link" href="./stared.html">stared</a>
-				</button>
-				<button class="nav-elem nav-menu-button-elem">
-					<a id="menu-want-link" href="#">want</a>
-				</button>
-				<button class="nav-elem nav-menu-button-elem">
-					<a id="menu-watched-link" href="#">watched</a>
-				</button>
+{% extends "base.html" %}
 
-				<button class="nav-elem profile"><a href="./profile.html">
-					<img src="../static/img/profile.svg" alt="profile">
-				</a></button>
-			</div>
-		</nav>
+{% block css %}
+	<link rel="stylesheet" type="text/css" href="/static/css/search.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/pagination.css">
+{% endblock %}
 
-		<h1 class="title">Filmer</h1>
-	</header>
+{% block title %}Search | Filmer{% endblock %}
 
+{% block content %}
 	<div class="content flex-content">
 		<h3>Search movies</h3>
 
-		<form onsubmit="addQueryParamsToForm(this)" class="search-form" action="#" method="post">
+		<form onsubmit="addQueryParamsToForm(this)" class="search-form" action="/movie/search" method="get">
 			<div class="form-input">
-				<img src="../static/img/search.svg">
-				<input class="form-elem" type="text" id="search-keyword" name="search-keyword" placeholder="search movies">
+				<img src="/static/img/search.svg">
+				<input class="form-elem" type="text" id="search-keyword" name="q" placeholder="search movies">
 			</div>
 			<button class="form-elem" type="submit">Search</button>
 		</form>
 
 		<div class="list-movies">
+		{% for movie in docs %}
 			<div class="movie">
 				<div class="movie-poster">
-					<img src="../static/img/non_poster.svg">
+					<img src='{{ movie.poster.url|default:"/static/img/non_poster.svg" }}'>
 				</div>
-				<a class="movie-info" href="#{{kinopoiskID}}">
+				<a class="movie-info" href="#/user-movie/{{ movie.id|floatformat:0 }}">
 					<div class="movie-info-item">
 						<label class="movie-info-label">Title:</label>
-						<p>Матрица</p>
+						<p>{{ movie.name|default:"-" }}</p>
 					</div>
 
 					<div class="movie-info-item">
 						<label class="movie-info-label">Type:</label>
-						<p>фильм</p>
+						{% if movie.type == "" %}
+						    <p>-</p>
+						{% elif movie.type == "movie" %}
+							<p>фильм</p>
+						{% elif movie.type == "tv-series" %}
+							<p>сериал</p>
+						{% elif movie.type == "cartoon" %}
+							<p>мультфильм</p>
+						{% elif movie.type == "anime" %}
+							<p>аниме</p>
+						{% elif movie.type == "animated-series" %}
+							<p>мультсериал</p>
+						{% endif %}
 					</div>
 
 					<div class="movie-info-item">
 						<label class="movie-info-label">Rating:</label>
-						<p>8.5</p>
+						{% if movie.rating.kp == 0.0 %}
+						    <p>-</p>
+						{% else %}
+							<p>{{ movie.rating.kp|floatformat:1 }}</p>
+						{% endif %}
 					</div>
 
 					<div class="movie-info-item">
 						<label class="movie-info-label">Year:</label>
-						<p>1999</p>
+						{% if movie.year == 0.0 %}
+						    <p>-</p>
+						{% else %}
+							<p>{{ movie.year|floatformat:0 }}</p>
+						{% endif %}
 					</div>
 
 					<div class="movie-info-item movie-genre-list">
 						<label class="movie-info-label">Genres:</label>
 						<ul>
-							<li>боевик</li>
-							<li>фантастика</li>
-							<li>комедия</li>
-							<li>фентези</li>
+						{% if movie.genres|length == 0 %}
+							<li>-</li>
+						{% else %}
+							{% for genre in movie.genres %}
+								<li>{{ genre.name }}</li>
+							{% endfor %}
+						{% endif %}
 						</ul>
 					</div>
 				</a>
 			</div>
+		{% endfor %}
+		</div>
 
-			<div class="movie">
-				<div class="movie-poster">
-					<img src="../static/img/non_poster.svg">
-				</div>
-				<a class="movie-info" href="#{{kinopoiskID}}">
-					<div class="movie-info-item movie-title">
-						<label class="movie-info-label">Title:</label>
-						<p>Матрица</p>
-					</div>
+		<div id="pagination">
+			<p id="pagination-total" class="non-visible">{{ total }}</p>
+			<p id="pagination-pages" class="non-visible">{{ pages }}</p>
+			<p id="pagination-page" class="non-visible">{{ page }}</p>
 
-					<div class="movie-info-item movie-type">
-						<label class="movie-info-label">Type:</label>
-						<p>фильм</p>
-					</div>
-
-					<div class="movie-info-item movie-rating">
-						<label class="movie-info-label">Rating:</label>
-						<p>8.5</p>
-					</div>
-
-					<div class="movie-info-item movie-year">
-						<label class="movie-info-label">Year:</label>
-						<p>1999</p>
-					</div>
-
-					<div class="movie-info-item movie-genre-list">
-						<label class="movie-info-label">Genres:</label>
-						<ul>
-							<li>боевик</li>
-							<li>фантастика</li>
-						</ul>
-					</div>
-				</a>
-			</div>
-
-			<div class="movie">
-				<div class="movie-poster">
-					<img src="../static/img/non_poster.svg">
-				</div>
-				<a class="movie-info" href="#{{kinopoiskID}}">
-					<div class="movie-info-item movie-title">
-						<label class="movie-info-label">Title:</label>
-						<p>Матрица</p>
-					</div>
-
-					<div class="movie-info-item movie-type">
-						<label class="movie-info-label">Type:</label>
-						<p>фильм</p>
-					</div>
-
-					<div class="movie-info-item movie-rating">
-						<label class="movie-info-label">Rating:</label>
-						<p>8.5</p>
-					</div>
-
-					<div class="movie-info-item movie-year">
-						<label class="movie-info-label">Year:</label>
-						<p>1999</p>
-					</div>
-
-					<div class="movie-info-item movie-genre-list">
-						<label class="movie-info-label">Genres:</label>
-						<ul>
-							<li>боевик</li>
-							<li>фантастика</li>
-						</ul>
-					</div>
-				</a>
+			<div class="pages">
+				<div class="page-elem">1</div>
 			</div>
 		</div>
 	</div>
-</body>
-</html>
+	<script type="text/javascript" src="/static/js/pagination.js"></script>
+{% endblock %}

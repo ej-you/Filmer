@@ -4,9 +4,9 @@ package repository
 type RestAPI interface {
 	// user movie (GET)
 	GetMovie(authToken string, kinopoiskID int) (*APIResponse, error)
-	GetStared(authToken string, queryParams CategoryUserMoviesIn) (*APIResponse, error)
-	GetWant(authToken string, queryParams CategoryUserMoviesIn) (*APIResponse, error)
-	GetWatched(authToken string, queryParams CategoryUserMoviesIn) (*APIResponse, error)
+	GetStared(authToken string, queryParams *CategoryUserMoviesIn) (*APIResponse, error)
+	GetWant(authToken string, queryParams *CategoryUserMoviesIn) (*APIResponse, error)
+	GetWatched(authToken string, queryParams *CategoryUserMoviesIn) (*APIResponse, error)
 	// user movie (POST)
 	PostClear(authToken string, movieID string) (*APIResponse, error)
 	PostStar(authToken string, movieID string) (*APIResponse, error)
@@ -14,7 +14,7 @@ type RestAPI interface {
 	PostWant(authToken string, movieID string) (*APIResponse, error)
 	PostWatched(authToken string, movieID string) (*APIResponse, error)
 	// movie
-	GetSearchMovies(authToken string, queryParams SearchMoviesIn) (*APIResponse, error)
+	GetSearchMovies(authToken string, queryParams *SearchMoviesIn) (*APIResponse, error)
 	// user
 	Login(body AuthIn) (*APIResponse, error)
 	SignUp(body AuthIn) (*APIResponse, error)
@@ -30,8 +30,8 @@ type AuthIn struct {
 
 // Query-params for search movies
 type SearchMoviesIn struct {
-	Keyword string `json:"q"`
-	Page    int    `json:"page"`
+	Keyword string `query:"q"`
+	Page    int    `query:"page"`
 }
 
 // Query-params for get stared || want || watched movies

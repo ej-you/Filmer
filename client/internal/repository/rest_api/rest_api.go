@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"time"
 
 	fiber "github.com/gofiber/fiber/v2"
@@ -36,15 +37,15 @@ func (api restAPIClient) GetMovie(authToken string, kinopoiskID int) (*repositor
 	return nil, nil
 }
 
-func (api restAPIClient) GetStared(authToken string, queryParams repository.CategoryUserMoviesIn) (*repository.APIResponse, error) {
+func (api restAPIClient) GetStared(authToken string, queryParams *repository.CategoryUserMoviesIn) (*repository.APIResponse, error) {
 	return nil, nil
 }
 
-func (api restAPIClient) GetWant(authToken string, queryParams repository.CategoryUserMoviesIn) (*repository.APIResponse, error) {
+func (api restAPIClient) GetWant(authToken string, queryParams *repository.CategoryUserMoviesIn) (*repository.APIResponse, error) {
 	return nil, nil
 }
 
-func (api restAPIClient) GetWatched(authToken string, queryParams repository.CategoryUserMoviesIn) (*repository.APIResponse, error) {
+func (api restAPIClient) GetWatched(authToken string, queryParams *repository.CategoryUserMoviesIn) (*repository.APIResponse, error) {
 	return nil, nil
 }
 
@@ -68,8 +69,18 @@ func (api restAPIClient) PostWatched(authToken string, movieID string) (*reposit
 	return nil, nil
 }
 
-func (api restAPIClient) GetSearchMovies(authToken string, queryParams repository.SearchMoviesIn) (*repository.APIResponse, error) {
-	return nil, nil
+// Search movies using keyword (with paginaiton)
+func (api restAPIClient) GetSearchMovies(authToken string, queryParams *repository.SearchMoviesIn) (*repository.APIResponse, error) {
+	apiResp := new(repository.APIResponse)
+	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", authToken)}
+	query := map[string]string{
+		"q":    queryParams.Keyword,
+		"page": strconv.Itoa(queryParams.Page),
+	}
+	if err := api.sendGET(api.cfg.RestAPI.Host+"/api/v1/kinopoisk/films/search", headers, query, apiResp); err != nil {
+		return nil, fmt.Errorf("search movies using rest api: send get request: %w", err)
+	}
+	return apiResp, nil
 }
 
 // Login user
@@ -143,7 +154,7 @@ func (api restAPIClient) sendRequest(req *http.Request, outStruct *repository.AP
 }
 
 // Send GET request to REST API
-func (api restAPIClient) sendGET(url string, headers http.Header, queryParams map[string]string, outStruct *repository.APIResponse) error {
+func (api restAPIClient) sendGET(url string, headers map[string]string, queryParams map[string]string, outStruct *repository.APIResponse) error {
 	reqContext, cancel := context.WithTimeout(context.Background(), api.requestTimeout)
 	defer cancel()
 
@@ -153,7 +164,10 @@ func (api restAPIClient) sendGET(url string, headers http.Header, queryParams ma
 		return fmt.Errorf("create request: %w", err)
 	}
 	// add headers
-	req.Header = headers
+	// add headers
+	for k, v := range headers {
+		req.Header.Add(k, v)
+	}
 
 	if queryParams != nil {
 		// add query-params

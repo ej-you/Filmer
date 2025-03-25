@@ -12,6 +12,7 @@ type ClientRouter struct {
 	cfg       *config.Config
 	mwManager middlewares.MiddlewareManager
 	userHM    *userHandlerManager
+	movieHM   *movieHandlerManager
 }
 
 // Router constructor
@@ -20,6 +21,7 @@ func NewClientRouter(cfg *config.Config, mwManager middlewares.MiddlewareManager
 		cfg:       cfg,
 		mwManager: mwManager,
 		userHM:    newUserHandlerManager(cfg),
+		movieHM:   newMovieHandlerManager(cfg),
 	}
 }
 
@@ -29,6 +31,9 @@ func (r ClientRouter) SetRoutes(router fiber.Router) {
 
 	userGroup := router.Group("/user")
 	r.setUserRoutes(userGroup)
+
+	movieGroup := router.Group("/movie")
+	r.setMovieRoutes(movieGroup)
 }
 
 // Setup user subroutes
@@ -42,4 +47,10 @@ func (r ClientRouter) setUserRoutes(router fiber.Router) {
 	restricted := router.Use(r.mwManager.CookieParser())
 	restricted.Get("/profile", r.mwManager.ToLoginIfNoCookie(), r.userHM.profileGET)
 	restricted.Post("/logout", r.userHM.logoutPOST)
+}
+
+// Setup movie subroutes
+func (r ClientRouter) setMovieRoutes(router fiber.Router) {
+	restricted := router.Use(r.mwManager.CookieParser(), r.mwManager.ToLoginIfNoCookie())
+	restricted.Get("/search", r.movieHM.searchGET)
 }
