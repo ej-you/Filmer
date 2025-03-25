@@ -21,7 +21,7 @@
 			<span id="seconds">0</span>s -->
 		</p>
 
-		<form id="link-button-form" action="/user/logout" method="post">
+		<form onsubmit="addQueryParamsToForm(this)" id="link-button-form" action="/user/logout" method="post">
 			<button id="link-button" class="link-button" type="submit">Logout Now</button>
 		</form>
 	</div>

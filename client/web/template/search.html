@@ -43,7 +43,7 @@
 	<div class="content flex-content">
 		<h3>Search movies</h3>
 
-		<form class="search-form" action="#" method="post">
+		<form onsubmit="addQueryParamsToForm(this)" class="search-form" action="#" method="post">
 			<div class="form-input">
 				<img src="../static/img/search.svg">
 				<input class="form-elem" type="text" id="search-keyword" name="search-keyword" placeholder="search movies">
