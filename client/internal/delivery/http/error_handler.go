@@ -25,6 +25,11 @@ func CustomErrorHandler(ctx *fiber.Ctx, err error) error {
 		message = err.Error()
 	}
 
+	// render 404 page for NotFound error
+	if statusCode == "404" {
+		return ctx.Status(404).Render("404", fiber.Map{})
+	}
+
 	// url and query params before error occurs
 	url := ctx.OriginalURL()
 	queryParams := ctx.Queries()

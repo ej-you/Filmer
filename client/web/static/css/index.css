@@ -4,14 +4,14 @@
 	align-content: center;
 }
 
-p {
+.description-p {
 	margin: 5px auto;
 }
 
-p a {
+.description-p a {
 	color: var(--light-red);
 }
-p a:hover {
+.description-p a:hover {
 	text-decoration: underline;
 }
 

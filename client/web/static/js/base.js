@@ -21,28 +21,23 @@ document.addEventListener("DOMContentLoaded", function () {
 			window.history.replaceState({}, document.title, location.pathname);
 		}
 
-		console.log(searchParams.toString())
-		console.log("Error message:")
-		console.log(errorMessage)
-		console.log(errorStatusCode)
+		const elemErrorMessage = document.getElementById("error-message");
+		const elemErrorCode = document.getElementById("error-message-code");
+		const elemErrorText = document.getElementById("error-message-text");
+
+		elemErrorCode.textContent = errorStatusCode
+		elemErrorText.textContent = errorMessage
+		elemErrorMessage.style.display = "block"
+
+		// console.log(searchParams.toString())
+		// console.log("Error message:")
+		// console.log(errorMessage)
+		// console.log(errorStatusCode)
 
 		setTimeout(() => {
 			console.log("Hide error message")
-            // url.searchParams.delete("message");
-            // url.searchParams.delete("statusCode");
-        }, 4000);
-        // // Показываем сообщение
-        // const messageBox = document.getElementById("error-message");
-        // if (messageBox) {
-        //     messageBox.textContent = url.searchParams.get("message");
-        //     messageBox.style.display = "block";
-
-        //     // Убираем параметры через 3 секунды
-        //     setTimeout(() => {
-        //         url.searchParams.delete("message");
-        //         url.searchParams.delete("statusCode");
-        //     }, 3000);
-        // }
+			elemErrorMessage.style.display = "none"
+        }, 3000);
     }
 });
 
