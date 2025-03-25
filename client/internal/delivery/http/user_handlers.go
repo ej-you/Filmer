@@ -32,6 +32,8 @@ func (hm userHandlerManager) loginGET(ctx *fiber.Ctx) error {
 
 // Render sign up page
 func (hm userHandlerManager) signUpGET(ctx *fiber.Ctx) error {
+	// errorStatusCode := ctx.Query("statusCode")
+	// errorMessage := ctx.Query("message")
 	return ctx.Render("signup", fiber.Map{})
 }
 
@@ -41,7 +43,7 @@ func (hm userHandlerManager) profileGET(ctx *fiber.Ctx) error {
 	// calc hours, minutes and seconds to expiration time
 	d, h, m, s, err := utils.GetJWTExpirationData(accessToken)
 	if err != nil {
-		return fmt.Errorf("render profile: get token expiration time", err)
+		return fmt.Errorf("render profile: get token expiration time: %w", err)
 	}
 	return ctx.Render("profile", fiber.Map{
 		"email":   ctx.Locals("email"),
@@ -59,12 +61,12 @@ func (hm userHandlerManager) loginPOST(ctx *fiber.Ctx) error {
 
 	// parse JSON-body
 	if err = ctx.BodyParser(&authIn); err != nil {
-		return fmt.Errorf("login", err)
+		return fmt.Errorf("login: %w", err)
 	}
 	// send request to REST API
 	apiResp, err := hm.api.Login(authIn)
 	if err != nil {
-		return fmt.Errorf("login", err)
+		return fmt.Errorf("login: %w", err)
 	}
 	// get token and email from API response
 	accessToken := (*apiResp)["accessToken"].(string)
@@ -83,7 +85,7 @@ func (hm userHandlerManager) signUpPOST(ctx *fiber.Ctx) error {
 
 	// parse JSON-body
 	if err = ctx.BodyParser(&authIn); err != nil {
-		return fmt.Errorf("sign up", err)
+		return fmt.Errorf("sign up: %w", err)
 	}
 	// check password and password confirm is equal
 	if authIn.Password != authIn.PasswordConfirm {
@@ -93,7 +95,7 @@ func (hm userHandlerManager) signUpPOST(ctx *fiber.Ctx) error {
 	// send request to REST API
 	apiResp, err := hm.api.SignUp(authIn)
 	if err != nil {
-		return fmt.Errorf("sign up", err)
+		return fmt.Errorf("sign up: %w", err)
 	}
 	// get token and email from API response
 	accessToken := (*apiResp)["accessToken"].(string)
@@ -111,7 +113,7 @@ func (hm userHandlerManager) logoutPOST(ctx *fiber.Ctx) error {
 	// send request to REST API
 	err := hm.api.Logout(accessToken)
 	if err != nil {
-		return fmt.Errorf("logout", err)
+		return fmt.Errorf("logout: %w", err)
 	}
 	// clear auth and email cookies
 	ctx.Cookie(utils.ClearAuthCookie(hm.cfg))

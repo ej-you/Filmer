@@ -50,8 +50,8 @@ func (c fiberCLient) Run() {
 
 	// app init
 	fibertApp := fiber.New(fiber.Config{
-		AppName: fmt.Sprintf("%s v1.0.0", c.cfg.App.Name),
-		// ErrorHandler: utils.CustomErrorHandler,
+		AppName:      fmt.Sprintf("%s v1.0.0", c.cfg.App.Name),
+		ErrorHandler: httpDelivery.CustomErrorHandler,
 		ServerHeader: c.cfg.App.Name,
 		Views:        engine,
 	})

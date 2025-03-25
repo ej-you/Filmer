@@ -1,3 +1,56 @@
+// +---------------+
+// + Error message +
+// +---------------+
+
+document.addEventListener("DOMContentLoaded", function () {
+    let paramsString = window.location.search;
+	let searchParams = new URLSearchParams(paramsString);
+
+	let errorMessage = searchParams.get("message")
+	let errorStatusCode = searchParams.get("statusCode")
+
+	// if error message query-params is presented
+	if (errorMessage !== null && errorStatusCode !== null) {
+		searchParams.delete("message")
+		searchParams.delete("statusCode")
+
+		// if other query-params is presented
+		if (searchParams.toString() !== "") {
+			window.history.replaceState({}, document.title, `${location.pathname}?${searchParams.toString()}`);
+		} else {
+			window.history.replaceState({}, document.title, location.pathname);
+		}
+
+		console.log(searchParams.toString())
+		console.log("Error message:")
+		console.log(errorMessage)
+		console.log(errorStatusCode)
+
+		setTimeout(() => {
+			console.log("Hide error message")
+            // url.searchParams.delete("message");
+            // url.searchParams.delete("statusCode");
+        }, 4000);
+        // // Показываем сообщение
+        // const messageBox = document.getElementById("error-message");
+        // if (messageBox) {
+        //     messageBox.textContent = url.searchParams.get("message");
+        //     messageBox.style.display = "block";
+
+        //     // Убираем параметры через 3 секунды
+        //     setTimeout(() => {
+        //         url.searchParams.delete("message");
+        //         url.searchParams.delete("statusCode");
+        //     }, 3000);
+        // }
+    }
+});
+
+
+// +--------------+
+// + Header icons +
+// +--------------+
+
 const minWidth = 750
 let iconIsSet = false
 
