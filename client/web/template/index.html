@@ -1,42 +1,25 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="../static/css/reset.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/base.css">
-	<script type="text/javascript" src="../static/js/base.js"></script>
-	<title>Filmer</title>
-</head>
-<body>
-	<header>
-		<nav>
-			<div class="logo-container">
-				<button class="nav-elem logo"><a href="./index.html">
-					<img src="../static/img/favicon.ico" alt="logo">
-				</a></button>
-			</div>
-			<div class="right-nav-container">
-				<button class="nav-elem nav-menu-button-elem">
-					<a id="menu-search-link" href="./search.html">search</a>
-				</button>
-				<button class="nav-elem nav-menu-button-elem">
-					<a id="menu-stared-link" href="./stared.html">stared</a>
-				</button>
-				<button class="nav-elem nav-menu-button-elem">
-					<a id="menu-want-link" href="#">want</a>
-				</button>
-				<button class="nav-elem nav-menu-button-elem">
-					<a id="menu-watched-link" href="#">watched</a>
-				</button>
+{% extends "base.html" %}
 
-				<button class="nav-elem profile"><a href="./profile.html">
-					<img src="../static/img/profile.svg" alt="profile">
-				</a></button>
-			</div>
-		</nav>
+{% block css %}
+	<link rel="stylesheet" type="text/css" href="/static/css/index.css">
+{% endblock %}
 
-		<h1 class="title">Filmer</h1>
-	</header>
-</body>
-</html>
+{% block title %}Filmer{% endblock %}
+
+{% block content %}
+	<div class="content flex-content">
+		<div class="description">
+			<p>Filmer is a service to manage movie lists</p>
+			<p>
+				<a href="/movie/search">Search</a> movies,
+				<a href="/user-movie/stared">star</a> it and save it to
+				<a href="/user-movie/want">want</a> or
+				<a href="/user-movie/watched">watched</a> lists
+			</p>
+		</div>
+		<div class="entry-buttons">
+			<button class="link-button"><a href="/user/sign-up">Sign up</a></button>
+			<button class="link-button"><a href="/user/login">Login</a></button>
+		</div>
+	</div>
+{% endblock %}

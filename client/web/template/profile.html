@@ -1,56 +1,30 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="../static/css/reset.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/base.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/profile.css">
-	<script type="text/javascript" src="../static/js/base.js"></script>
-	<title>Profile | Filmer</title>
-</head>
-<body>
-	<header>
-		<nav>
-			<div class="logo-container">
-				<button class="nav-elem logo"><a href="./index.html">
-					<img src="../static/img/favicon.ico" alt="logo">
-				</a></button>
-			</div>
-			<div class="right-nav-container">
-				<button class="nav-elem nav-menu-button-elem">
-					<a id="menu-search-link" href="#">search</a>
-				</button>
-				<button class="nav-elem nav-menu-button-elem">
-					<a id="menu-stared-link" href="#">stared</a>
-				</button>
-				<button class="nav-elem nav-menu-button-elem">
-					<a id="menu-want-link" href="#">want</a>
-				</button>
-				<button class="nav-elem nav-menu-button-elem">
-					<a id="menu-watched-link" href="#">watched</a>
-				</button>
+{% extends "base.html" %}
 
-				<button class="nav-elem profile"><a href="./signup.html">
-					<img src="../static/img/profile.svg" alt="profile">
-				</a></button>
-			</div>
-		</nav>
+{% block css %}
+	<link rel="stylesheet" type="text/css" href="/static/css/profile.css">
+{% endblock %}
 
-		<h1 class="title">Filmer</h1>
-	</header>
+{% block title %}Profile | Filmer{% endblock %}
 
+{% block content %}
 	<div class="content">
-		<h4>You are already authorized as <span class="accent">user@gmail.com</span></h4>
+		<h4>You are already authorized as <span class="accent">{{ email }}</span></h4>
 
 		<p id="session-expiration">
-			Your session expires in <span id="hours">2</span>h <span id="minutes">30</span>m <span id="seconds">45</span>s
+			Your session expires in
+			<span id="days">{{ days }}</span>d
+			<span id="hours">{{ hours }}</span>h
+			<span id="minutes">{{ minutes }}</span>m
+			<span id="seconds">{{ seconds }}</span>s
+			<!-- <span id="hours">0</span>h
+			<span id="minutes">0</span>m
+			<span id="seconds">0</span>s -->
 		</p>
 
-		<button class="link-button"><a href="#">Logout Now</a></button>
+		<form id="link-button-form" action="/user/logout" method="post">
+			<button id="link-button" class="link-button" type="submit">Logout Now</button>
+		</form>
 	</div>
 
-	<!-- <img src="../static/img/non_poster.svg"> -->
-	<script type="text/javascript" src="../static/js/profile.js"></script>
-</body>
-</html>
+	<script type="text/javascript" src="/static/js/profile.js"></script>
+{% endblock %}

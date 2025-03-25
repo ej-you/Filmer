@@ -108,7 +108,8 @@ nav {
 	text-align: center;
 }
 .content > * {
-	margin: auto;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 /* every movie poster border and size */

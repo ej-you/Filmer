@@ -1,17 +1,11 @@
 h4 {
 	font-size: 23px;
-	margin: 20px;
-}
-
-p {
-	margin-bottom: 15px;
+	margin: 10px;
 }
 
 /* logout button */
 .link-button {
 	margin: 20px 0;
-}
-.link-button a {
 	font-size: 23px;
 	border-radius: 20px;
 	background-color: var(--light-gray);
@@ -20,7 +14,7 @@ p {
 	padding: 12px 30px;
 	align-content: center;
 }
-.link-button a:hover {
+.link-button:hover {
 	background-color: var(--gray);
 }
 

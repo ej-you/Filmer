@@ -1,47 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="../static/css/reset.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/base.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/signup_login.css">
-	<script type="text/javascript" src="../static/js/base.js"></script>
-	<title>Sign up | Filmer</title>
-</head>
-<body>
-	<header>
-		<nav>
-			<div class="logo-container">
-				<button class="nav-elem logo"><a href="./index.html">
-					<img src="../static/img/favicon.ico" alt="logo">
-				</a></button>
-			</div>
-			<div class="right-nav-container">
-				<button class="nav-elem nav-menu-button-elem">
-					<a id="menu-search-link" href="#">search</a>
-				</button>
-				<button class="nav-elem nav-menu-button-elem">
-					<a id="menu-stared-link" href="#">stared</a>
-				</button>
-				<button class="nav-elem nav-menu-button-elem">
-					<a id="menu-want-link" href="#">want</a>
-				</button>
-				<button class="nav-elem nav-menu-button-elem">
-					<a id="menu-watched-link" href="#">watched</a>
-				</button>
+{% extends "base.html" %}
 
-				<button class="nav-elem profile"><a href="./signup.html">
-					<img src="../static/img/profile.svg" alt="profile">
-				</a></button>
-			</div>
-		</nav>
+{% block css %}
+	<link rel="stylesheet" type="text/css" href="/static/css/signup_login.css">
+{% endblock %}
 
-		<h1 class="title">Filmer</h1>
-	</header>
+{% block title %}Sign up | Filmer{% endblock %}
 
+{% block content %}
 	<div class="content">
-		<form action="#" method="post">
+		<form action="/user/sign-up" method="post">
 			<div class="form-elem form-input-container">
 				<div class="form-elem form-input">
 					<label for="email">Email</label>
@@ -59,11 +26,9 @@
 			<button class="form-elem" type="submit">Sign up</button>
 
 			<div class="form-elem to-login">
-				<!-- <p>Do not have an account?</p> -->
 				<p>Already have an account?</p>
-				<a href="./login.html">Login</a>
+				<a href="/user/login">Login</a>
 			</div>
 		</form>
 	</div>
-</body>
-</html>
+{% endblock %}
