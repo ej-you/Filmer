@@ -9,19 +9,21 @@ import (
 
 // Router to setup client routes
 type ClientRouter struct {
-	cfg       *config.Config
-	mwManager middlewares.MiddlewareManager
-	userHM    *userHandlerManager
-	movieHM   *movieHandlerManager
+	cfg         *config.Config
+	mwManager   middlewares.MiddlewareManager
+	userHM      *userHandlerManager
+	movieHM     *movieHandlerManager
+	userMovieHM *userMovieHandlerManager
 }
 
 // Router constructor
 func NewClientRouter(cfg *config.Config, mwManager middlewares.MiddlewareManager) *ClientRouter {
 	return &ClientRouter{
-		cfg:       cfg,
-		mwManager: mwManager,
-		userHM:    newUserHandlerManager(cfg),
-		movieHM:   newMovieHandlerManager(cfg),
+		cfg:         cfg,
+		mwManager:   mwManager,
+		userHM:      newUserHandlerManager(cfg),
+		movieHM:     newMovieHandlerManager(cfg),
+		userMovieHM: newUserMovieHandlerManager(cfg),
 	}
 }
 
@@ -34,6 +36,9 @@ func (r ClientRouter) SetRoutes(router fiber.Router) {
 
 	movieGroup := router.Group("/movie")
 	r.setMovieRoutes(movieGroup)
+
+	userMovieGroup := router.Group("/user-movie")
+	r.setUserMovieRoutes(userMovieGroup)
 }
 
 // Setup user subroutes
@@ -53,4 +58,10 @@ func (r ClientRouter) setUserRoutes(router fiber.Router) {
 func (r ClientRouter) setMovieRoutes(router fiber.Router) {
 	restricted := router.Use(r.mwManager.CookieParser(), r.mwManager.ToLoginIfNoCookie())
 	restricted.Get("/search", r.movieHM.searchGET)
+}
+
+// Setup user movie subroutes
+func (r ClientRouter) setUserMovieRoutes(router fiber.Router) {
+	restricted := router.Use(r.mwManager.CookieParser(), r.mwManager.ToLoginIfNoCookie())
+	restricted.Get("/:movieID", r.userMovieHM.movieGET)
 }

@@ -76,3 +76,17 @@ func TestGetSearchMovies(t *testing.T) {
 	}
 	t.Logf("Successfully search movies: %+v", apiResp)
 }
+
+func TestGetMovie(t *testing.T) {
+	t.Log("Test get full movie info with REST API")
+
+	// init api client
+	cfg := config.NewConfig()
+	api := NewRestAPI(cfg)
+
+	apiResp, err := api.GetMovie(authToken, 301)
+	if err != nil {
+		t.Fatalf("Get full movie info failed: %v", err)
+	}
+	t.Logf("Successfully got full movie info: %+v", apiResp)
+}

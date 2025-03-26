@@ -21,11 +21,11 @@
 
 		<div class="list-movies">
 		{% for movie in docs %}
-			<div class="movie">
+			<a class="movie" href="/user-movie/{{ movie.id|floatformat:0 }}">
 				<div class="movie-poster">
 					<img src='{{ movie.poster.url|default:"/static/img/non_poster.svg" }}'>
 				</div>
-				<a class="movie-info" href="#/user-movie/{{ movie.id|floatformat:0 }}">
+				<div class="movie-info">
 					<div class="movie-info-item">
 						<label class="movie-info-label">Title:</label>
 						<p>{{ movie.name|default:"-" }}</p>
@@ -78,8 +78,8 @@
 						{% endif %}
 						</ul>
 					</div>
-				</a>
-			</div>
+				</div>
+			</a>
 		{% endfor %}
 		</div>
 

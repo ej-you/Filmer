@@ -115,6 +115,8 @@ nav {
 	display: flex;
 	justify-content: center;
 	align-content: center;
+}
+.movie-poster, .person-poster {
 	align-self: center;
 }
 /* every movie poster size in movie lists */

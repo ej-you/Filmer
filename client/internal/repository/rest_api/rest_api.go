@@ -34,7 +34,13 @@ func NewRestAPI(cfg *config.Config) repository.RestAPI {
 }
 
 func (api restAPIClient) GetMovie(authToken string, kinopoiskID int) (*repository.APIResponse, error) {
-	return nil, nil
+	apiResp := new(repository.APIResponse)
+	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", authToken)}
+	url := fmt.Sprintf("%s/api/v1/films/full-info/%d", api.cfg.RestAPI.Host, kinopoiskID)
+	if err := api.sendGET(url, headers, nil, apiResp); err != nil {
+		return nil, fmt.Errorf("get full movie info using rest api: send get request: %w", err)
+	}
+	return apiResp, nil
 }
 
 func (api restAPIClient) GetStared(authToken string, queryParams *repository.CategoryUserMoviesIn) (*repository.APIResponse, error) {

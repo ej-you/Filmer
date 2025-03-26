@@ -1,6 +1,5 @@
 h3 {
 	font-size: 30px;
-	user-select: none;
 }
 
 .flex-content {
@@ -21,7 +20,7 @@ h3 {
 .movie {
 	display: flex;
 	justify-content: space-between;
-	gap: 30px;
+	gap: 20px;
 }
 
 /* h3 movie title */
@@ -31,6 +30,7 @@ h3 {
 /* h3 for directors and actors */
 .movie-staff-header {
 	text-align: left;
+	user-select: none;
 }
 
 /* movie info container (all about movie without staff) */
@@ -53,7 +53,6 @@ h3 {
 	margin-top: 10px;
 
 	display: flex;
-	width: 220px;
 	justify-content: center;
 	gap: 15px;
 }
@@ -87,19 +86,6 @@ h3 {
 	fill: var(--white);
 }
 
-/* .movie-extra-icon > button > svg {
-	stroke: var(--white);
-}
-.movie-extra-icon > button > svg:hover {
-	stroke: var(--dark-white);
-} */
-/* .movie-extra > * > svg {
-	stroke: var(--white);
-}
-.movie-extra > * > svg:hover {
-	stroke: var(--dark-white);
-} */
-
 .movie-description {
 	text-align: justify;
 }
@@ -108,21 +94,18 @@ h3 {
 .movie-info {
 	display: grid;
 
-	grid-template-columns: auto auto;
-	grid-template-rows: repeat(5, 20px) auto auto;
+	grid-template-columns: minmax(auto, 100px) auto;
+	grid-template-rows: repeat(4, 20px) auto auto;
 	column-gap: 2%;
 	row-gap: 15px;
 
 	text-align: left;
 }
 .movie-info label {
-	cursor: none;
+	cursor: auto;
 	color: var(--light-red);
 }
 
-.movie-genre-list {
-	grid-row: span 2;
-}
 .movie-genre-list ul {
 	display: flex;
 	flex-wrap: wrap;
@@ -160,7 +143,6 @@ h3 {
 		border-radius: 20px;
 	}
 }
-
 
 /* for width to 1500px and less */
 @media screen and (max-width: 1500px) {

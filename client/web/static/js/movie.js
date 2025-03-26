@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	const iconsElems = document.querySelectorAll(".movie-extra form")
 	iconsElems.forEach((iconElem) => {
 		// if icon data "active" is true
-		if (iconElem.dataset.active === "true") {
+		if (iconElem.dataset.active === "True") {
 			const iconElemSvg = iconElem.querySelector("button svg");
 			// change styles for svg elem
 			iconElemSvg.classList.remove('fill-static-white')
