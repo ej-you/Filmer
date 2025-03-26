@@ -29,11 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
 		elemErrorText.textContent = errorMessage
 		elemErrorMessage.style.display = "block"
 
-		// console.log(searchParams.toString())
-		// console.log("Error message:")
-		// console.log(errorMessage)
-		// console.log(errorStatusCode)
-
 		setTimeout(() => {
 			console.log("Hide error message")
 			elemErrorMessage.style.display = "none"

@@ -1,0 +1,204 @@
+h3 {
+	font-size: 30px;
+	user-select: none;
+}
+
+.flex-content {
+	margin: auto;
+	margin-bottom: 150px;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 60%;
+}
+.flex-content > * {
+	margin-bottom: 15px;
+	width: 100%;
+}
+
+/* full movie container */
+.movie {
+	display: flex;
+	justify-content: space-between;
+	gap: 30px;
+}
+
+/* h3 movie title */
+.movie-title {
+	text-align: center;
+}
+/* h3 for directors and actors */
+.movie-staff-header {
+	text-align: left;
+}
+
+/* movie info container (all about movie without staff) */
+.movie-full-info {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	gap: 25px;
+
+	align-items: center;
+}
+.movie-full-info-footer {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+/* buttons for external link, star, want and watched */
+.movie-extra {
+	margin-top: 10px;
+
+	display: flex;
+	width: 220px;
+	justify-content: center;
+	gap: 15px;
+}
+.movie-extra-icon > button {
+	display: flex;
+}
+.movie-extra-icon > button > svg {
+	height: 36px;
+	width: 36px;
+}
+
+#external-link > button > svg {
+	stroke: var(--white);
+}
+#external-link > button > svg:hover {
+	stroke: var(--dark-white);
+}
+
+/* for stared, want and watched icons by default */
+.fill-static-white {
+	fill: var(--white);
+}
+.fill-hover-light-red:hover {
+	fill: var(--light-red);
+}
+/* for active stared, want and watched icons */
+.fill-static-light-red {
+	fill: var(--light-red);
+}
+.fill-hover-white:hover {
+	fill: var(--white);
+}
+
+/* .movie-extra-icon > button > svg {
+	stroke: var(--white);
+}
+.movie-extra-icon > button > svg:hover {
+	stroke: var(--dark-white);
+} */
+/* .movie-extra > * > svg {
+	stroke: var(--white);
+}
+.movie-extra > * > svg:hover {
+	stroke: var(--dark-white);
+} */
+
+.movie-description {
+	text-align: justify;
+}
+
+/* grid movie info without poster and description */
+.movie-info {
+	display: grid;
+
+	grid-template-columns: auto auto;
+	grid-template-rows: repeat(5, 20px) auto auto;
+	column-gap: 2%;
+	row-gap: 15px;
+
+	text-align: left;
+}
+.movie-info label {
+	cursor: none;
+	color: var(--light-red);
+}
+
+.movie-genre-list {
+	grid-row: span 2;
+}
+.movie-genre-list ul {
+	display: flex;
+	flex-wrap: wrap;
+	column-gap: 8px;
+}
+
+.movie-persons {
+	width: 100%;
+
+	display: flex;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.person {
+	width: 160px;
+	padding: 20px;
+	border-radius: 20px;
+
+	box-shadow: 0px 0px 25px 1px var(--light-black);
+	display: flex;
+	flex-direction: column;
+}
+.person-poster {
+	margin-bottom: 10px;
+}
+
+
+/* for width from 1080px and more */
+@media screen and (min-width: 1080px) {
+	.movie {
+		box-shadow: 0px 0px 25px 1px var(--light-black);
+		padding: 20px;
+		border-radius: 20px;
+	}
+}
+
+
+/* for width to 1500px and less */
+@media screen and (max-width: 1500px) {
+	.flex-content {
+		width: 80%;
+	}
+}
+
+/* for width to 1080px and less */
+@media screen and (max-width: 1080px) {
+	.movie {
+		flex-direction: column;
+	}
+	.movie-staff-header {
+		text-align: center;
+	}
+	.movie-persons {
+		justify-content: center;
+	}
+}
+
+/* for width to 750px and less */
+@media screen and (max-width: 750px) {
+	h3 {
+		font-size: 25px;
+	}
+	.flex-content {
+		width: 90%;
+	}
+
+	.movie-extra-icon > button > svg {
+		height: 27px;
+		width: 27px;
+	}
+
+	.person {
+		width: 152px;
+		padding: 16px;
+		border-radius: 16px;
+	}
+}
