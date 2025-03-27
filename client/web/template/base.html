@@ -58,6 +58,19 @@
 			let searchParams = new URLSearchParams(paramsString);
 			formElem.action = formElem.action + "?" + searchParams.toString();
 		}
+
+		// add current page path with query-params like hidden input to form with POST request
+		function addHiddenNextAttributeToForm(formElem) {
+			let currentPage = window.location.pathname + window.location.search;
+			// create hidden input with current page path
+			let input = document.createElement("input");
+	        input.type = "hidden";
+	        input.name = "next";
+	        input.value = currentPage;
+	        // add input to form
+	        formElem.appendChild(input);
+		}
+
 		// // select form elem
 		// const formElem = document.querySelector('form');
 		// if (formElem === undefined || formElem === null) {

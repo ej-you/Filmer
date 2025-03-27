@@ -4,7 +4,7 @@ h3 {
 }
 
 .flex-content {
-	margin: auto 15px;
+	margin: auto 15px 150px 15px;
 
 	display: flex;
 	flex-direction: column;
@@ -67,6 +67,10 @@ button[type="submit"] {
 }
 button[type="submit"]:hover {
 	background-color: var(--gray);
+}
+
+#found-total {
+	font-size: 23px;
 }
 
 .list-movies {
@@ -138,7 +142,19 @@ button[type="submit"]:hover {
 	}
 
 	.flex-content {
-		margin: auto 10px;
+		margin: auto 10px 150px 10px;
+	}
+
+	#found-total {
+		font-size: 20px;
+	}
+
+	.form-input {
+		font-size: 18px;
+	}
+
+	button[type="submit"] {
+		padding: 13px 5%;
 	}
 
 	.list-movies {
@@ -149,7 +165,7 @@ button[type="submit"]:hover {
 		min-width: 330px;
 	}
 
-	button[type="submit"] {
-		padding: 13px 5%;
+	.movie-info-item > *, #pagination * {
+		font-size: 16px;
 	}
 }

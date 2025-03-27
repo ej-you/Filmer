@@ -19,6 +19,10 @@
 			<button class="form-elem" type="submit">Search</button>
 		</form>
 
+		{% if total %}
+			<h4 id="found-total"><span class="accent">Found movies: {{ total|floatformat:0 }}</span></h4>
+		{% endif %}
+
 		<div class="list-movies">
 		{% for movie in docs %}
 			<a class="movie" href="/user-movie/{{ movie.id|floatformat:0 }}">
@@ -83,15 +87,8 @@
 		{% endfor %}
 		</div>
 
-		<div id="pagination">
-			<p id="pagination-total" class="non-visible">{{ total }}</p>
-			<p id="pagination-pages" class="non-visible">{{ pages }}</p>
-			<p id="pagination-page" class="non-visible">{{ page }}</p>
-
-			<div class="pages">
-				<div class="page-elem">1</div>
-			</div>
-		</div>
+		<!-- data-pagination-total="{{ total|floatformat:0 }}" -->
+		<div id="pagination" data-pagination-pages="{{ pages|floatformat:0 }}"></div>
 	</div>
 	<script type="text/javascript" src="/static/js/pagination.js"></script>
 {% endblock %}

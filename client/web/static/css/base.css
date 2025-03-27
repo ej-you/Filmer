@@ -135,6 +135,10 @@ nav {
 	width: 120px;
 }
 
+.non-visible {
+	display: none;
+}
+
 /* for width to 750px and less */
 @media screen and (max-width: 750px) {
 	h1 {
