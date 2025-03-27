@@ -11,7 +11,8 @@ var userAuthData = repository.AuthIn{
 	Email:    "user1@gmail.com",
 	Password: "qwerty123",
 }
-var authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDI5Mjg0MzcsInN1YiI6IjViNjk3OGVkLTZjYjQtNDk2Zi04ZGIzLTYzY2RlZDc5YTg1YyJ9.a94t81PKNy6zFGPKVAYhTlXic5NEhTIbbUN4w-QzYRs"
+var authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDMwMzA3OTIsInN1YiI6IjViNjk3OGVkLTZjYjQtNDk2Zi04ZGIzLTYzY2RlZDc5YTg1YyJ9.GFvnEu5ptLySqVOnejFOpXuTKgTdmS2o_ST2Lfy79Nk"
+var movieID = "f86f517b-e509-42d4-a1f3-b8cc769cb938"
 
 func TestSignUp(t *testing.T) {
 	t.Log("Test sign up with REST API")
@@ -84,9 +85,23 @@ func TestGetMovie(t *testing.T) {
 	cfg := config.NewConfig()
 	api := NewRestAPI(cfg)
 
-	apiResp, err := api.GetMovie(authToken, 301)
+	apiResp, err := api.GetMovie(authToken, 361)
 	if err != nil {
 		t.Fatalf("Get full movie info failed: %v", err)
 	}
 	t.Logf("Successfully got full movie info: %+v", apiResp)
+}
+
+func TestStarMovie(t *testing.T) {
+	t.Log("Test star movie with REST API")
+
+	// init api client
+	cfg := config.NewConfig()
+	api := NewRestAPI(cfg)
+
+	apiResp, err := api.PostStar(authToken, movieID)
+	if err != nil {
+		t.Fatalf("Star movie failed: %v", err)
+	}
+	t.Logf("Successfully star movie: %+v", apiResp)
 }

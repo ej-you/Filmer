@@ -55,24 +55,54 @@ func (api restAPIClient) GetWatched(authToken string, queryParams *repository.Ca
 	return nil, nil
 }
 
-func (api restAPIClient) PostClear(authToken string, movieID string) (*repository.APIResponse, error) {
-	return nil, nil
-}
-
 func (api restAPIClient) PostStar(authToken string, movieID string) (*repository.APIResponse, error) {
-	return nil, nil
+	apiResp := new(repository.APIResponse)
+	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", authToken)}
+	url := fmt.Sprintf("%s/api/v1/films/%s/star", api.cfg.RestAPI.Host, movieID)
+	if err := api.sendPOST(url, headers, nil, apiResp); err != nil {
+		return nil, fmt.Errorf("star movie using rest api: send post request: %w", err)
+	}
+	return apiResp, nil
 }
 
 func (api restAPIClient) PostUnstar(authToken string, movieID string) (*repository.APIResponse, error) {
-	return nil, nil
+	apiResp := new(repository.APIResponse)
+	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", authToken)}
+	url := fmt.Sprintf("%s/api/v1/films/%s/unstar", api.cfg.RestAPI.Host, movieID)
+	if err := api.sendPOST(url, headers, nil, apiResp); err != nil {
+		return nil, fmt.Errorf("unstar movie using rest api: send post request: %w", err)
+	}
+	return apiResp, nil
+}
+
+func (api restAPIClient) PostClear(authToken string, movieID string) (*repository.APIResponse, error) {
+	apiResp := new(repository.APIResponse)
+	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", authToken)}
+	url := fmt.Sprintf("%s/api/v1/films/%s/clear", api.cfg.RestAPI.Host, movieID)
+	if err := api.sendPOST(url, headers, nil, apiResp); err != nil {
+		return nil, fmt.Errorf("clear movie category using rest api: send post request: %w", err)
+	}
+	return apiResp, nil
 }
 
 func (api restAPIClient) PostWant(authToken string, movieID string) (*repository.APIResponse, error) {
-	return nil, nil
+	apiResp := new(repository.APIResponse)
+	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", authToken)}
+	url := fmt.Sprintf("%s/api/v1/films/%s/want", api.cfg.RestAPI.Host, movieID)
+	if err := api.sendPOST(url, headers, nil, apiResp); err != nil {
+		return nil, fmt.Errorf("set want movie category using rest api: send post request: %w", err)
+	}
+	return apiResp, nil
 }
 
 func (api restAPIClient) PostWatched(authToken string, movieID string) (*repository.APIResponse, error) {
-	return nil, nil
+	apiResp := new(repository.APIResponse)
+	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", authToken)}
+	url := fmt.Sprintf("%s/api/v1/films/%s/watched", api.cfg.RestAPI.Host, movieID)
+	if err := api.sendPOST(url, headers, nil, apiResp); err != nil {
+		return nil, fmt.Errorf("set watched movie category using rest api: send post request: %w", err)
+	}
+	return apiResp, nil
 }
 
 // Search movies using keyword (with paginaiton)

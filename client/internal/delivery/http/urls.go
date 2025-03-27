@@ -62,6 +62,12 @@ func (r ClientRouter) setMovieRoutes(router fiber.Router) {
 
 // Setup user movie subroutes
 func (r ClientRouter) setUserMovieRoutes(router fiber.Router) {
-	restricted := router.Use(r.mwManager.CookieParser(), r.mwManager.ToLoginIfNoCookie())
-	restricted.Get("/:movieID", r.userMovieHM.movieGET)
+	restricted := router.Use(r.mwManager.CookieParser())
+	restricted.Get("/:kinopoiskID", r.mwManager.ToLoginIfNoCookie(), r.userMovieHM.movieGET)
+
+	restricted.Post("/:movieID/star", r.userMovieHM.starPOST)
+	restricted.Post("/:movieID/unstar", r.userMovieHM.unstarPOST)
+	restricted.Post("/:movieID/clear", r.userMovieHM.clearPOST)
+	restricted.Post("/:movieID/want", r.userMovieHM.wantPOST)
+	restricted.Post("/:movieID/watched", r.userMovieHM.watchedPOST)
 }

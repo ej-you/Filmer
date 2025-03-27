@@ -8,9 +8,9 @@ type RestAPI interface {
 	GetWant(authToken string, queryParams *CategoryUserMoviesIn) (*APIResponse, error)
 	GetWatched(authToken string, queryParams *CategoryUserMoviesIn) (*APIResponse, error)
 	// user movie (POST)
-	PostClear(authToken string, movieID string) (*APIResponse, error)
 	PostStar(authToken string, movieID string) (*APIResponse, error)
 	PostUnstar(authToken string, movieID string) (*APIResponse, error)
+	PostClear(authToken string, movieID string) (*APIResponse, error)
 	PostWant(authToken string, movieID string) (*APIResponse, error)
 	PostWatched(authToken string, movieID string) (*APIResponse, error)
 	// movie
