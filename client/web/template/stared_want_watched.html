@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="../static/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/base.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/stared_want_watched.css">
+	<script type="text/javascript" src="../static/js/base.js"></script>
+	<script type="text/javascript" src="../static/js/stared_want_watched.js"></script>
+	<title>Filmer</title>
+</head>
+<body>
+	<header>
+		<nav>
+			<div class="logo-container">
+				<button class="nav-elem logo"><a href="./index.html">
+					<img src="../static/img/favicon.ico" alt="logo">
+				</a></button>
+			</div>
+			<div class="right-nav-container">
+				<button class="nav-elem nav-menu-button-elem">
+					<a id="menu-search-link" href="./search.html">search</a>
+				</button>
+				<button class="nav-elem nav-menu-button-elem">
+					<a id="menu-stared-link" href="./stared.html">stared</a>
+				</button>
+				<button class="nav-elem nav-menu-button-elem">
+					<a id="menu-want-link" href="#">want</a>
+				</button>
+				<button class="nav-elem nav-menu-button-elem">
+					<a id="menu-watched-link" href="#">watched</a>
+				</button>
+
+				<button class="nav-elem profile"><a href="./profile.html">
+					<img src="../static/img/profile.svg" alt="profile">
+				</a></button>
+			</div>
+		</nav>
+
+		<h1 class="title">Filmer</h1>
+	</header>
+
+	<div class="content">
+		<h3 class="subtitle">Stared movies</h3>
+
+		<div class="flex-content">
+			<div id="flex-settings">
+				<div class="settings">
+					<p class="setting-header">Order</p>
+
+					<a class="sort-field-link" data-link-value="title" href="?sortField=title">title</a>
+					<a class="sort-field-link" data-link-value="rating" href="?sortField=rating">rating</a>
+					<a class="sort-field-link" data-link-value="year" href="?sortField=year">year</a>
+					<a class="sort-field-link" data-link-value="updated_at" href="?sortField=updated_at">updated at</a>
+
+					<div class="links-switch">
+						<a class="sort-order-link asc-order" data-link-value="asc" href="?sortOrder=asc">ASC</a>
+						<a class="sort-order-link desc-order" data-link-value="desc" href="?sortOrder=desc">DESC</a>
+					</div>
+				</div>
+
+				<!-- <form id="filter-form" onsubmit="addSortParamsToForm(this)" class="settings" action="" method="get"> -->
+				<form id="filter-form" class="settings" action="" method="get">
+					<p class="setting-header">Filters</p>
+
+					<input id="sort-field-in-filter" type="hidden" name="sortField" value="">
+					<input id="sort-order-in-filter" type="hidden" name="sortOrder" value="">
+
+					<div class="filters-separator"></div>
+					<div class="filter-setting">
+						<p class="accent">genres</p>
+
+						<div id="filter-genre-list">
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="детектив"><span>детектив</span>
+							</label>
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="комедия"><span>комедия</span>
+							</label>
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="криминал"><span>криминал</span>
+							</label>
+
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="мелодрама"><span>мелодрама</span>
+							</label>
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="триллер"><span>триллер</span>
+							</label>
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="боевик"><span>боевик</span>
+							</label>
+
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="фэнтези"><span>фэнтези</span>
+							</label>
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="фантастика"><span>фантастика</span>
+							</label>
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="драма"><span>драма</span>
+							</label>
+
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="мультфильм"><span>мультфильм</span>
+							</label>
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="спорт"><span>спорт</span>
+							</label>
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="военный"><span>военный</span>
+							</label>
+
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="приключения"><span>приключения</span>
+							</label>
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="документальный"><span>документальный</span>
+							</label>
+
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="короткометражка"><span>короткометражка</span>
+							</label>
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="реальное ТВ"><span>реальное ТВ</span>
+							</label>
+
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="семейный"><span>семейный</span>
+							</label>
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="биография"><span>биография</span>
+							</label>
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="аниме"><span>аниме</span>
+							</label>
+
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="церемония"><span>церемония</span>
+							</label>
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="новости"><span>новости</span>
+							</label>
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="концерт"><span>концерт</span>
+							</label>
+
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="фильм-нуар"><span>фильм-нуар</span>
+							</label>
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="детский"><span>детский</span>
+							</label>
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="ужасы"><span>ужасы</span>
+							</label>
+
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="вестерн"><span>вестерн</span>
+							</label>
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="история"><span>история</span>
+							</label>
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="мюзикл"><span>мюзикл</span>
+							</label>
+
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="музыка"><span>музыка</span>
+							</label>
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="ток-шоу"><span>ток-шоу</span>
+							</label>
+							<label class="checkbox-btn">
+								<input name="genres" type="checkbox" value="игра"><span>игра</span>
+							</label>
+						</div>
+					</div>
+
+					<div class="filters-separator"></div>
+					<div class="filter-setting">
+						<p class="accent">rating from</p>
+
+						<div class="range-box" id="filter-rating-from">
+							<input type="range" class="range" name="ratingFrom" min="0" max="10" value="0" step="0.1">
+							<span class="range-value">0</span>
+						</div>
+					</div>
+
+					<div class="filters-separator"></div>
+					<div class="filter-setting">
+						<p class="accent">year from</p>
+						<input class="filter-year" id="filter-year-from" type="number" name="yearFrom" min="1500" max="3000" value="1500">
+					</div>
+
+					<div class="filters-separator"></div>
+					<div class="filter-setting">
+						<p class="accent">year to</p>
+						<input class="filter-year" id="filter-year-to" type="number" name="yearTo" min="1500" max="3000" value="3000">
+					</div>
+
+					<div class="filters-separator"></div>
+					<div class="filter-setting" id="filter-type">
+						<p class="accent">type</p>
+
+						<div class="radio-button">
+							<input type="radio" name="type" value="все" id="type-all"/>
+							<label for="type-all">все</label>
+						</div>
+
+						<div class="radio-button">
+							<input type="radio" name="type" value="фильм" id="type-film"/>
+							<label for="type-film">фильм</label>
+						</div>
+
+						<div class="radio-button">
+							<input type="radio" name="type" value="сериал" id="type-series"/>
+							<label for="type-series">сериал</label>
+						</div>
+
+						<div class="radio-button">
+							<input type="radio" name="type" value="видео" id="type-video"/>
+							<label for="type-video">видео</label>
+						</div>
+
+						<div class="radio-button">
+							<input type="radio" name="type" value="мини-сериал" id="type-mini-series"/>
+							<label for="type-mini-series">мини-сериал</label>
+						</div>
+					</div>
+
+					<div class="filters-separator"></div>
+					<button class="filters-submit-btn" type="submit">Apply</button>
+				</form>
+			</div>
+			<div class="list-movies"></div>
+		</div>
+	</div>
+</body>
+</html>
