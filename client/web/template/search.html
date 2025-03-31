@@ -2,6 +2,7 @@
 
 {% block css %}
 	<link rel="stylesheet" type="text/css" href="/static/css/search.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/list_movies.css">
 	<link rel="stylesheet" type="text/css" href="/static/css/pagination.css">
 {% endblock %}
 
@@ -25,7 +26,7 @@
 
 		<div class="list-movies">
 		{% for movie in docs %}
-			<a class="movie" href="/user-movie/{{ movie.id|floatformat:0 }}">
+			<a class="movie" href="/user-movie/info/{{ movie.id|floatformat:0 }}">
 				<div class="movie-poster">
 					<img src='{{ movie.poster.url|default:"/static/img/non_poster.svg" }}'>
 				</div>
@@ -87,7 +88,6 @@
 		{% endfor %}
 		</div>
 
-		<!-- data-pagination-total="{{ total|floatformat:0 }}" -->
 		<div id="pagination" data-pagination-pages="{{ pages|floatformat:0 }}"></div>
 	</div>
 	<script type="text/javascript" src="/static/js/pagination.js"></script>

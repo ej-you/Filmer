@@ -2,6 +2,7 @@ package http
 
 import (
 	"fmt"
+	"net/url"
 
 	fiber "github.com/gofiber/fiber/v2"
 
@@ -62,6 +63,78 @@ func (hm userMovieHandlerManager) movieGET(ctx *fiber.Ctx) error {
 		(*apiResp)["movie"] = movieData
 	}
 	return ctx.Render("movie", fiber.Map(*apiResp))
+}
+
+// Render stared page
+func (hm userMovieHandlerManager) staredGET(ctx *fiber.Ctx) error {
+	var err error
+	// parse query-params
+	queryParams, err := url.ParseQuery(string(ctx.Request().URI().QueryString()))
+	if err != nil {
+		return fmt.Errorf("get stared: parse query params: %w", err)
+	}
+	if len(queryParams["type"]) > 0 && queryParams["type"][0] == "все" {
+		delete(queryParams, "type")
+	}
+	categoryIn := repository.CategoryUserMoviesIn(queryParams)
+	// get access token
+	accessToken := ctx.Locals("accessToken").(string)
+
+	// send request to REST API
+	apiResp, err := hm.api.GetStared(accessToken, categoryIn)
+	if err != nil {
+		return fmt.Errorf("get stared: %w", err)
+	}
+	(*apiResp)["title"] = "Stared"
+	return ctx.Render("stared_want_watched", fiber.Map(*apiResp))
+}
+
+// Render want page
+func (hm userMovieHandlerManager) wantGET(ctx *fiber.Ctx) error {
+	var err error
+	// parse query-params
+	queryParams, err := url.ParseQuery(string(ctx.Request().URI().QueryString()))
+	if err != nil {
+		return fmt.Errorf("get want: parse query params: %w", err)
+	}
+	if len(queryParams["type"]) > 0 && queryParams["type"][0] == "все" {
+		delete(queryParams, "type")
+	}
+	categoryIn := repository.CategoryUserMoviesIn(queryParams)
+	// get access token
+	accessToken := ctx.Locals("accessToken").(string)
+
+	// send request to REST API
+	apiResp, err := hm.api.GetWant(accessToken, categoryIn)
+	if err != nil {
+		return fmt.Errorf("get want: %w", err)
+	}
+	(*apiResp)["title"] = "Want"
+	return ctx.Render("stared_want_watched", fiber.Map(*apiResp))
+}
+
+// Render watched page
+func (hm userMovieHandlerManager) watchedGET(ctx *fiber.Ctx) error {
+	var err error
+	// parse query-params
+	queryParams, err := url.ParseQuery(string(ctx.Request().URI().QueryString()))
+	if err != nil {
+		return fmt.Errorf("get watched: parse query params: %w", err)
+	}
+	if len(queryParams["type"]) > 0 && queryParams["type"][0] == "все" {
+		delete(queryParams, "type")
+	}
+	categoryIn := repository.CategoryUserMoviesIn(queryParams)
+	// get access token
+	accessToken := ctx.Locals("accessToken").(string)
+
+	// send request to REST API
+	apiResp, err := hm.api.GetWatched(accessToken, categoryIn)
+	if err != nil {
+		return fmt.Errorf("get watched: %w", err)
+	}
+	(*apiResp)["title"] = "Watched"
+	return ctx.Render("stared_want_watched", fiber.Map(*apiResp))
 }
 
 // Star user movie via send request to REST API

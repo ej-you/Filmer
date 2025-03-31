@@ -45,7 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		const sortFilterSettingsElem = document.getElementById("flex-settings")
 		const modalContainer = document.querySelector("#modal-flex-settings .modal-window")
 		modalContainer.appendChild(sortFilterSettingsElem)
-		sortFilterSettingsElem.style = "display: flex"
+		sortFilterSettingsElem.style = "display: flex";
+
+		// disable main page scroll
+		document.body.style.overflow = "hidden";
 	});
 	// close modal window
     document.querySelector("#modal-flex-settings .modal-close").addEventListener("click", function(event) {
@@ -53,9 +56,12 @@ document.addEventListener('DOMContentLoaded', () => {
     	document.getElementById("modal-flex-settings").style.display = "none"
 
 		const sortFilterSettingsElem = document.getElementById("flex-settings")
-		const asideContainer = document.querySelector(".flex-content")
-		asideContainer.appendChild(sortFilterSettingsElem)
-		sortFilterSettingsElem.style = "display: none"
+		const asideContainer = document.querySelector(".flex-content-row")
+		asideContainer.insertBefore(sortFilterSettingsElem, document.getElementById("burger-flex-settings"))
+		sortFilterSettingsElem.style = "display: none";
+
+		// enable back main page scroll
+		document.body.style.overflow = "auto";
     });
 });
 
@@ -63,35 +69,22 @@ document.addEventListener('DOMContentLoaded', () => {
 // + set and select order links +
 // +----------------------------+
 
-// add background to selected sort links and setup sort links href
-function setupSortLinks() {
+function getSortParams() {
 	let sortField = searchParams.get("sortField")
 	// if sortField is not presented
-	if (sortField === null) {
+	if (sortField == null) {
 		sortField = "updated_at"
 	}
-	// sort fields
-	document.querySelectorAll(".sort-field-link").forEach((sortFieldLink) => {
-		if (sortFieldLink.dataset.linkValue === sortField) {
-			sortFieldLink.style.backgroundColor = "#2e2e2e"
-		}
-	});
 
 	let sortOrder = searchParams.get("sortOrder")
 	// if sortOrder is not presented
-	if (sortOrder === null && sortField === "updated_at") {
+	if (sortOrder == null && sortField === "updated_at") {
 		sortOrder = "desc"
 	} else if (sortOrder === null) {
 		sortOrder = "asc"
 	}
-	// sort orders
-	document.querySelectorAll(".sort-order-link").forEach((sortOrderLink) => {
-		if (sortOrderLink.dataset.linkValue === sortOrder) {
-			sortOrderLink.style.backgroundColor = "#2e2e2e"
-		}
-	});
 
-	updateSortLinksHref(sortField, sortOrder)
+	return [sortField, sortOrder]
 }
 
 // update sort links href with selected sort field and order
@@ -102,6 +95,24 @@ function updateSortLinksHref(sortField, sortOrder) {
 	document.querySelectorAll(".sort-order-link").forEach((sortOrderLink) => {
 		sortOrderLink.href = sortOrderLink.href + `&sortField=${sortField}`
 	});
+}
+
+// add background to selected sort links and setup sort links href
+function setupSortLinks() {
+	const [sortField, sortOrder] = getSortParams()
+	// sort fields
+	document.querySelectorAll(".sort-field-link").forEach((sortFieldLink) => {
+		if (sortFieldLink.dataset.linkValue === sortField) {
+			sortFieldLink.style.backgroundColor = "#2e2e2e"
+		}
+	});
+	// sort orders
+	document.querySelectorAll(".sort-order-link").forEach((sortOrderLink) => {
+		if (sortOrderLink.dataset.linkValue === sortOrder) {
+			sortOrderLink.style.backgroundColor = "#2e2e2e"
+		}
+	});
+	updateSortLinksHref(sortField, sortOrder)
 }
 
 document.addEventListener('DOMContentLoaded', setupSortLinks);
@@ -184,12 +195,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // add sort query-params values to filter form
 document.addEventListener('DOMContentLoaded', () => {
-	if (searchParams.has("sortField")) {
-		document.getElementById("sort-field-in-filter").value = searchParams.get("sortField")
-	}
-	if (searchParams.has("sortOrder")) {
-		document.getElementById("sort-order-in-filter").value = searchParams.get("sortOrder")
-	}
+	const [sortField, sortOrder] = getSortParams()
+	document.getElementById("sort-field-in-filter").value = sortField
+	document.getElementById("sort-order-in-filter").value = sortOrder
 });
 
 // add filter query params (from page URL) to sort links (then click to follow link)

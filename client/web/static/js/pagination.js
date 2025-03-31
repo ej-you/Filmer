@@ -24,15 +24,9 @@ function getPageHref(page) {
 	// parse keyword query param
 	let paramsString = window.location.search;
 	let searchParams = new URLSearchParams(paramsString);
-
 	// create and return href
-	let href;
-	if (searchParams.has("q")) {
-		href = `${window.location.pathname}?q=${searchParams.get("q")}&page=${page}`;
-	} else {
-		href = `${window.location.pathname}?page=${page}`;
-	}
-	return href
+	searchParams.set("page", page)
+	return `${window.location.pathname}?${searchParams.toString()}`
 }
 
 // returns new page button elem with specified page (int)

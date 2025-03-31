@@ -139,6 +139,14 @@ nav {
 	display: none;
 }
 
+.page-error-container {
+	width: 50%;
+}
+.page-error-container h3 {
+	font-size: 23px;
+	margin-bottom: 5px;
+}
+
 /* for width to 750px and less */
 @media screen and (max-width: 750px) {
 	h1 {
@@ -172,6 +180,10 @@ nav {
 	.person-poster img {
 		height: 135px;
 		width: 90px;
+	}
+
+	.page-error-container {
+		width: 90%;
 	}
 }
 

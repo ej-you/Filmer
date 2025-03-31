@@ -4,9 +4,9 @@ package repository
 type RestAPI interface {
 	// user movie (GET)
 	GetMovie(authToken string, kinopoiskID int) (*APIResponse, error)
-	GetStared(authToken string, queryParams *CategoryUserMoviesIn) (*APIResponse, error)
-	GetWant(authToken string, queryParams *CategoryUserMoviesIn) (*APIResponse, error)
-	GetWatched(authToken string, queryParams *CategoryUserMoviesIn) (*APIResponse, error)
+	GetStared(authToken string, queryParams CategoryUserMoviesIn) (*APIResponse, error)
+	GetWant(authToken string, queryParams CategoryUserMoviesIn) (*APIResponse, error)
+	GetWatched(authToken string, queryParams CategoryUserMoviesIn) (*APIResponse, error)
 	// user movie (POST)
 	PostStar(authToken string, movieID string) (*APIResponse, error)
 	PostUnstar(authToken string, movieID string) (*APIResponse, error)
@@ -35,19 +35,21 @@ type SearchMoviesIn struct {
 }
 
 // Query-params for get stared || want || watched movies
-type CategoryUserMoviesIn struct {
-	// filter
-	RatingFrom *float64 `json:"ratingFrom,omitempty"`
-	YearFrom   *int     `json:"yearFrom,omitempty"`
-	YearTo     *int     `json:"yearTo,omitempty"`
-	Type       *string  `json:"type,omitempty"`
-	Genres     []string `json:"genres,omitempty"`
-	// sort
-	SortField *string `json:"sortField,omitempty"`
-	SortOrder *string `json:"sortOrder,omitempty"`
-	// pagination
-	Page *int `json:"page,omitempty"`
-}
+type CategoryUserMoviesIn map[string][]string
+
+// type CategoryUserMoviesIn struct {
+// 	// filter
+// 	RatingFrom *string  `query:"ratingFrom,omitempty"`
+// 	YearFrom   *string  `query:"yearFrom,omitempty"`
+// 	YearTo     *string  `query:"yearTo,omitempty"`
+// 	Type       *string  `query:"type,omitempty"`
+// 	Genres     []string `query:"genres,omitempty"`
+// 	// sort
+// 	SortField *string `query:"sortField,omitempty"`
+// 	SortOrder *string `query:"sortOrder,omitempty"`
+// 	// pagination
+// 	Page *string `query:"page,omitempty"`
+// }
 
 // struct to parse and return JSON-response from REST API
 type APIResponse map[string]any

@@ -43,16 +43,27 @@ func (api restAPIClient) GetMovie(authToken string, kinopoiskID int) (*repositor
 	return apiResp, nil
 }
 
-func (api restAPIClient) GetStared(authToken string, queryParams *repository.CategoryUserMoviesIn) (*repository.APIResponse, error) {
-	return nil, nil
+func (api restAPIClient) GetStared(authToken string, queryParams repository.CategoryUserMoviesIn) (*repository.APIResponse, error) {
+	return api.getCategory(authToken, "stared", &queryParams)
 }
 
-func (api restAPIClient) GetWant(authToken string, queryParams *repository.CategoryUserMoviesIn) (*repository.APIResponse, error) {
-	return nil, nil
+func (api restAPIClient) GetWant(authToken string, queryParams repository.CategoryUserMoviesIn) (*repository.APIResponse, error) {
+	return api.getCategory(authToken, "want", &queryParams)
 }
 
-func (api restAPIClient) GetWatched(authToken string, queryParams *repository.CategoryUserMoviesIn) (*repository.APIResponse, error) {
-	return nil, nil
+func (api restAPIClient) GetWatched(authToken string, queryParams repository.CategoryUserMoviesIn) (*repository.APIResponse, error) {
+	return api.getCategory(authToken, "watched", &queryParams)
+}
+
+// for GetStared, GetWant and GetWatched
+func (api restAPIClient) getCategory(authToken string, category string, queryParams *repository.CategoryUserMoviesIn) (*repository.APIResponse, error) {
+	apiResp := new(repository.APIResponse)
+	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", authToken)}
+	url := fmt.Sprintf("%s/api/v1/films/%s", api.cfg.RestAPI.Host, category)
+	if err := api.sendGET(url, headers, *queryParams, apiResp); err != nil {
+		return nil, fmt.Errorf("get %s user movies using rest api: send get request: %w", category, err)
+	}
+	return apiResp, nil
 }
 
 func (api restAPIClient) PostStar(authToken string, movieID string) (*repository.APIResponse, error) {
@@ -109,9 +120,9 @@ func (api restAPIClient) PostWatched(authToken string, movieID string) (*reposit
 func (api restAPIClient) GetSearchMovies(authToken string, queryParams *repository.SearchMoviesIn) (*repository.APIResponse, error) {
 	apiResp := new(repository.APIResponse)
 	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", authToken)}
-	query := map[string]string{
-		"q":    queryParams.Keyword,
-		"page": strconv.Itoa(queryParams.Page),
+	query := map[string][]string{
+		"q":    []string{queryParams.Keyword},
+		"page": []string{strconv.Itoa(queryParams.Page)},
 	}
 	if err := api.sendGET(api.cfg.RestAPI.Host+"/api/v1/kinopoisk/films/search", headers, query, apiResp); err != nil {
 		return nil, fmt.Errorf("search movies using rest api: send get request: %w", err)
@@ -190,7 +201,7 @@ func (api restAPIClient) sendRequest(req *http.Request, outStruct *repository.AP
 }
 
 // Send GET request to REST API
-func (api restAPIClient) sendGET(url string, headers map[string]string, queryParams map[string]string, outStruct *repository.APIResponse) error {
+func (api restAPIClient) sendGET(url string, headers map[string]string, queryParams map[string][]string, outStruct *repository.APIResponse) error {
 	reqContext, cancel := context.WithTimeout(context.Background(), api.requestTimeout)
 	defer cancel()
 
@@ -209,7 +220,9 @@ func (api restAPIClient) sendGET(url string, headers map[string]string, queryPar
 		// add query-params
 		query := req.URL.Query()
 		for k, v := range queryParams {
-			query.Add(k, v)
+			for _, val := range v {
+				query.Add(k, val)
+			}
 		}
 		req.URL.RawQuery = query.Encode()
 	}

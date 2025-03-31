@@ -1,47 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="../static/css/reset.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/base.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/stared_want_watched.css">
-	<script type="text/javascript" src="../static/js/base.js"></script>
-	<script type="text/javascript" src="../static/js/stared_want_watched.js"></script>
-	<title>Filmer</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-	<header>
-		<nav>
-			<div class="logo-container">
-				<button class="nav-elem logo"><a href="./index.html">
-					<img src="../static/img/favicon.ico" alt="logo">
-				</a></button>
-			</div>
-			<div class="right-nav-container">
-				<button class="nav-elem nav-menu-button-elem">
-					<a id="menu-search-link" href="./search.html">search</a>
-				</button>
-				<button class="nav-elem nav-menu-button-elem">
-					<a id="menu-stared-link" href="./stared.html">stared</a>
-				</button>
-				<button class="nav-elem nav-menu-button-elem">
-					<a id="menu-want-link" href="#">want</a>
-				</button>
-				<button class="nav-elem nav-menu-button-elem">
-					<a id="menu-watched-link" href="#">watched</a>
-				</button>
+{% block css %}
+<!-- 	<link rel="stylesheet" type="text/css" href="/static/css/search.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/pagination.css"> -->
+	<link rel="stylesheet" type="text/css" href="/static/css/list_movies.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/stared_want_watched.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/pagination.css">
+	<script type="text/javascript" src="/static/js/base.js"></script>
+	<script type="text/javascript" src="/static/js/stared_want_watched.js"></script>
+{% endblock %}
 
-				<button class="nav-elem profile"><a href="./profile.html">
-					<img src="../static/img/profile.svg" alt="profile">
-				</a></button>
-			</div>
-		</nav>
+{% block title %}{{ title|default:"Category" }} | Filmer{% endblock %}
 
-		<h1 class="title">Filmer</h1>
-	</header>
-
+{% block content %}
 	<div id="modal-flex-settings">
 		<div class="modal-close">
             <svg version="1.1" viewBox="0 0 24 24" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="grid_system"/><g id="_icons"><path d="M5.3,18.7C5.5,18.9,5.7,19,6,19s0.5-0.1,0.7-0.3l5.3-5.3l5.3,5.3c0.2,0.2,0.5,0.3,0.7,0.3s0.5-0.1,0.7-0.3   c0.4-0.4,0.4-1,0-1.4L13.4,12l5.3-5.3c0.4-0.4,0.4-1,0-1.4s-1-0.4-1.4,0L12,10.6L6.7,5.3c-0.4-0.4-1-0.4-1.4,0s-0.4,1,0,1.4   l5.3,5.3l-5.3,5.3C4.9,17.7,4.9,18.3,5.3,18.7z"/></g></svg>
@@ -49,12 +20,18 @@
         <div class="modal-window"></div>
 	</div>
 
-	<div class="content">
-		<h3 class="subtitle">Stared movies</h3>
+	<div class="content flex-content-column">
+		<h3 class="subtitle">{{ title|default:"Category" }} movies</h3>
 
-		<div class="flex-content">
+		{% if pagination.total %}
+			<h4 id="found-total"><span class="accent">Found movies: {{ pagination.total|floatformat:0 }}</span></h4>
+		{% else %}
+			<h4 id="found-total"><span class="accent">Found movies: 0</span></h4>
+		{% endif %}
+
+		<div class="flex-content-row">
 			<div id="flex-settings">
-				<div class="settings">
+				<div id="order-settings" class="settings">
 					<p class="setting-header">Order</p>
 
 					<a class="sort-field-link" data-link-value="title" href="?sortField=title">title</a>
@@ -246,8 +223,60 @@
 				<button id="burger-btn">sort and filters</button>
 			</div>
 
-			<div class="list-movies"></div>
+			<div class="list-movies">
+			{% for user_movie in movies %}
+				<a class="movie" href="/user-movie/info/{{ user_movie.movie.kinopoiskID|floatformat:0 }}">
+					<div class="movie-poster">
+						<img src='{{ user_movie.movie.imgURL|default:"/static/img/non_poster.svg" }}'>
+					</div>
+					<div class="movie-info">
+						<div class="movie-info-item">
+							<label class="movie-info-label">Title:</label>
+							<p>{{ user_movie.movie.title|default:"-" }}</p>
+						</div>
+
+						<div class="movie-info-item">
+							<label class="movie-info-label">Type:</label>
+							<p>{{ user_movie.movie.type|default:"-" }}</p>
+						</div>
+
+						<div class="movie-info-item">
+							<label class="movie-info-label">Rating:</label>
+							{% if user_movie.movie.rating == 0.0 %}
+							    <p>-</p>
+							{% else %}
+								<p>{{ user_movie.movie.rating|floatformat:1 }}</p>
+							{% endif %}
+						</div>
+
+						<div class="movie-info-item">
+							<label class="movie-info-label">Year:</label>
+							{% if user_movie.movie.year == 0.0 %}
+							    <p>-</p>
+							{% else %}
+								<p>{{ user_movie.movie.year|floatformat:0 }}</p>
+							{% endif %}
+						</div>
+
+						<div class="movie-info-item movie-genre-list">
+							<label class="movie-info-label">Genres:</label>
+							<ul>
+							{% if user_movie.movie.genres|length == 0 %}
+								<li>-</li>
+							{% else %}
+								{% for genre in user_movie.movie.genres %}
+									<li>{{ genre.genre }}</li>
+								{% endfor %}
+							{% endif %}
+							</ul>
+						</div>
+					</div>
+				</a>
+			{% endfor %}
+			</div>
 		</div>
+
+		<div id="pagination" data-pagination-pages="{{ pagination.pages|floatformat:0 }}"></div>
 	</div>
-</body>
-</html>
+	<script type="text/javascript" src="/static/js/pagination.js"></script>
+{% endblock %}

@@ -1,3 +1,6 @@
+const minWidth = 750
+let iconIsSet = false
+
 // +---------------+
 // + Error message +
 // +---------------+
@@ -40,10 +43,6 @@ document.addEventListener("DOMContentLoaded", function () {
 // +--------------+
 // + Header icons +
 // +--------------+
-
-const minWidth = 750
-let iconIsSet = false
-
 
 // switch menu buttons from text to icons
 function toIcons() {

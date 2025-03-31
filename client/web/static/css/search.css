@@ -69,72 +69,6 @@ button[type="submit"]:hover {
 	background-color: var(--gray);
 }
 
-#found-total {
-	font-size: 23px;
-}
-
-.list-movies {
-	width: 100%;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
-	gap: 15px;
-}
-
-.movie {
-	display: flex;
-	padding: 20px;
-	gap: 20px;
-
-	flex-grow: 1;
-	min-width: 500px;
-
-	background-color: var(--dark-gray);
-	box-shadow: 0px 0px 25px 1px var(--light-black);
-	border-radius: 20px;
-}
-.movie > * {
-	margin-left: 0;
-}
-
-/* full movie info without poster */
-.movie-info {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-
-	align-items: flex-start;
-	flex-grow: 1;
-
-	margin-top: 10px;
-	margin-bottom: 10px;
-}
-
-.movie-info-item {
-	display: flex;
-	align-items: baseline;
-
-	margin: 3px 0;
-}
-.movie-info-item label {
-	color: var(--light-red);
-	margin-right: 5px;
-}
-
-.movie-genre-list {
-	margin: 0;
-}
-.movie-genre-list ul {
-	display: flex;
-	justify-content: flex-start;
-	flex-wrap: wrap;
-}
-.movie-genre-list ul li {
-	margin-left: 4px;
-	margin-right: 4px;
-}
-
-
 /* for width to 750px and less */
 @media screen and (max-width: 750px) {
 	h3 {
@@ -145,27 +79,11 @@ button[type="submit"]:hover {
 		margin: auto 10px 150px 10px;
 	}
 
-	#found-total {
-		font-size: 20px;
-	}
-
 	.form-input {
 		font-size: 18px;
 	}
 
 	button[type="submit"] {
 		padding: 13px 5%;
-	}
-
-	.list-movies {
-		gap: 10px;
-	}
-
-	.movie {
-		min-width: 330px;
-	}
-
-	.movie-info-item > *, #pagination * {
-		font-size: 16px;
 	}
 }
