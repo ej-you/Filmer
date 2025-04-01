@@ -10,7 +10,7 @@ import (
 	"Filmer/server/config"
 )
 
-func main() {
+func runMigrates() {
 	cfg := config.NewConfig()
 
 	fmt.Printf("Migrate DB %q\n", cfg.Database.ConnURL)

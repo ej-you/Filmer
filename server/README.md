@@ -49,7 +49,7 @@ docker compose up -d
 ```
 3. Migrate DB
 ```
-docker exec -it filmer_server sh -c "/app/migrate_db"
+docker exec -it filmer_server sh -c "/app/app_server migrate"
 ```
 
 <hr>

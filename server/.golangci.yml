@@ -1,3 +1,5 @@
+version: "2"
+
 linters:
   disable-all: true
   enable:
@@ -16,8 +18,6 @@ linters:
     - gocritic
     - gocyclo
     - godox
-    - gofmt
-    - goimports
     - goprintffuncname
     - gosec
     - ineffassign
@@ -60,7 +60,7 @@ linters-settings:
 issues:
   exclude-dirs-use-default: false
   exclude-dirs:
-    - docs
+    - web
   exclude-rules:
     - linters:
         - revive
@@ -73,7 +73,6 @@ issues:
       text: "Magic number: 24, in <argument> detected"
       linters:
         - mnd
-
   fix: false
 
 run:
