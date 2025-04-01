@@ -86,6 +86,7 @@ func (s fiberServer) Run() {
 	fibertApp.Use(mwManager.Logger())
 	fibertApp.Use(mwManager.Recover())
 	fibertApp.Use(mwManager.CORS())
+	fibertApp.Use(mwManager.Cache())
 	fibertApp.Use(mwManager.Swagger())
 
 	// set up handlers

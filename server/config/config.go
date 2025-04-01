@@ -23,6 +23,7 @@ type (
 		CorsAllowedMethods string        `env-required:"true" env:"SERVER_CORS_ALLOWED_METHODS" env-description:"cors allowed methods"`
 		JwtSecret          string        `env-required:"true" env:"JWT_SECRET" env-description:"secret for JWT-token signature"`
 		TokenExpired       time.Duration `env:"TOKEN_EXPIRED" env-default:"30m" env-description:"JWT-token expired duration (default: 30m)"`
+		CacheExpiration    time.Duration `env:"CACHE_EXPIRATION" env-default:"24h" env-description:"Cache expiration time (default: 24h)"`
 	}
 
 	Cache struct {
