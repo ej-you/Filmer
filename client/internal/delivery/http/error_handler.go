@@ -27,6 +27,7 @@ func CustomErrorHandler(ctx *fiber.Ctx, err error) error {
 	if fiberErr.Code == http.StatusPaymentRequired {
 		return ctx.Status(http.StatusPaymentRequired).Render("402", fiber.Map{})
 	}
+
 	// url and query params before error occurs
 	url := ctx.OriginalURL()
 	queryParams := ctx.Queries()

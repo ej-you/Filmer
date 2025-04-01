@@ -99,7 +99,7 @@ func TestStarMovie(t *testing.T) {
 	cfg := config.NewConfig()
 	api := NewRestAPI(cfg)
 
-	apiResp, err := api.PostStar(authToken, movieID)
+	apiResp, err := api.PostCategory(authToken, "star", movieID)
 	if err != nil {
 		t.Fatalf("Star movie failed: %v", err)
 	}
@@ -124,7 +124,7 @@ func TestGetStared(t *testing.T) {
 		// "page":       []string{"1"},
 	}
 
-	apiResp, err := api.GetStared(authToken, categoryIn)
+	apiResp, err := api.GetCategory(authToken, "stared", categoryIn)
 	if err != nil {
 		t.Fatalf("Get stared movies failed: %v", err)
 	}
