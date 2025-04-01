@@ -70,7 +70,7 @@ func (s fiberServer) Run() {
 		JSONEncoder:  s.jsonify.Marshal,
 		JSONDecoder:  s.jsonify.Unmarshal,
 		// https://www.f5.com/company/blog/nginx/socket-sharding-nginx-release-1-9-1
-		Prefork:      true,
+		Prefork:      false,
 		ServerHeader: s.cfg.App.Name,
 	})
 
