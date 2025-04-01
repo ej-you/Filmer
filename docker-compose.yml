@@ -40,6 +40,23 @@ services:
       - cockroach
       - redis
 
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: filmer_client
+    restart: always
+    env_file:
+      - ./client/.env
+    volumes:
+      - client_logs:/logs:rw
+    expose:
+      - "3001"
+    networks:
+      main_network:
+    depends_on:
+      - server
+
   nginx:
     build:
       context: ./nginx
@@ -51,7 +68,7 @@ services:
     networks:
       main_network:
     depends_on:
-      - server
+      - client
 
 
 networks:
@@ -62,3 +79,4 @@ networks:
 volumes:
   cockroach_data:
   server_logs:
+  client_logs:
