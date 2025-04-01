@@ -10,7 +10,7 @@
 	<script type="text/javascript" src="/static/js/stared_want_watched.js"></script>
 {% endblock %}
 
-{% block title %}{{ title|default:"Category" }} | Filmer{% endblock %}
+{% block title %}{{ title|capfirst|default:"Category" }} | Filmer{% endblock %}
 
 {% block content %}
 	<div id="modal-flex-settings">
@@ -21,7 +21,7 @@
 	</div>
 
 	<div class="content flex-content-column">
-		<h3 class="subtitle">{{ title|default:"Category" }} movies</h3>
+		<h3 class="subtitle">{{ title|capfirst|default:"Category" }} movies</h3>
 
 		{% if pagination.total %}
 			<h4 id="found-total"><span class="accent">Found movies: {{ pagination.total|floatformat:0 }}</span></h4>

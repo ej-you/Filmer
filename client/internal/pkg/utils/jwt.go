@@ -7,8 +7,14 @@ import (
 	jwt "github.com/golang-jwt/jwt/v5"
 )
 
+const (
+	hoursInDay = 24
+	secInMin   = 60
+	secInHour  = 3600
+)
+
 // Return days, hours, minutes and seconds until token is expire
-func GetJWTExpirationData(accessToken string) (int, int, int, int, error) {
+func GetJWTExpirationData(accessToken string) (days, hours, minutes, seconds int, err error) {
 	token, _, err := jwt.NewParser().ParseUnverified(accessToken, jwt.MapClaims{})
 	if err != nil {
 		return 0, 0, 0, 0, fmt.Errorf("parse token: %w", err)
@@ -27,11 +33,10 @@ func GetJWTExpirationData(accessToken string) (int, int, int, int, error) {
 
 	allSeconds := int(expirationDuration.Seconds())
 	// calc days, hours, minutes and seconds to expiration time separately
-	h := allSeconds / 3600 // non-normalized
-	m := (allSeconds - h*3600) / 60
-	s := allSeconds - h*3600 - m*60
-	d := h / 24
-	h = h - d*24
-
-	return d, h, m, s, nil
+	hours = allSeconds / secInHour // non-normalized
+	minutes = (allSeconds - hours*secInHour) / secInMin
+	seconds = allSeconds - hours*secInHour - minutes*secInMin
+	days = hours / hoursInDay
+	hours -= days * hoursInDay
+	return
 }

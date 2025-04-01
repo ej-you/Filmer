@@ -1,65 +1,72 @@
 package utils
 
 import (
+	"fmt"
+	"net/http"
+	"net/url"
 	"time"
 
 	fiber "github.com/gofiber/fiber/v2"
 
 	"Filmer/client/config"
+	"Filmer/client/internal/repository"
 )
 
+// check given status code is 2xx
 func StatusCode2xx(statusCode int) bool {
 	return statusCode/100 == 2
 }
 
-// create auth cookie for user
+// Create auth cookie for user
 func GetAuthCookie(cfg *config.Config, authToken string) *fiber.Cookie {
-	return &fiber.Cookie{
-		Name:     "auth",
-		Value:    authToken,
-		Path:     "/",
-		HTTPOnly: true,
-		Secure:   cfg.App.CookieSecure,
-		SameSite: "Strict",
-		Expires:  time.Now().Add(cfg.App.TokenExpired),
-	}
+	return createCookie("auth", authToken, cfg.App.CookieSecure, cfg.App.TokenExpired)
 }
 
-// clear auth cookie for user
+// Clear auth cookie for user
 func ClearAuthCookie(cfg *config.Config) *fiber.Cookie {
-	return &fiber.Cookie{
-		Name:     "auth",
-		Value:    "",
-		Path:     "/",
-		HTTPOnly: true,
-		Secure:   cfg.App.CookieSecure,
-		SameSite: "Strict",
-		Expires:  time.Now().Add(-time.Hour),
-	}
+	return createCookie("auth", "", cfg.App.CookieSecure, -time.Hour)
 }
 
-// create cookie with user email
+// Create cookie with user email
 func GetEmailCookie(cfg *config.Config, email string) *fiber.Cookie {
+	return createCookie("email", email, cfg.App.CookieSecure, cfg.App.TokenExpired)
+}
+
+// Clear cookie with user email
+func ClearEmailCookie(cfg *config.Config) *fiber.Cookie {
+	return createCookie("email", "", cfg.App.CookieSecure, -time.Hour)
+}
+
+func createCookie(name, value string, secure bool, expiresAfter time.Duration) *fiber.Cookie {
 	return &fiber.Cookie{
-		Name:     "email",
-		Value:    email,
+		Name:     name,
+		Value:    value,
 		Path:     "/",
 		HTTPOnly: true,
-		Secure:   cfg.App.CookieSecure,
+		Secure:   secure,
 		SameSite: "Strict",
-		Expires:  time.Now().Add(cfg.App.TokenExpired),
+		Expires:  time.Now().UTC().Add(expiresAfter),
 	}
 }
 
-// clear cookie with user email
-func ClearEmailCookie(cfg *config.Config) *fiber.Cookie {
-	return &fiber.Cookie{
-		Name:     "email",
-		Value:    "",
-		Path:     "/",
-		HTTPOnly: true,
-		Secure:   cfg.App.CookieSecure,
-		SameSite: "Strict",
-		Expires:  time.Now().Add(-time.Hour),
+// Parse movie ID from path
+func GetMovieIDPathParam(ctx *fiber.Ctx) (string, error) {
+	movieID := ctx.Params("movieID")
+	if movieID == "" {
+		return "", fiber.NewError(http.StatusBadRequest, "invalid movie ID was given")
 	}
+	return movieID, nil
+}
+
+// Get query params for category GET request
+func GetCategoryQueryParams(ctx *fiber.Ctx) (repository.CategoryUserMoviesIn, error) {
+	// parse query-params
+	queryParams, err := url.ParseQuery(string(ctx.Request().URI().QueryString()))
+	if err != nil {
+		return nil, fmt.Errorf("parse query params: %w", err)
+	}
+	if len(queryParams["type"]) > 0 && queryParams["type"][0] == "все" {
+		delete(queryParams, "type")
+	}
+	return repository.CategoryUserMoviesIn(queryParams), nil
 }

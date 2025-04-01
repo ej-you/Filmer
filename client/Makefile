@@ -10,6 +10,9 @@ dev:
 lint:
 	golangci-lint run -c ./.golangci.yml ./...
 
+clean-lint-cache:
+	golangci-lint cache clean
+
 # ------- #
 # SWAGGER #
 # ------- #

@@ -25,8 +25,10 @@ type (
 	}
 )
 
-var once sync.Once
-var cfg = new(Config)
+var (
+	once sync.Once
+	cfg  = new(Config)
+)
 
 // Config constructor
 // Returns app config loaded from ENV-vars

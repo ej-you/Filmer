@@ -2,13 +2,25 @@ package http
 
 import (
 	"fmt"
-	"net/url"
+	"net/http"
 
 	fiber "github.com/gofiber/fiber/v2"
 
 	"Filmer/client/config"
+	"Filmer/client/internal/app/constants"
+	"Filmer/client/internal/pkg/utils"
 	"Filmer/client/internal/repository"
-	restAPI "Filmer/client/internal/repository/rest_api"
+	restAPI "Filmer/client/internal/repository/restapi"
+)
+
+const (
+	categoryTemplate = "stared_want_watched" // for stared, want and watched render template
+	staredCategory   = "stared"
+	wantCategory     = "want"
+	watchedCategory  = "watched"
+	starCategory     = "star"
+	unstarCategory   = "unstar"
+	clearCategory    = "clear"
 )
 
 // Manager for user movie subroutes handlers
@@ -34,10 +46,10 @@ func (hm userMovieHandlerManager) movieGET(ctx *fiber.Ctx) error {
 		return fmt.Errorf("movie: %w", err)
 	}
 	if kinopoiskID <= 0 {
-		return fiber.NewError(400, "invalid kinopoisk ID was given")
+		return fiber.NewError(http.StatusBadRequest, "invalid kinopoisk ID was given")
 	}
 	// get access token
-	accessToken := ctx.Locals("accessToken").(string)
+	accessToken := ctx.Locals(constants.LocalsKeyAccessToken).(string)
 
 	// send request to REST API
 	apiResp, err := hm.api.GetMovie(accessToken, kinopoiskID)
@@ -49,9 +61,9 @@ func (hm userMovieHandlerManager) movieGET(ctx *fiber.Ctx) error {
 	(*apiResp)["want"] = false
 	(*apiResp)["watched"] = false
 	userMovieStatus := (*apiResp)["status"].(float64)
-	if userMovieStatus == 1 {
+	if userMovieStatus == constants.UserMovieStatusWant {
 		(*apiResp)["want"] = true
-	} else if userMovieStatus == 2 {
+	} else if userMovieStatus == constants.UserMovieStatusWatched {
 		(*apiResp)["watched"] = true
 	}
 
@@ -67,172 +79,77 @@ func (hm userMovieHandlerManager) movieGET(ctx *fiber.Ctx) error {
 
 // Render stared page
 func (hm userMovieHandlerManager) staredGET(ctx *fiber.Ctx) error {
-	var err error
-	// parse query-params
-	queryParams, err := url.ParseQuery(string(ctx.Request().URI().QueryString()))
-	if err != nil {
-		return fmt.Errorf("get stared: parse query params: %w", err)
-	}
-	if len(queryParams["type"]) > 0 && queryParams["type"][0] == "все" {
-		delete(queryParams, "type")
-	}
-	categoryIn := repository.CategoryUserMoviesIn(queryParams)
-	// get access token
-	accessToken := ctx.Locals("accessToken").(string)
-
-	// send request to REST API
-	apiResp, err := hm.api.GetStared(accessToken, categoryIn)
-	if err != nil {
-		return fmt.Errorf("get stared: %w", err)
-	}
-	(*apiResp)["title"] = "Stared"
-	return ctx.Render("stared_want_watched", fiber.Map(*apiResp))
+	return hm.categoryGET(ctx, staredCategory)
 }
 
 // Render want page
 func (hm userMovieHandlerManager) wantGET(ctx *fiber.Ctx) error {
-	var err error
-	// parse query-params
-	queryParams, err := url.ParseQuery(string(ctx.Request().URI().QueryString()))
-	if err != nil {
-		return fmt.Errorf("get want: parse query params: %w", err)
-	}
-	if len(queryParams["type"]) > 0 && queryParams["type"][0] == "все" {
-		delete(queryParams, "type")
-	}
-	categoryIn := repository.CategoryUserMoviesIn(queryParams)
-	// get access token
-	accessToken := ctx.Locals("accessToken").(string)
-
-	// send request to REST API
-	apiResp, err := hm.api.GetWant(accessToken, categoryIn)
-	if err != nil {
-		return fmt.Errorf("get want: %w", err)
-	}
-	(*apiResp)["title"] = "Want"
-	return ctx.Render("stared_want_watched", fiber.Map(*apiResp))
+	return hm.categoryGET(ctx, wantCategory)
 }
 
 // Render watched page
 func (hm userMovieHandlerManager) watchedGET(ctx *fiber.Ctx) error {
-	var err error
-	// parse query-params
-	queryParams, err := url.ParseQuery(string(ctx.Request().URI().QueryString()))
-	if err != nil {
-		return fmt.Errorf("get watched: parse query params: %w", err)
-	}
-	if len(queryParams["type"]) > 0 && queryParams["type"][0] == "все" {
-		delete(queryParams, "type")
-	}
-	categoryIn := repository.CategoryUserMoviesIn(queryParams)
-	// get access token
-	accessToken := ctx.Locals("accessToken").(string)
-
-	// send request to REST API
-	apiResp, err := hm.api.GetWatched(accessToken, categoryIn)
-	if err != nil {
-		return fmt.Errorf("get watched: %w", err)
-	}
-	(*apiResp)["title"] = "Watched"
-	return ctx.Render("stared_want_watched", fiber.Map(*apiResp))
+	return hm.categoryGET(ctx, watchedCategory)
 }
 
 // Star user movie via send request to REST API
 func (hm userMovieHandlerManager) starPOST(ctx *fiber.Ctx) error {
-	// parse "next" form param to redirect after POST will be processed
-	next := ctx.FormValue("next", "/")
-	// parse movie ID from path
-	movieID := ctx.Params("movieID")
-	if movieID == "" {
-		return fiber.NewError(400, "invalid movie ID was given")
-	}
-	// get access token
-	accessToken := ctx.Locals("accessToken").(string)
-
-	// send request to REST API
-	_, err := hm.api.PostStar(accessToken, movieID)
-	if err != nil {
-		return fmt.Errorf("star movie: %w", err)
-	}
-	return ctx.Redirect(next, 303)
+	return hm.categoryPOST(ctx, starCategory)
 }
 
 // Unstar user movie via send request to REST API
 func (hm userMovieHandlerManager) unstarPOST(ctx *fiber.Ctx) error {
-	// parse "next" form param to redirect after POST will be processed
-	next := ctx.FormValue("next", "/")
-	// parse movie ID from path
-	movieID := ctx.Params("movieID")
-	if movieID == "" {
-		return fiber.NewError(400, "invalid movie ID was given")
-	}
-	// get access token
-	accessToken := ctx.Locals("accessToken").(string)
-
-	// send request to REST API
-	_, err := hm.api.PostUnstar(accessToken, movieID)
-	if err != nil {
-		return fmt.Errorf("unstar movie: %w", err)
-	}
-	return ctx.Redirect(next, 303)
+	return hm.categoryPOST(ctx, unstarCategory)
 }
 
 // Clear user movie categories via send request to REST API
 func (hm userMovieHandlerManager) clearPOST(ctx *fiber.Ctx) error {
-	// parse "next" form param to redirect after POST will be processed
-	next := ctx.FormValue("next", "/")
-	// parse movie ID from path
-	movieID := ctx.Params("movieID")
-	if movieID == "" {
-		return fiber.NewError(400, "invalid movie ID was given")
-	}
-	// get access token
-	accessToken := ctx.Locals("accessToken").(string)
-
-	// send request to REST API
-	_, err := hm.api.PostClear(accessToken, movieID)
-	if err != nil {
-		return fmt.Errorf("clear movie category: %w", err)
-	}
-	return ctx.Redirect(next, 303)
+	return hm.categoryPOST(ctx, clearCategory)
 }
 
 // Set "want" user movie category via send request to REST API
 func (hm userMovieHandlerManager) wantPOST(ctx *fiber.Ctx) error {
-	// parse "next" form param to redirect after POST will be processed
-	next := ctx.FormValue("next", "/")
-	// parse movie ID from path
-	movieID := ctx.Params("movieID")
-	if movieID == "" {
-		return fiber.NewError(400, "invalid movie ID was given")
-	}
-	// get access token
-	accessToken := ctx.Locals("accessToken").(string)
-
-	// send request to REST API
-	_, err := hm.api.PostWant(accessToken, movieID)
-	if err != nil {
-		return fmt.Errorf("set want movie category: %w", err)
-	}
-	return ctx.Redirect(next, 303)
+	return hm.categoryPOST(ctx, wantCategory)
 }
 
 // Set "watched" user movie via send request to REST API
 func (hm userMovieHandlerManager) watchedPOST(ctx *fiber.Ctx) error {
-	// parse "next" form param to redirect after POST will be processed
-	next := ctx.FormValue("next", "/")
-	// parse movie ID from path
-	movieID := ctx.Params("movieID")
-	if movieID == "" {
-		return fiber.NewError(400, "invalid movie ID was given")
+	return hm.categoryPOST(ctx, watchedCategory)
+}
+
+func (hm userMovieHandlerManager) categoryGET(ctx *fiber.Ctx, category string) error {
+	var err error
+	// parse query-params
+	categoryIn, err := utils.GetCategoryQueryParams(ctx)
+	if err != nil {
+		return fmt.Errorf("get %s: %w", category, err)
 	}
 	// get access token
-	accessToken := ctx.Locals("accessToken").(string)
+	accessToken := ctx.Locals(constants.LocalsKeyAccessToken).(string)
 
 	// send request to REST API
-	_, err := hm.api.PostWatched(accessToken, movieID)
+	apiResp, err := hm.api.GetCategory(accessToken, category, categoryIn)
 	if err != nil {
-		return fmt.Errorf("set watched movie category: %w", err)
+		return fmt.Errorf("get %s: %w", category, err)
 	}
-	return ctx.Redirect(next, 303)
+	(*apiResp)["title"] = category
+	return ctx.Render(categoryTemplate, fiber.Map(*apiResp))
+}
+
+func (hm userMovieHandlerManager) categoryPOST(ctx *fiber.Ctx, category string) error {
+	// parse movie ID from path
+	movieID, err := utils.GetMovieIDPathParam(ctx)
+	if err != nil {
+		return fmt.Errorf("set %s user movie category: %w", category, err)
+	}
+	// get access token
+	accessToken := ctx.Locals(constants.LocalsKeyAccessToken).(string)
+
+	// send request to REST API
+	if _, err = hm.api.PostCategory(accessToken, category, movieID); err != nil {
+		return fmt.Errorf("set %s user movie category: %w", category, err)
+	}
+	// parse "next" form param to redirect after POST will be processed
+	next := ctx.FormValue(constants.NextQueryParam, "/")
+	return ctx.Redirect(next, http.StatusSeeOther)
 }

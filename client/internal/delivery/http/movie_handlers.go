@@ -2,12 +2,14 @@ package http
 
 import (
 	"fmt"
+	"net/http"
 
 	fiber "github.com/gofiber/fiber/v2"
 
 	"Filmer/client/config"
+	"Filmer/client/internal/app/constants"
 	"Filmer/client/internal/repository"
-	restAPI "Filmer/client/internal/repository/rest_api"
+	restAPI "Filmer/client/internal/repository/restapi"
 )
 
 // Manager for movie subroutes handlers
@@ -29,7 +31,7 @@ func (hm movieHandlerManager) searchGET(ctx *fiber.Ctx) error {
 	var err error
 	searchMoviesIn := new(repository.SearchMoviesIn)
 
-	accessToken := ctx.Locals("accessToken").(string)
+	accessToken := ctx.Locals(constants.LocalsKeyAccessToken).(string)
 	// parse query-params
 	if err = ctx.QueryParser(searchMoviesIn); err != nil {
 		return fmt.Errorf("search movies: %w", err)
@@ -53,7 +55,7 @@ func (hm movieHandlerManager) searchGET(ctx *fiber.Ctx) error {
 	reqPage := (*apiResp)["page"].(float64)
 	pages := (*apiResp)["pages"].(float64)
 	if reqPage > pages {
-		return fiber.NewError(404, "search movie page with given page param not fount")
+		return fiber.NewError(http.StatusNotFound, "search movie page with given page param not fount")
 	}
 	return ctx.Render("search", fiber.Map(*apiResp))
 }

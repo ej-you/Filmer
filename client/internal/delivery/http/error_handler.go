@@ -2,7 +2,6 @@ package http
 
 import (
 	"errors"
-	// "fmt"
 	"net/http"
 	"strconv"
 
@@ -17,7 +16,7 @@ func CustomErrorHandler(ctx *fiber.Ctx, err error) error {
 	var fiberErr *fiber.Error
 	// if unknown error
 	if !errors.As(err, &fiberErr) {
-		return ctx.Status(500).Render("500", fiber.Map{"message": err.Error()})
+		return ctx.Status(http.StatusInternalServerError).Render("500", fiber.Map{"message": err.Error()})
 	}
 
 	// render 404 page for NotFound error
@@ -36,5 +35,5 @@ func CustomErrorHandler(ctx *fiber.Ctx, err error) error {
 	queryParams["message"] = fiberErr.Message
 
 	// redirect back with error message query-params
-	return ctx.RedirectToRoute(url, fiber.Map{"queries": queryParams}, 303)
+	return ctx.RedirectToRoute(url, fiber.Map{"queries": queryParams}, http.StatusSeeOther)
 }

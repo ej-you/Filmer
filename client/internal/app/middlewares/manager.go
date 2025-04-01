@@ -1,6 +1,8 @@
 package middlewares
 
 import (
+	"fmt"
+	"net/http"
 	"net/url"
 
 	fiber "github.com/gofiber/fiber/v2"
@@ -9,6 +11,7 @@ import (
 	fiberRecover "github.com/gofiber/fiber/v2/middleware/recover"
 
 	"Filmer/client/config"
+	"Filmer/client/internal/app/constants"
 )
 
 // Interface with all necessary middlewares for client
@@ -50,12 +53,12 @@ func (mm appMiddlewareManager) Recover() fiber.Handler {
 func (mm appMiddlewareManager) CookieParser() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		// parse cookies from request
-		accessToken := ctx.Cookies("auth")
-		email := ctx.Cookies("email")
+		accessToken := ctx.Cookies(constants.CookieAuth)
+		email := ctx.Cookies(constants.CookieEmail)
 
 		// set vars to context
-		ctx.Locals("accessToken", accessToken)
-		ctx.Locals("email", email)
+		ctx.Locals(constants.LocalsKeyAccessToken, accessToken)
+		ctx.Locals(constants.LocalsKeyEmail, email)
 		return ctx.Next()
 	}
 }
@@ -70,12 +73,13 @@ func (mm appMiddlewareManager) Compression() fiber.Handler {
 func (mm appMiddlewareManager) ToLoginIfNoCookie() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		// parse cookies from request
-		accessToken := ctx.Cookies("auth")
+		accessToken := ctx.Cookies(constants.CookieAuth)
 
 		// if cookies is not specified
 		if accessToken == "" {
 			// send next param (current url before redirect to login)
-			return ctx.Redirect("/user/login?next="+url.QueryEscape(ctx.OriginalURL()), 303)
+			redirectURL := fmt.Sprintf("/user/login?%s=%s", constants.NextQueryParam, url.QueryEscape(ctx.OriginalURL()))
+			return ctx.Redirect(redirectURL, http.StatusSeeOther)
 		}
 		return ctx.Next()
 	}
@@ -85,11 +89,11 @@ func (mm appMiddlewareManager) ToLoginIfNoCookie() fiber.Handler {
 func (mm appMiddlewareManager) ToProfileIfCookie() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		// parse cookies from request
-		accessToken := ctx.Cookies("auth")
+		accessToken := ctx.Cookies(constants.CookieAuth)
 
 		// if cookies is specified
 		if accessToken != "" {
-			return ctx.Redirect("/user/profile", 303)
+			return ctx.Redirect("/user/profile", http.StatusSeeOther)
 		}
 		return ctx.Next()
 	}

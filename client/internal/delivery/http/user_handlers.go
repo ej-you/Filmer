@@ -2,14 +2,16 @@ package http
 
 import (
 	"fmt"
+	"net/http"
 	"net/url"
 
 	fiber "github.com/gofiber/fiber/v2"
 
 	"Filmer/client/config"
+	"Filmer/client/internal/app/constants"
 	"Filmer/client/internal/pkg/utils"
 	"Filmer/client/internal/repository"
-	restAPI "Filmer/client/internal/repository/rest_api"
+	restAPI "Filmer/client/internal/repository/restapi"
 )
 
 // Manager for user subroutes handlers
@@ -33,8 +35,6 @@ func (hm userHandlerManager) loginGET(ctx *fiber.Ctx) error {
 
 // Render sign up page
 func (hm userHandlerManager) signUpGET(ctx *fiber.Ctx) error {
-	// errorStatusCode := ctx.Query("statusCode")
-	// errorMessage := ctx.Query("message")
 	return ctx.Render("signup", fiber.Map{})
 }
 
@@ -42,16 +42,16 @@ func (hm userHandlerManager) signUpGET(ctx *fiber.Ctx) error {
 func (hm userHandlerManager) profileGET(ctx *fiber.Ctx) error {
 	accessToken := ctx.Locals("accessToken").(string)
 	// calc hours, minutes and seconds to expiration time
-	d, h, m, s, err := utils.GetJWTExpirationData(accessToken)
+	days, hours, minutes, seconds, err := utils.GetJWTExpirationData(accessToken)
 	if err != nil {
 		return fmt.Errorf("render profile: get token expiration time: %w", err)
 	}
 	return ctx.Render("profile", fiber.Map{
 		"email":   ctx.Locals("email"),
-		"days":    d,
-		"hours":   h,
-		"minutes": m,
-		"seconds": s,
+		"days":    days,
+		"hours":   hours,
+		"minutes": minutes,
+		"seconds": seconds,
 	})
 }
 
@@ -76,11 +76,11 @@ func (hm userHandlerManager) loginPOST(ctx *fiber.Ctx) error {
 	ctx.Cookie(utils.GetAuthCookie(hm.cfg, accessToken))
 	ctx.Cookie(utils.GetEmailCookie(hm.cfg, email))
 
-	reidrectURL, err := url.QueryUnescape(ctx.Query("next", "/user/profile"))
+	reidrectURL, err := url.QueryUnescape(ctx.Query(constants.NextQueryParam, "/user/profile"))
 	if err != nil {
 		return fmt.Errorf("login: %w", err)
 	}
-	return ctx.Redirect(reidrectURL, 303)
+	return ctx.Redirect(reidrectURL, http.StatusSeeOther)
 }
 
 // Sign up user via send request to REST API
@@ -94,7 +94,7 @@ func (hm userHandlerManager) signUpPOST(ctx *fiber.Ctx) error {
 	}
 	// check password and password confirm is equal
 	if authIn.Password != authIn.PasswordConfirm {
-		return fmt.Errorf("sign up: %w", fiber.NewError(400, "passwords do not match"))
+		return fmt.Errorf("sign up: %w", fiber.NewError(http.StatusBadRequest, "passwords do not match"))
 	}
 
 	// send request to REST API
@@ -109,7 +109,7 @@ func (hm userHandlerManager) signUpPOST(ctx *fiber.Ctx) error {
 	ctx.Cookie(utils.GetAuthCookie(hm.cfg, accessToken))
 	ctx.Cookie(utils.GetEmailCookie(hm.cfg, email))
 
-	return ctx.Redirect("/user/profile", 303)
+	return ctx.Redirect("/user/profile", http.StatusSeeOther)
 }
 
 // Logout user via send request to REST API
@@ -124,5 +124,5 @@ func (hm userHandlerManager) logoutPOST(ctx *fiber.Ctx) error {
 	ctx.Cookie(utils.ClearAuthCookie(hm.cfg))
 	ctx.Cookie(utils.ClearEmailCookie(hm.cfg))
 
-	return ctx.Redirect("/", 303)
+	return ctx.Redirect("/", http.StatusSeeOther)
 }

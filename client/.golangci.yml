@@ -1,5 +1,10 @@
+version: "2"
+
+run:
+  tests: false
+
 linters:
-  disable-all: true
+  default: none
   enable:
     - asciicheck
     - bodyclose
@@ -16,8 +21,6 @@ linters:
     - gocritic
     - gocyclo
     - godox
-    - gofmt
-    - goimports
     - goprintffuncname
     - gosec
     - ineffassign
@@ -35,46 +38,50 @@ linters:
     - varnamelen
     - whitespace
 
+  settings:
+    cyclop:
+      max-complexity: 10
+    errorlint:
+      comparison: true
+    goconst:
+      ignore-strings: .*?%s|%v|%w.*
+      numbers: true
+      ignore-calls: false
+    gocritic:
+      enable-all: true
+    gocyclo:
+      min-complexity: 10
+    nestif:
+      min-complexity: 3
+    prealloc:
+      simple: false
+      for-loops: true
+    whitespace:
+      multi-func: true
 
-linters-settings:
-  cyclop:
-    max-complexity: 10
-  errorlint:
-    comparison: true
-  goconst:
-    numbers: true
-    ignore-calls: false
-    ignore-strings: '.*?%s|%v|%w.*'
-  gocritic:
-    enable-all: true
-  gocyclo:
-    min-complexity: 10
-  nestif:
-    min-complexity: 3
-  prealloc:
-    simple: false
-    for-loops: true
-  whitespace:
-    multi-func: true
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - linters:
+          - mnd
+        path: internal/pkg/utils/http\.go
+        text: "Magic number: 2, in <return> detected"
+    paths:
+      - docs
 
 issues:
-  exclude-dirs-use-default: false
-  exclude-dirs:
-    - docs
-  exclude-rules:
-    - linters:
-        - revive
-      text: "don't use an underscore in package name"
-    - path: third_party/kinopoisk_api/api_client\.go
-      text: should rewrite http.NewRequestWithContext
-      linters:
-        - noctx
-    - path: pkg/utils/time\.go
-      text: "Magic number: 24, in <argument> detected"
-      linters:
-        - mnd
-
   fix: false
 
-run:
-  tests: false
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - internal/repository/restapi/rest_api\.go
