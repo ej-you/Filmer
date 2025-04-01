@@ -17,6 +17,7 @@
 .flex-content-row {
 	display: flex;
 	flex-direction: row;
+    align-items: flex-start;
 	width: 100%;
 	gap: 15px;
 }

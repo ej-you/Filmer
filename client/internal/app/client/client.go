@@ -10,17 +10,10 @@ import (
 	"github.com/gofiber/template/django/v3"
 
 	httpDelivery "Filmer/client/internal/delivery/http"
-	// movieHTTP "Filmer/server/internal/movie/delivery/http"
-	// userMovieHTTP "Filmer/server/internal/user_movie/delivery/http"
 
 	"Filmer/client/config"
 	"Filmer/client/internal/app/middlewares"
 	"Filmer/client/internal/pkg/logger"
-	// "Filmer/server/pkg/cache"
-	// "Filmer/server/pkg/database"
-	// "Filmer/server/pkg/jsonify"
-	// "Filmer/server/pkg/utils"
-	// "Filmer/server/pkg/validator"
 )
 
 // Client interface
@@ -32,7 +25,6 @@ type Client interface {
 type fiberCLient struct {
 	cfg *config.Config
 	log logger.Logger
-	// jsonify jsonify.JSONify
 }
 
 // Client constructor
@@ -40,7 +32,6 @@ func NewClient(cfg *config.Config) Client {
 	return &fiberCLient{
 		cfg: cfg,
 		log: logger.NewLogger(),
-		// jsonify: jsonify.NewJSONify(),
 	}
 }
 
@@ -60,6 +51,7 @@ func (c fiberCLient) Run() {
 	mwManager := middlewares.NewMiddlewareManager(c.cfg)
 	fibertApp.Use(mwManager.Logger())
 	fibertApp.Use(mwManager.Recover())
+	fibertApp.Use(mwManager.Compression())
 
 	// set up static
 	fibertApp.Static("/favicon.ico", "./web/static/img/favicon.ico")
@@ -67,20 +59,6 @@ func (c fiberCLient) Run() {
 	// set up handlers
 	router := httpDelivery.NewClientRouter(c.cfg, mwManager)
 	router.SetRoutes(fibertApp)
-
-	// apiV1 := fibertApp.Group("/api/v1")
-	// // auth
-	// authHandlerManager := authHTTP.NewAuthHandlerManager(s.cfg, appDB, appCache, validator)
-	// authRouter := authHTTP.NewAuthRouter(mwManager, authHandlerManager)
-	// authRouter.SetRoutes(apiV1.Group("/user"))
-	// // movie
-	// movieHandlerManager := movieHTTP.NewMovieHandlerManager(s.cfg, s.jsonify, s.log, appDB, appCache, validator)
-	// movieRouter := movieHTTP.NewMovieRouter(mwManager, movieHandlerManager)
-	// movieRouter.SetRoutes(apiV1.Group("/kinopoisk/films"))
-	// // user movie
-	// userMovieHandlerManager := userMovieHTTP.NewUserMovieHandlerManager(s.cfg, s.jsonify, s.log, appDB, appCache, validator)
-	// userMovieRouter := userMovieHTTP.NewUserMovieRouter(mwManager, userMovieHandlerManager)
-	// userMovieRouter.SetRoutes(apiV1.Group("/films"))
 
 	// start client
 	go func() {

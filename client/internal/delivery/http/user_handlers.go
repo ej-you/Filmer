@@ -2,6 +2,7 @@ package http
 
 import (
 	"fmt"
+	"net/url"
 
 	fiber "github.com/gofiber/fiber/v2"
 
@@ -75,7 +76,11 @@ func (hm userHandlerManager) loginPOST(ctx *fiber.Ctx) error {
 	ctx.Cookie(utils.GetAuthCookie(hm.cfg, accessToken))
 	ctx.Cookie(utils.GetEmailCookie(hm.cfg, email))
 
-	return ctx.Redirect("/user/profile", 303)
+	reidrectURL, err := url.QueryUnescape(ctx.Query("next", "/user/profile"))
+	if err != nil {
+		return fmt.Errorf("login: %w", err)
+	}
+	return ctx.Redirect(reidrectURL, 303)
 }
 
 // Sign up user via send request to REST API

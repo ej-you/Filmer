@@ -17,7 +17,7 @@ import (
 	"Filmer/client/internal/repository"
 )
 
-const apiRequestTimeout = 3 * time.Second // timeout for requests to REST API
+const apiRequestTimeout = 5 * time.Second // timeout for requests to REST API
 
 // REST API client implementation
 type restAPIClient struct {

@@ -1,25 +1,14 @@
 package middlewares
 
 import (
-	// "errors"
-	// "fmt"
-	// "net/http"
+	"net/url"
 
-	// fiberJWT "github.com/gofiber/contrib/jwt"
 	fiber "github.com/gofiber/fiber/v2"
+	fiberCompress "github.com/gofiber/fiber/v2/middleware/compress"
 	fiberLogger "github.com/gofiber/fiber/v2/middleware/logger"
 	fiberRecover "github.com/gofiber/fiber/v2/middleware/recover"
 
-	// jwt "github.com/golang-jwt/jwt/v5"
-
-	// "Filmer/client/internal/auth"
-	// authRepository "Filmer/client/internal/auth/repository"
-	// authUsecase "Filmer/client/internal/auth/usecase"
-
 	"Filmer/client/config"
-	// "Filmer/client/pkg/cache"
-	// httpError "Filmer/client/pkg/http_error"
-	// "Filmer/client/pkg/utils"
 )
 
 // Interface with all necessary middlewares for client
@@ -27,6 +16,7 @@ type MiddlewareManager interface {
 	Logger() fiber.Handler
 	Recover() fiber.Handler
 	CookieParser() fiber.Handler
+	Compression() fiber.Handler
 	ToLoginIfNoCookie() fiber.Handler
 	ToProfileIfCookie() fiber.Handler
 }
@@ -70,6 +60,12 @@ func (mm appMiddlewareManager) CookieParser() fiber.Handler {
 	}
 }
 
+func (mm appMiddlewareManager) Compression() fiber.Handler {
+	return fiberCompress.New(fiberCompress.Config{
+		Level: fiberCompress.LevelBestSpeed,
+	})
+}
+
 // Redirect to login if cookies is not specified
 func (mm appMiddlewareManager) ToLoginIfNoCookie() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
@@ -78,7 +74,8 @@ func (mm appMiddlewareManager) ToLoginIfNoCookie() fiber.Handler {
 
 		// if cookies is not specified
 		if accessToken == "" {
-			return ctx.Redirect("/user/login", 303)
+			// send next param (current url before redirect to login)
+			return ctx.Redirect("/user/login?next="+url.QueryEscape(ctx.OriginalURL()), 303)
 		}
 		return ctx.Next()
 	}
