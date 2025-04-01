@@ -71,3 +71,13 @@ func (mr movieRepository) SaveMovie(movie *entity.Movie) error {
 	}
 	return nil
 }
+
+// Full update existing movie in DB
+func (mr movieRepository) FullUpdateMovie(movie *entity.Movie) error {
+	// save movie in DB
+	updateResult := mr.dbClient.Save(movie)
+	if err := updateResult.Error; err != nil {
+		return httpError.NewHTTPError(http.StatusInternalServerError, "failed to full update movie", err)
+	}
+	return nil
+}

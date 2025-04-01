@@ -137,6 +137,15 @@ func (mu movieUsecase) SaveMovie(movie *entity.Movie) error {
 	return nil
 }
 
+// Full update movie in DB
+// Must be presented all movie fields
+func (mu movieUsecase) FullUpdateMovie(movie *entity.Movie) error {
+	if err := mu.movieRepo.FullUpdateMovie(movie); err != nil {
+		return fmt.Errorf("movieUsecase.FullUpdateMovie: %w", err)
+	}
+	return nil
+}
+
 // Background movie info update
 // Must be presented movie ID (movie.ID) and kinopoisk movie ID (movie.KinopoiskID)
 func (mu movieUsecase) updateMovieData(movie *entity.Movie) {
@@ -147,7 +156,7 @@ func (mu movieUsecase) updateMovieData(movie *entity.Movie) {
 		return
 	}
 	// update movie in DB (so, PK is presented then data will update)
-	if err = mu.movieRepo.SaveMovie(movie); err != nil {
+	if err = mu.movieRepo.FullUpdateMovie(movie); err != nil {
 		mu.logger.Errorf("background update for film %d: failed to save movie: %v", movie.KinopoiskID, err)
 		return
 	}

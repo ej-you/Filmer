@@ -9,6 +9,7 @@ type Repository interface {
 
 	GetMovieByKinopoiskID(movie *entity.Movie) (bool, error)
 	SaveMovie(movie *entity.Movie) error
+	FullUpdateMovie(movie *entity.Movie) error
 }
 
 type CacheRepository interface {
