@@ -1,16 +1,16 @@
-package main
+package migrate
 
 import (
 	"fmt"
 
 	migrate "github.com/golang-migrate/migrate/v4"
-	_ "github.com/golang-migrate/migrate/v4/database/cockroachdb"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/golang-migrate/migrate/v4/database/cockroachdb" // cockroachdb engine for migrate
+	_ "github.com/golang-migrate/migrate/v4/source/file"          // file engine for migrate
 
 	"Filmer/server/config"
 )
 
-func runMigrates() {
+func RunMigrates() {
 	cfg := config.NewConfig()
 
 	fmt.Printf("Migrate DB %q\n", cfg.Database.ConnURL)
