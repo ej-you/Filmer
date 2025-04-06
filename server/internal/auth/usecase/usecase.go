@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"golang.org/x/crypto/bcrypt"
-
 	"Filmer/server/config"
 	"Filmer/server/internal/entity"
 	httpError "Filmer/server/pkg/http_error"
@@ -36,7 +34,7 @@ func NewUsecase(cfg *config.Config, authRepo auth.Repository, authCacheRepo auth
 // Returns *entity.UserWithToken with filled given user struct and random-generated access token
 func (au authUsecase) SignUp(user *entity.User) (*entity.UserWithToken, error) {
 	// hash password
-	passwordHash, err := au.encodePassword(user.Password)
+	passwordHash, err := utils.EncodePassword(user.Password)
 	if err != nil {
 		return nil, fmt.Errorf("authUsecase.SignUp: %w", err)
 	}
@@ -74,7 +72,7 @@ func (au authUsecase) Login(user *entity.User) (*entity.UserWithToken, error) {
 	}
 
 	// check entered password is correct
-	if !au.passwordIsCorrect(enteredPasswd, user.Password) {
+	if !utils.PasswordIsCorrect(enteredPasswd, user.Password) {
 		return nil, httpError.NewHTTPError(http.StatusUnauthorized, "invalid password", fmt.Errorf("authUsecase.Login"))
 	}
 
@@ -112,22 +110,4 @@ func (au authUsecase) RestrictBlacklistedToken(token string) error {
 		return httpError.NewHTTPError(http.StatusForbidden, "token is not valid", fmt.Errorf("authUsecase.RestrictBlacklistedToken"))
 	}
 	return nil
-}
-
-// Encode given password
-// Returns encoded password like a hash
-func (au authUsecase) encodePassword(password []byte) ([]byte, error) {
-	hash, err := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
-	if err != nil {
-		// probably, password is too long
-		return nil, httpError.NewHTTPError(http.StatusBadRequest, "failed to encode password", err)
-	}
-	return hash, nil
-}
-
-// Check the given password is equal to its hash from DB
-// Returns true, if password is equal
-func (au authUsecase) passwordIsCorrect(password, hash []byte) bool {
-	err := bcrypt.CompareHashAndPassword(hash, password)
-	return err == nil
 }

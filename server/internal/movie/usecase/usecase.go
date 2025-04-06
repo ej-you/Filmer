@@ -137,15 +137,6 @@ func (mu movieUsecase) SaveMovie(movie *entity.Movie) error {
 	return nil
 }
 
-// Full update movie in DB
-// Must be presented all movie fields
-func (mu movieUsecase) FullUpdateMovie(movie *entity.Movie) error {
-	if err := mu.movieRepo.FullUpdateMovie(movie); err != nil {
-		return fmt.Errorf("movieUsecase.FullUpdateMovie: %w", err)
-	}
-	return nil
-}
-
 // Background movie info update
 // Must be presented movie ID (movie.ID) and kinopoisk movie ID (movie.KinopoiskID)
 func (mu movieUsecase) updateMovieData(movie *entity.Movie) {

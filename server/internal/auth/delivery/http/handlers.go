@@ -40,9 +40,9 @@ func NewAuthHandlerManager(cfg *config.Config, dbClient *gorm.DB, cacheClient ca
 
 // @summary		Регистрация юзера
 // @description	Регистрация нового юзера с почтой и паролем
-// @router			/user/sign-up [post]
-// @id				user-sign-up
-// @tags			user
+// @router			/auth/sign-up [post]
+// @id				auth-sign-up
+// @tags			auth
 // @accept			json
 // @produce		json
 // @param			authIn	body		authIn	true	"authIn"
@@ -76,9 +76,9 @@ func (ahm AuthHandlerManager) SignUp() fiber.Handler {
 
 // @summary		Вход для юзера
 // @description	Вход для существующего юзера по почте и паролю
-// @router			/user/login [post]
-// @id				user-login
-// @tags			user
+// @router			/auth/login [post]
+// @id				auth-login
+// @tags			auth
 // @accept			json
 // @produce		json
 // @param			authIn	body		authIn	true	"authIn"
@@ -113,9 +113,9 @@ func (ahm AuthHandlerManager) Login() fiber.Handler {
 
 // @summary		Выход юзера
 // @description	Выход юзера (помещение JWT-token'а текущей сессии юзера в черный список)
-// @router			/user/logout [post]
-// @id				user-logout
-// @tags			user
+// @router			/auth/logout [post]
+// @id				auth-logout
+// @tags			auth
 // @security		JWT
 // @success		204	"No Content"
 // @failure		401	"Пустой или неправильный токен"

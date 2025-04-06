@@ -10,6 +10,7 @@ import (
 
 	authHTTP "Filmer/server/internal/auth/delivery/http"
 	movieHTTP "Filmer/server/internal/movie/delivery/http"
+	userHTTP "Filmer/server/internal/user/delivery/http"
 	userMovieHTTP "Filmer/server/internal/user_movie/delivery/http"
 
 	"Filmer/server/config"
@@ -94,7 +95,7 @@ func (s fiberServer) Run() {
 	// auth
 	authHandlerManager := authHTTP.NewAuthHandlerManager(s.cfg, appDB, appCache, validator)
 	authRouter := authHTTP.NewAuthRouter(mwManager, authHandlerManager)
-	authRouter.SetRoutes(apiV1.Group("/user"))
+	authRouter.SetRoutes(apiV1.Group("/auth"))
 	// movie
 	movieHandlerManager := movieHTTP.NewMovieHandlerManager(s.cfg, s.jsonify, s.log, appDB, appCache, validator)
 	movieRouter := movieHTTP.NewMovieRouter(mwManager, movieHandlerManager)
@@ -103,6 +104,10 @@ func (s fiberServer) Run() {
 	userMovieHandlerManager := userMovieHTTP.NewUserMovieHandlerManager(s.cfg, s.jsonify, s.log, appDB, appCache, validator)
 	userMovieRouter := userMovieHTTP.NewUserMovieRouter(mwManager, userMovieHandlerManager)
 	userMovieRouter.SetRoutes(apiV1.Group("/films"))
+	// user
+	userHandlerManager := userHTTP.NewUserHandlerManager(s.cfg, appDB, validator)
+	userRouter := userHTTP.NewUserRouter(mwManager, userHandlerManager)
+	userRouter.SetRoutes(apiV1.Group("/user"))
 
 	// start server
 	go func() {
