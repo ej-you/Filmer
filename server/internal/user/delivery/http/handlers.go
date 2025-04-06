@@ -41,6 +41,7 @@ func NewUserHandlerManager(cfg *config.Config, dbClient *gorm.DB,
 // @router			/user/change-password [post]
 // @id				user-change-password
 // @tags			user
+// @param			changePasswordIn	body	changePasswordIn	true	"changePasswordIn"
 // @security		JWT
 // @success		204	"No Content"
 // @failure		400	"Неверный пароль"

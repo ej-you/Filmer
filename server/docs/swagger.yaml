@@ -311,6 +311,25 @@ definitions:
     - email
     - password
     type: object
+  http.changePasswordIn:
+    description: data for change user password
+    properties:
+      currentPassword:
+        description: current password
+        example: qwerty123
+        maxLength: 40
+        minLength: 8
+        type: string
+      newPassword:
+        description: new password
+        example: 123qwerty
+        maxLength: 40
+        minLength: 8
+        type: string
+    required:
+    - currentPassword
+    - newPassword
+    type: object
 host: 127.0.0.1:3000
 info:
   contact: {}
@@ -321,6 +340,75 @@ info:
   title: Filmer API
   version: 1.0.0
 paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Вход для существующего юзера по почте и паролю
+      operationId: auth-login
+      parameters:
+      - description: authIn
+        in: body
+        name: authIn
+        required: true
+        schema:
+          $ref: '#/definitions/http.authIn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.UserWithToken'
+        "401":
+          description: Неверный пароль для учетной записи юзера
+        "404":
+          description: Юзер с введенной почтой не найден
+      summary: Вход для юзера
+      tags:
+      - auth
+  /auth/logout:
+    post:
+      description: Выход юзера (помещение JWT-token'а текущей сессии юзера в черный
+        список)
+      operationId: auth-logout
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Пустой или неправильный токен
+        "403":
+          description: Истекший или невалидный токен
+      security:
+      - JWT: []
+      summary: Выход юзера
+      tags:
+      - auth
+  /auth/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: Регистрация нового юзера с почтой и паролем
+      operationId: auth-sign-up
+      parameters:
+      - description: authIn
+        in: body
+        name: authIn
+        required: true
+        schema:
+          $ref: '#/definitions/http.authIn'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entity.UserWithToken'
+        "409":
+          description: Юзер с введенной почтой уже зарегистрирован
+      summary: Регистрация юзера
+      tags:
+      - auth
   /films/{movieID}/clear:
     post:
       description: Удаление фильма юзера из списков "хочу посмотреть" и "посмотрел"
@@ -694,73 +782,31 @@ paths:
       summary: Поиск фильмов
       tags:
       - movie
-  /user/login:
+  /user/change-password:
     post:
-      consumes:
-      - application/json
-      description: Вход для существующего юзера по почте и паролю
-      operationId: user-login
+      description: Установка нового пароля юзеру с подтверждением через старый пароль
+      operationId: user-change-password
       parameters:
-      - description: authIn
+      - description: changePasswordIn
         in: body
-        name: authIn
+        name: changePasswordIn
         required: true
         schema:
-          $ref: '#/definitions/http.authIn'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/entity.UserWithToken'
-        "401":
-          description: Неверный пароль для учетной записи юзера
-        "404":
-          description: Юзер с введенной почтой не найден
-      summary: Вход для юзера
-      tags:
-      - user
-  /user/logout:
-    post:
-      description: Выход юзера (помещение JWT-token'а текущей сессии юзера в черный
-        список)
-      operationId: user-logout
+          $ref: '#/definitions/http.changePasswordIn'
       responses:
         "204":
           description: No Content
+        "400":
+          description: Неверный пароль
         "401":
           description: Пустой или неправильный токен
         "403":
           description: Истекший или невалидный токен
+        "404":
+          description: Текущий юзер не найден
       security:
       - JWT: []
-      summary: Выход юзера
-      tags:
-      - user
-  /user/sign-up:
-    post:
-      consumes:
-      - application/json
-      description: Регистрация нового юзера с почтой и паролем
-      operationId: user-sign-up
-      parameters:
-      - description: authIn
-        in: body
-        name: authIn
-        required: true
-        schema:
-          $ref: '#/definitions/http.authIn'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/entity.UserWithToken'
-        "409":
-          description: Юзер с введенной почтой уже зарегистрирован
-      summary: Регистрация юзера
+      summary: Смена пароля юзера
       tags:
       - user
 produces:

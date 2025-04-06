@@ -25,6 +25,111 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth/login": {
+            "post": {
+                "description": "Вход для существующего юзера по почте и паролю",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Вход для юзера",
+                "operationId": "auth-login",
+                "parameters": [
+                    {
+                        "description": "authIn",
+                        "name": "authIn",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/http.authIn"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.UserWithToken"
+                        }
+                    },
+                    "401": {
+                        "description": "Неверный пароль для учетной записи юзера"
+                    },
+                    "404": {
+                        "description": "Юзер с введенной почтой не найден"
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Выход юзера (помещение JWT-token'а текущей сессии юзера в черный список)",
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Выход юзера",
+                "operationId": "auth-logout",
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "401": {
+                        "description": "Пустой или неправильный токен"
+                    },
+                    "403": {
+                        "description": "Истекший или невалидный токен"
+                    }
+                }
+            }
+        },
+        "/auth/sign-up": {
+            "post": {
+                "description": "Регистрация нового юзера с почтой и паролем",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Регистрация юзера",
+                "operationId": "auth-sign-up",
+                "parameters": [
+                    {
+                        "description": "authIn",
+                        "name": "authIn",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/http.authIn"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/entity.UserWithToken"
+                        }
+                    },
+                    "409": {
+                        "description": "Юзер с введенной почтой уже зарегистрирован"
+                    }
+                }
+            }
+        },
         "/films/full-info/{kinopoiskID}": {
             "get": {
                 "security": [
@@ -580,107 +685,45 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/login": {
-            "post": {
-                "description": "Вход для существующего юзера по почте и паролю",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "Вход для юзера",
-                "operationId": "user-login",
-                "parameters": [
-                    {
-                        "description": "authIn",
-                        "name": "authIn",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/http.authIn"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/entity.UserWithToken"
-                        }
-                    },
-                    "401": {
-                        "description": "Неверный пароль для учетной записи юзера"
-                    },
-                    "404": {
-                        "description": "Юзер с введенной почтой не найден"
-                    }
-                }
-            }
-        },
-        "/user/logout": {
+        "/user/change-password": {
             "post": {
                 "security": [
                     {
                         "JWT": []
                     }
                 ],
-                "description": "Выход юзера (помещение JWT-token'а текущей сессии юзера в черный список)",
+                "description": "Установка нового пароля юзеру с подтверждением через старый пароль",
                 "tags": [
                     "user"
                 ],
-                "summary": "Выход юзера",
-                "operationId": "user-logout",
+                "summary": "Смена пароля юзера",
+                "operationId": "user-change-password",
+                "parameters": [
+                    {
+                        "description": "changePasswordIn",
+                        "name": "changePasswordIn",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/http.changePasswordIn"
+                        }
+                    }
+                ],
                 "responses": {
                     "204": {
                         "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Неверный пароль"
                     },
                     "401": {
                         "description": "Пустой или неправильный токен"
                     },
                     "403": {
                         "description": "Истекший или невалидный токен"
-                    }
-                }
-            }
-        },
-        "/user/sign-up": {
-            "post": {
-                "description": "Регистрация нового юзера с почтой и паролем",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "Регистрация юзера",
-                "operationId": "user-sign-up",
-                "parameters": [
-                    {
-                        "description": "authIn",
-                        "name": "authIn",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/http.authIn"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/entity.UserWithToken"
-                        }
                     },
-                    "409": {
-                        "description": "Юзер с введенной почтой уже зарегистрирован"
+                    "404": {
+                        "description": "Текущий юзер не найден"
                     }
                 }
             }
@@ -1115,6 +1158,30 @@ const docTemplate = `{
                     "maxLength": 40,
                     "minLength": 8,
                     "example": "qwerty123"
+                }
+            }
+        },
+        "http.changePasswordIn": {
+            "description": "data for change user password",
+            "type": "object",
+            "required": [
+                "currentPassword",
+                "newPassword"
+            ],
+            "properties": {
+                "currentPassword": {
+                    "description": "current password",
+                    "type": "string",
+                    "maxLength": 40,
+                    "minLength": 8,
+                    "example": "qwerty123"
+                },
+                "newPassword": {
+                    "description": "new password",
+                    "type": "string",
+                    "maxLength": 40,
+                    "minLength": 8,
+                    "example": "123qwerty"
                 }
             }
         }
