@@ -7,6 +7,7 @@ server_runner_path="./internal/app/server/server.go"
 db_url = "cockroach://$(DB_USER):$(DB_PASSWD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=disable"
 # title of migration
 title = "migration"
+version = 1
 
 # --- #
 # APP #
@@ -41,11 +42,12 @@ check-db-env-vars:
 	fi
 
 # use "title" var for name the migration
-migrations: check-db-env-vars
+migrations:
 	migrate create -digits 2 -dir migrations -ext sql -seq "$(title)"
 
+# use "version" var for specify the version of the migration to force
 migrate-force: check-db-env-vars
-	migrate -database $(db_url) -path migrations -verbose force 1
+	migrate -database $(db_url) -path migrations -verbose force $(version)
 
 migrate-version: check-db-env-vars
 	migrate -database $(db_url) -path migrations -verbose version
