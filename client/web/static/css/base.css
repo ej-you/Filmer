@@ -6,6 +6,7 @@
 	--dark-gray: #1b1b1b;
 	--light-black: #111111;
 
+	--green: #82b423;
 	--light-red: #ab785b;
 }
 
@@ -97,6 +98,10 @@ nav {
 .accent {
 	font-style: italic;
 	color: var(--light-red);
+}
+
+.success {
+	color: var(--green);
 }
 
 

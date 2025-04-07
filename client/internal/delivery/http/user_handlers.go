@@ -14,6 +14,10 @@ import (
 	restAPI "Filmer/client/internal/repository/restapi"
 )
 
+const (
+	accessTokenLocalsKey = "accessToken"
+)
+
 // Manager for user subroutes handlers
 type userHandlerManager struct {
 	cfg *config.Config
@@ -40,18 +44,22 @@ func (hm userHandlerManager) signUpGET(ctx *fiber.Ctx) error {
 
 // Render profile page
 func (hm userHandlerManager) profileGET(ctx *fiber.Ctx) error {
-	accessToken := ctx.Locals("accessToken").(string)
+	// if password was changed via previous POST request (before redirect)
+	passwdChangedOK := ctx.Query("passwdChangedOK", "")
+
+	accessToken := ctx.Locals(accessTokenLocalsKey).(string)
 	// calc hours, minutes and seconds to expiration time
 	days, hours, minutes, seconds, err := utils.GetJWTExpirationData(accessToken)
 	if err != nil {
 		return fmt.Errorf("render profile: get token expiration time: %w", err)
 	}
 	return ctx.Render("profile", fiber.Map{
-		"email":   ctx.Locals("email"),
-		"days":    days,
-		"hours":   hours,
-		"minutes": minutes,
-		"seconds": seconds,
+		"email":           ctx.Locals("email"),
+		"days":            days,
+		"hours":           hours,
+		"minutes":         minutes,
+		"seconds":         seconds,
+		"passwdChangedOK": passwdChangedOK,
 	})
 }
 
@@ -125,4 +133,24 @@ func (hm userHandlerManager) logoutPOST(ctx *fiber.Ctx) error {
 	ctx.Cookie(utils.ClearEmailCookie(hm.cfg))
 
 	return ctx.Redirect("/", http.StatusSeeOther)
+}
+
+// Change user password via send request to REST API
+func (hm userHandlerManager) changePasswordPOST(ctx *fiber.Ctx) error {
+	var err error
+	var changePasswordIn repository.ChangePasswordIn
+
+	accessToken := ctx.Locals(accessTokenLocalsKey).(string)
+	// parse JSON-body
+	if err = ctx.BodyParser(&changePasswordIn); err != nil {
+		return fmt.Errorf("change password: %w", err)
+	}
+
+	// send request to REST API
+	err = hm.api.ChangePassword(accessToken, changePasswordIn)
+	if err != nil {
+		return fmt.Errorf("change password: %w", err)
+	}
+
+	return ctx.Redirect("/user/profile?passwdChangedOK=true", http.StatusSeeOther)
 }

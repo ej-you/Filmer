@@ -18,6 +18,14 @@ h4 {
 	background-color: var(--gray);
 }
 
+#change-passwd-form {
+	margin-top: 100px;
+}
+
+.change-passwd {
+	margin-bottom: 20px;
+}
+
 
 /* for width to 750px and less */
 @media screen and (max-width: 750px) {

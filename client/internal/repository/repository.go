@@ -12,6 +12,7 @@ type RestAPI interface {
 	Login(body AuthIn) (*APIResponse, error)
 	SignUp(body AuthIn) (*APIResponse, error)
 	Logout(authToken string) error
+	ChangePassword(authToken string, body ChangePasswordIn) error
 }
 
 // JSON-body for login && signup
@@ -25,6 +26,12 @@ type AuthIn struct {
 type SearchMoviesIn struct {
 	Keyword string `query:"q"`
 	Page    int    `query:"page"`
+}
+
+// JSON-body for change user password
+type ChangePasswordIn struct {
+	CurrentPassword string `form:"current-password" json:"currentPassword"`
+	NewPassword     string `form:"new-password" json:"newPassword"`
 }
 
 // Query-params for get stared || want || watched movies

@@ -81,7 +81,7 @@ func (api restAPIClient) GetSearchMovies(authToken string, queryParams *reposito
 // Login user
 func (api restAPIClient) Login(body repository.AuthIn) (*repository.APIResponse, error) {
 	apiResp := new(repository.APIResponse)
-	if err := api.sendPOST(api.cfg.RestAPI.Host+"/api/v1/user/login", nil, body, apiResp); err != nil {
+	if err := api.sendPOST(api.cfg.RestAPI.Host+"/api/v1/auth/login", nil, body, apiResp); err != nil {
 		return nil, fmt.Errorf("login using rest api: send post request: %w", err)
 	}
 	return apiResp, nil
@@ -90,7 +90,7 @@ func (api restAPIClient) Login(body repository.AuthIn) (*repository.APIResponse,
 // Sign up user
 func (api restAPIClient) SignUp(body repository.AuthIn) (*repository.APIResponse, error) {
 	apiResp := new(repository.APIResponse)
-	if err := api.sendPOST(api.cfg.RestAPI.Host+"/api/v1/user/sign-up", nil, body, apiResp); err != nil {
+	if err := api.sendPOST(api.cfg.RestAPI.Host+"/api/v1/auth/sign-up", nil, body, apiResp); err != nil {
 		return nil, fmt.Errorf("sign up using rest api: send post request: %w", err)
 	}
 	return apiResp, nil
@@ -99,8 +99,17 @@ func (api restAPIClient) SignUp(body repository.AuthIn) (*repository.APIResponse
 // Logout user
 func (api restAPIClient) Logout(authToken string) error {
 	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", authToken)}
-	if err := api.sendPOST(api.cfg.RestAPI.Host+"/api/v1/user/logout", headers, nil, nil); err != nil {
+	if err := api.sendPOST(api.cfg.RestAPI.Host+"/api/v1/auth/logout", headers, nil, nil); err != nil {
 		return fmt.Errorf("logout using rest api: send post request: %w", err)
+	}
+	return nil
+}
+
+// Change user password
+func (api restAPIClient) ChangePassword(authToken string, body repository.ChangePasswordIn) error {
+	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", authToken)}
+	if err := api.sendPOST(api.cfg.RestAPI.Host+"/api/v1/user/change-password", headers, body, nil); err != nil {
+		return fmt.Errorf("change password using rest api: send post request: %w", err)
 	}
 	return nil
 }

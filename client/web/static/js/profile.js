@@ -1,3 +1,12 @@
+// remove all query-params if exists (for removing passwdChangedOK query-param)
+document.addEventListener("DOMContentLoaded", function () {
+	const url = new URL(window.location.href);
+	url.searchParams.delete("passwdChangedOK");
+	window.history.replaceState({}, document.title, url.pathname + url.search);
+    console.log("Param removed. New URL:", url.pathname + url.search);
+});
+
+// token expiration time countdown
 const sessionExpiration = document.getElementById("session-expiration");
 const days = document.getElementById("days");
 const hours = document.getElementById("hours");

@@ -50,8 +50,12 @@ func (r ClientRouter) setUserRoutes(router fiber.Router) {
 	router.Post("/sign-up", r.userHM.signUpPOST)
 
 	restricted := router.Use(r.mwManager.CookieParser())
-	restricted.Get("/profile", r.mwManager.ToLoginIfNoCookie(), r.userHM.profileGET)
 	restricted.Post("/logout", r.userHM.logoutPOST)
+	restricted.Post("/change-password", r.userHM.changePasswordPOST)
+
+	profile := restricted.Use(r.mwManager.ToLoginIfNoCookie())
+	profile.Get("/profile", r.userHM.profileGET)
+	profile.Get("/change-password", r.userHM.profileGET)
 }
 
 // Setup movie subroutes
