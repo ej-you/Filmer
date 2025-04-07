@@ -346,7 +346,7 @@
 		width: 325px;
 	}
 
-	.sort-field-link:hover, .sort-order-link:hover, .filters-submit-btn:hover, .checkbox-btn:hover {
+	.sort-field-link:hover, .sort-order-link:hover, .radio-button label:hover, .checkbox-btn:hover {
 		color: var(--white);
 	}
 }
