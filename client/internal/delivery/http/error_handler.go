@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 
 	fiber "github.com/gofiber/fiber/v2"
 
@@ -19,8 +20,8 @@ func CustomErrorHandler(ctx *fiber.Ctx, err error) error {
 		return ctx.Status(http.StatusInternalServerError).Render("500", fiber.Map{"message": err.Error()})
 	}
 
-	// render 404 page for NotFound error
-	if fiberErr.Code == http.StatusNotFound {
+	// render 404 page for NotFound error (exclude 404 from REST API)
+	if strings.HasPrefix(fiberErr.Message, "Cannot GET") {
 		return ctx.Status(http.StatusNotFound).Render("404", fiber.Map{})
 	}
 	// render 402 page for API limit error
