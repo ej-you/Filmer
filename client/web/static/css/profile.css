@@ -21,6 +21,18 @@ h4 {
 #change-passwd-form {
 	margin-top: 100px;
 }
+#change-passwd-form button {
+	margin: 20px 0;
+	padding: 10px 25px;
+
+	font-size: 23px;
+	border-radius: 15px;
+	background-color: var(--light-gray);
+	user-select: none;
+}
+#change-passwd-form button:hover {
+	background-color: var(--gray);
+}
 
 .change-passwd {
 	margin-bottom: 20px;
@@ -35,5 +47,9 @@ h4 {
 
 	.link-button a {
 		font-size: 20px;
+	}
+
+	#change-passwd-form {
+		margin-top: 20px;
 	}
 }

@@ -39,7 +39,7 @@ label {
 }
 
 /* submit button in form */
-button[type="submit"] {
+.submit-btn {
 	margin: 40px 0 20px 0;
 	padding: 10px 25px;
 
@@ -48,7 +48,7 @@ button[type="submit"] {
 	background-color: var(--light-gray);
 	user-select: none;
 }
-button[type="submit"]:hover {
+.submit-btn:hover {
 	background-color: var(--gray);
 }
 
