@@ -347,6 +347,6 @@
 	}
 
 	.sort-field-link:hover, .sort-order-link:hover, .filters-submit-btn:hover, .checkbox-btn:hover {
-		color: var(--light-gray);
+		color: var(--white);
 	}
 }
