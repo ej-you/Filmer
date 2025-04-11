@@ -54,7 +54,13 @@ func (hm movieHandlerManager) searchGET(ctx *fiber.Ctx) error {
 	// if requested page value more than existing pages amount
 	reqPage := (*apiResp)["page"].(float64)
 	pages := (*apiResp)["pages"].(float64)
-	if reqPage > pages {
+
+	// if no one result was found
+	if pages == 0 {
+		(*apiResp)["zeroResults"] = true
+		return ctx.Render("search", fiber.Map(*apiResp))
+		// if requested page greater than found pages
+	} else if reqPage > pages {
 		return fiber.NewError(http.StatusNotFound, "search movie page with given page param not fount")
 	}
 	return ctx.Render("search", fiber.Map(*apiResp))

@@ -20,7 +20,7 @@
 			<button class="form-elem" type="submit">Search</button>
 		</form>
 
-		{% if total %}
+		{% if total or zeroResults %}
 			<h4 id="found-total"><span class="accent">Found movies: {{ total|floatformat:0 }}</span></h4>
 		{% endif %}
 
