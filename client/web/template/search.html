@@ -26,7 +26,7 @@
 
 		<div class="list-movies">
 		{% for movie in docs %}
-			<a class="movie" href="/user-movie/info/{{ movie.id|floatformat:0 }}">
+			<a class="movie" href="/filmer/user-movie/info/{{ movie.id|floatformat:0 }}">
 				<div class="movie-poster">
 					<img src='{{ movie.poster.url|default:"/static/img/non_poster.svg" }}'>
 				</div>

@@ -19,11 +19,11 @@
 			<span id="seconds">{{ seconds }}</span>s
 		</p>
 
-		<form onsubmit="addQueryParamsToForm(this)" id="link-button-form" action="/user/logout" method="post">
+		<form onsubmit="addQueryParamsToForm(this)" id="link-button-form" action="/filmer/user/logout" method="post">
 			<button id="link-button" class="link-button" type="submit">Logout Now</button>
 		</form>
 
-		<form id="change-passwd-form" action="/user/change-password" method="post">
+		<form id="change-passwd-form" action="/filmer/user/change-password" method="post">
 			<h4>Change password</h4>
 			{% if passwdChangedOK %}
 				<p class="success change-passwd">Password was changed sucessfully!</p>

@@ -30,7 +30,7 @@ function changeTime() {
 			clearInterval(interval);
 			// change form and button to login
 			const logoutForm = document.getElementById("link-button-form");
-			logoutForm.action = "/user/login"
+			logoutForm.action = "/filmer/user/login"
 			logoutForm.method = "get"
 			const logoutBtn = document.getElementById("link-button");
 			logoutBtn.textContent = "Login"
