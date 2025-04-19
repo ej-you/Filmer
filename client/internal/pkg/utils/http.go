@@ -41,7 +41,7 @@ func createCookie(name, value string, secure bool, expiresAfter time.Duration) *
 	return &fiber.Cookie{
 		Name:     name,
 		Value:    value,
-		Path:     "/",
+		Path:     "/api",
 		HTTPOnly: true,
 		Secure:   secure,
 		SameSite: "Strict",
