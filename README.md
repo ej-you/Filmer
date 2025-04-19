@@ -21,3 +21,4 @@
 8. Add director/actor page with his movies
 9. Add `back` button to movie page
 10. Add related movies to movie page
+11. Add limit for movie directors amount (max = 10 directors)
