@@ -24,6 +24,7 @@ type (
 		JwtSecret          string        `env-required:"true" env:"JWT_SECRET" env-description:"secret for JWT-token signature"`
 		TokenExpired       time.Duration `env:"TOKEN_EXPIRED" env-default:"30m" env-description:"JWT-token expired duration (default: 30m)"`
 		CacheExpiration    time.Duration `env:"CACHE_EXPIRATION" env-default:"24h" env-description:"Cache expiration time (default: 24h)"`
+		PathPrefix         string        `env:"PATH_PREFIX" env-default:"" env-description:"Set path prefix (default: \"\")"`
 	}
 
 	Cache struct {

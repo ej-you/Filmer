@@ -18,6 +18,7 @@ type (
 		Port         string        `env:"CLIENT_PORT" env-default:"7000" env-description:"client port (default: 7000)"`
 		TokenExpired time.Duration `env:"TOKEN_EXPIRED" env-default:"30m" env-description:"REST API token expired duration (default: 30m)"`
 		CookieSecure bool          `env:"COOKIES_SECURE" env-default:"false" env-description:"Set secure=true for cookies (default: false)"`
+		PathPrefix   string        `env:"PATH_PREFIX" env-default:"" env-description:"Set path prefix (default: \"\")"`
 	}
 
 	RestAPI struct {
