@@ -91,7 +91,7 @@ func (s fiberServer) Run() {
 	fibertApp.Use(mwManager.Swagger())
 
 	// set up handlers
-	apiV1 := fibertApp.Group(s.cfg.App.PathPrefix + "/api/v1")
+	apiV1 := fibertApp.Group("/api/v1")
 	// auth
 	authHandlerManager := authHTTP.NewAuthHandlerManager(s.cfg, appDB, appCache, validator)
 	authRouter := authHTTP.NewAuthRouter(mwManager, authHandlerManager)
