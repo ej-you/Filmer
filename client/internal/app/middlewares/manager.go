@@ -78,7 +78,12 @@ func (mm appMiddlewareManager) ToLoginIfNoCookie() fiber.Handler {
 		// if cookies is not specified
 		if accessToken == "" {
 			// send next param (current url before redirect to login)
-			redirectURL := fmt.Sprintf("/user/login?%s=%s", constants.NextQueryParam, url.QueryEscape(ctx.OriginalURL()))
+			redirectURL := fmt.Sprintf(
+				"%s/user/login?%s=%s",
+				mm.cfg.App.PathPrefix,
+				constants.NextQueryParam,
+				url.QueryEscape(ctx.OriginalURL()),
+			)
 			return ctx.Redirect(redirectURL, http.StatusSeeOther)
 		}
 		return ctx.Next()
@@ -93,7 +98,7 @@ func (mm appMiddlewareManager) ToProfileIfCookie() fiber.Handler {
 
 		// if cookies is specified
 		if accessToken != "" {
-			return ctx.Redirect("/user/profile", http.StatusSeeOther)
+			return ctx.Redirect(mm.cfg.App.PathPrefix+"/user/profile", http.StatusSeeOther)
 		}
 		return ctx.Next()
 	}
