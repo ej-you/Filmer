@@ -30,7 +30,7 @@ func NewClientRouter(cfg *config.Config, mwManager middlewares.MiddlewareManager
 // Main func to setup all of routes
 func (r ClientRouter) SetRoutes(router fiber.Router) {
 	// main prefix
-	appGroup = router.Group(r.cfg.App.PathPrefix)
+	appGroup := router.Group(r.cfg.App.PathPrefix)
 
 	appGroup.Get("/", indexGET)
 
