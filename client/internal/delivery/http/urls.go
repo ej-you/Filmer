@@ -29,15 +29,18 @@ func NewClientRouter(cfg *config.Config, mwManager middlewares.MiddlewareManager
 
 // Main func to setup all of routes
 func (r ClientRouter) SetRoutes(router fiber.Router) {
-	router.Get(r.cfg.App.PathPrefix, indexGET)
+	// main prefix
+	appGroup = router.Group(r.cfg.App.PathPrefix)
 
-	userGroup := router.Group("/user")
+	appGroup.Get("/", indexGET)
+
+	userGroup := appGroup.Group("/user")
 	r.setUserRoutes(userGroup)
 
-	movieGroup := router.Group("/movie")
+	movieGroup := appGroup.Group("/movie")
 	r.setMovieRoutes(movieGroup)
 
-	userMovieGroup := router.Group("/user-movie")
+	userMovieGroup := appGroup.Group("/user-movie")
 	r.setUserMovieRoutes(userMovieGroup)
 }
 
