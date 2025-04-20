@@ -16,6 +16,8 @@ import (
 
 const (
 	accessTokenLocalsKey = "accessToken"
+
+	profilePath = "/filmer/user/profile"
 )
 
 // Manager for user subroutes handlers
@@ -84,7 +86,7 @@ func (hm userHandlerManager) loginPOST(ctx *fiber.Ctx) error {
 	ctx.Cookie(utils.GetAuthCookie(hm.cfg, accessToken))
 	ctx.Cookie(utils.GetEmailCookie(hm.cfg, email))
 
-	reidrectURL, err := url.QueryUnescape(ctx.Query(constants.NextQueryParam, "/user/profile"))
+	reidrectURL, err := url.QueryUnescape(ctx.Query(constants.NextQueryParam, profilePath))
 	if err != nil {
 		return fmt.Errorf("login: %w", err)
 	}
@@ -117,7 +119,7 @@ func (hm userHandlerManager) signUpPOST(ctx *fiber.Ctx) error {
 	ctx.Cookie(utils.GetAuthCookie(hm.cfg, accessToken))
 	ctx.Cookie(utils.GetEmailCookie(hm.cfg, email))
 
-	return ctx.Redirect("/user/profile", http.StatusSeeOther)
+	return ctx.Redirect(profilePath, http.StatusSeeOther)
 }
 
 // Logout user via send request to REST API
@@ -152,5 +154,5 @@ func (hm userHandlerManager) changePasswordPOST(ctx *fiber.Ctx) error {
 		return fmt.Errorf("change password: %w", err)
 	}
 
-	return ctx.Redirect("/user/profile?passwdChangedOK=true", http.StatusSeeOther)
+	return ctx.Redirect(profilePath+"?passwdChangedOK=true", http.StatusSeeOther)
 }
