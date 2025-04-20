@@ -19,29 +19,29 @@ func StatusCode2xx(statusCode int) bool {
 
 // Create auth cookie for user
 func GetAuthCookie(cfg *config.Config, authToken string) *fiber.Cookie {
-	return createCookie("auth", authToken, cfg.App.CookieSecure, cfg.App.TokenExpired)
+	return createCookie("auth", authToken, cfg.App.PathPrefix, cfg.App.CookieSecure, cfg.App.TokenExpired)
 }
 
 // Clear auth cookie for user
 func ClearAuthCookie(cfg *config.Config) *fiber.Cookie {
-	return createCookie("auth", "", cfg.App.CookieSecure, -time.Hour)
+	return createCookie("auth", "", cfg.App.PathPrefix, cfg.App.CookieSecure, -time.Hour)
 }
 
 // Create cookie with user email
 func GetEmailCookie(cfg *config.Config, email string) *fiber.Cookie {
-	return createCookie("email", email, cfg.App.CookieSecure, cfg.App.TokenExpired)
+	return createCookie("email", email, cfg.App.PathPrefix, cfg.App.CookieSecure, cfg.App.TokenExpired)
 }
 
 // Clear cookie with user email
 func ClearEmailCookie(cfg *config.Config) *fiber.Cookie {
-	return createCookie("email", "", cfg.App.CookieSecure, -time.Hour)
+	return createCookie("email", "", cfg.App.PathPrefix, cfg.App.CookieSecure, -time.Hour)
 }
 
-func createCookie(name, value string, secure bool, expiresAfter time.Duration) *fiber.Cookie {
+func createCookie(name, value, path string, secure bool, expiresAfter time.Duration) *fiber.Cookie {
 	return &fiber.Cookie{
 		Name:     name,
 		Value:    value,
-		Path:     "/",
+		Path:     path,
 		HTTPOnly: true,
 		Secure:   secure,
 		SameSite: "Strict",
