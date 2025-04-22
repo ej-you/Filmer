@@ -46,27 +46,27 @@
 						{{ movie.description }}
 					</p>
 					<div class="movie-info">
-						<label>Type:</label>
+						<label>Тип:</label>
 						<p>{{ movie.type|default:"фильм" }}</p>
 
-						<label>Rating:</label>
+						<label>Рейтинг:</label>
 						{% if movie.rating == 0.0 %}
 						    <p>-</p>
 						{% else %}
 							<p>{{ movie.rating|floatformat:1 }}</p>
 						{% endif %}
 
-						<label>Year:</label>
+						<label>Год:</label>
 						{% if movie.year == 0.0 %}
 						    <p>-</p>
 						{% else %}
 							<p>{{ movie.year|floatformat:0 }}</p>
 						{% endif %}
 
-						<label>Length:</label>
+						<label>Длина:</label>
 						<p>{{ movie.movieLength|default:"-" }}</p>
 
-						<label>Genres:</label>
+						<label>Жанры:</label>
 						<div class="movie-genre-list">
 							<ul>
 								{% if movie.genres|length == 0 %}
@@ -79,7 +79,7 @@
 							</ul>
 						</div>
 
-						<label>Last update:</label>
+						<label>Обновлено:</label>
 						<p>{{ movie.updatedAt|default:"-" }}</p>
 					</div>
 				</div>
@@ -87,7 +87,7 @@
 		</div>
 
 		{% if movie.staff.directors|length != 0 %}
-			<h3 class="movie-staff-header">Directors:</h3>
+			<h3 class="movie-staff-header">Режиссёры:</h3>
 			<div class="movie-persons movie-directors">
 			{% for director in movie.staff.directors %}
 				<div class="person">
@@ -101,7 +101,7 @@
 		{% endif %}
 
 		{% if movie.staff.actors|length != 0 %}
-			<h3 class="movie-staff-header">Actors:</h3>
+			<h3 class="movie-staff-header">Актёры:</h3>
 			<div class="movie-persons movie-actors">
 			{% for actor in movie.staff.actors %}
 				<div class="person">
