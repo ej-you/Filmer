@@ -12,8 +12,11 @@ import (
 	"Filmer/server/internal/movie"
 )
 
-const searchMoviesPerPage = "25" // movies per page (for search movies)
-const movieActorsLimit = 30      // parse max 30 actors for movie
+const (
+	searchMoviesPerPage = "25" // movies per page (for search movies)
+	movieDirectorsLimit = 8    // parse max 8 directors for movie
+	movieActorsLimit    = 30   // parse max 30 actors for movie
+)
 
 // dict for converting movie types
 var movieTypesMap = map[string]string{
@@ -141,6 +144,10 @@ func (mkr movieKinopoiskWebAPIRepository) getMovieStaffByMovieKinopoiskID(movieK
 	for _, rawFilmStaff := range rawFilmStaffSlice {
 		switch rawFilmStaff.ProfessionKey {
 		case "DIRECTOR":
+			// max movieDirectorsLimit actors for movie
+			if len(movieStaff.Directors) == movieDirectorsLimit {
+				continue
+			}
 			movieStaff.Directors = append(movieStaff.Directors, entity.Person{
 				ID:     rawFilmStaff.StaffID,
 				Name:   rawFilmStaff.Name,
