@@ -12,7 +12,7 @@
 - [ ] Fix frontend bugs (at least):
 	- [ ] Opening a modal not from the very top of the screen
 	- [ ] Remove movies cards stretch (set `max-width`)
-	- [ ] Set `width` for input `#search-keyword` in search movies
+	- [x] Set `width` for input `#search-keyword` in search movies
 - [ ] Add popular movies (or recomendations) to the main page
 - [ ] Add OpenID auth
 - [ ] Add the ability to recomend the movie to another user

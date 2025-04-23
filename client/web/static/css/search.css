@@ -50,6 +50,10 @@ h3 {
 	width: 36px;
 }
 
+#search-keyword {
+	width: 100px;
+}
+
 /* submit button in form */
 button[type="submit"] {
 	margin-top: 0;
