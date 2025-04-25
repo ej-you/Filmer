@@ -17,8 +17,9 @@
 - [ ] Add OpenID auth
 - [ ] Add the ability to recomend the movie to another user
 - [ ] Add the ability to browse recomended movies from other users
-- [ ] Add `step-down` flag for one step migrations rollback to migrator
 - [ ] Add director/actor page with his movies
 - [ ] Add `back` button to movie page
 - [ ] Add related movies to movie page
 - [x] Add limit for movie directors amount (max = 8 directors)
+- [ ] Save cache data on redis shutdown (and load cache data on redis startup)
+- [ ] Add `step-down` flag for one step migrations rollback to migrator
