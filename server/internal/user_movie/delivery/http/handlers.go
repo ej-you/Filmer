@@ -39,7 +39,7 @@ func NewUserMovieHandlerManager(cfg *config.Config, jsonify jsonify.JSONify, log
 	dbClient *gorm.DB, cache cache.Cache, validator validator.Validator) *UserMovieHandlerManager {
 	// init movie usecase
 	movieRepo := movieRepository.NewRepository(dbClient)
-	movieCacheRepo := movieRepository.NewCacheRepository(cache)
+	movieCacheRepo := movieRepository.NewCacheRepository(cache, jsonify)
 	movieKinopoiskWebAPIRepo := movieRepository.NewKinopoiskWebAPIRepository(cfg, jsonify)
 	movieUC := movieUsecase.NewUsecase(cfg, logger, movieRepo, movieCacheRepo, movieKinopoiskWebAPIRepo)
 	// init user movie usecase

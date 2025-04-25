@@ -19,6 +19,7 @@ const cacheIOCtxTimeout = 2 * time.Second   // timeout for ctx for set/get funcs
 type Cache interface {
 	Set(key string, value any, expiration time.Duration) error
 	GetBool(key string) (bool, error)
+	GetBytes(key string) ([]byte, error)
 }
 
 // Cache implementation through Redis
@@ -72,6 +73,19 @@ func (rc redisCache) GetBool(key string) (bool, error) {
 	// if NOT "Not found" error
 	if err != nil && !goRedis.HasErrorPrefix(err, "redis: nil") {
 		return false, err
+	}
+	return value, nil
+}
+
+// get bytes value from redis with key
+func (rc redisCache) GetBytes(key string) ([]byte, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), cacheIOCtxTimeout)
+	defer cancel()
+	value, err := rc.redis.Get(ctx, key).Bytes()
+
+	// if NOT "Not found" error
+	if err != nil && !goRedis.HasErrorPrefix(err, "redis: nil") {
+		return nil, err
 	}
 	return value, nil
 }

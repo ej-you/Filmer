@@ -22,5 +22,5 @@
 - [ ] Add related movies to movie page
 - [x] Add limit for movie directors amount (max = 8 directors)
 - [x] Save cache data on redis shutdown (and load cache data on redis startup)
-- [ ] Add `step-down` flag for one step migrations rollback to migrator
 - [ ] Add log rotation (for server and client)
+- [ ] Add `step-down` flag for one step migrations rollback to migrator

@@ -6,7 +6,6 @@ import (
 	fiber "github.com/gofiber/fiber/v2"
 
 	httpError "Filmer/server/pkg/http_error"
-	"Filmer/server/pkg/logger"
 )
 
 //easyjson:json
@@ -17,8 +16,6 @@ type errorResponse struct {
 
 // custom error handler for server
 func CustomErrorHandler(ctx *fiber.Ctx, err error) error {
-	logger.NewLogger().Error(err)
-
 	var errResp errorResponse
 
 	var fiberErr *fiber.Error

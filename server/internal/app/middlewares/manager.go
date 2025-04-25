@@ -8,7 +8,6 @@ import (
 	fiberJWT "github.com/gofiber/contrib/jwt"
 	fiberSwagger "github.com/gofiber/contrib/swagger"
 	fiber "github.com/gofiber/fiber/v2"
-	fiberCache "github.com/gofiber/fiber/v2/middleware/cache"
 	fiberCORS "github.com/gofiber/fiber/v2/middleware/cors"
 	fiberLogger "github.com/gofiber/fiber/v2/middleware/logger"
 	fiberRecover "github.com/gofiber/fiber/v2/middleware/recover"
@@ -31,7 +30,6 @@ type MiddlewareManager interface {
 	Logger() fiber.Handler
 	Recover() fiber.Handler
 	CORS() fiber.Handler
-	Cache() fiber.Handler
 	Swagger() fiber.Handler
 	JWTAuth() fiber.Handler
 }
@@ -57,8 +55,10 @@ func NewMiddlewareManager(cfg *config.Config, dbClient *gorm.DB, cache cache.Cac
 // Middleware for logging requests to server
 func (mm appMiddlewareManager) Logger() fiber.Handler {
 	return fiberLogger.New(fiberLogger.Config{
-		TimeFormat: "2006-01-02T15:04:05-0700",
-		Format:     "${time} | pid ${pid} | ${status} | ${latency} | ${method} | ${path} | ${error}\n",
+		TimeFormat:    "2006-01-02T15:04:05-0700",
+		Format:        "${time} | pid ${pid} | ${status} | ${latency} | ${method} | ${path} | ${error}\n",
+		Output:        mm.cfg.LogOutput.Info,
+		DisableColors: false,
 	})
 }
 
@@ -72,19 +72,6 @@ func (mm appMiddlewareManager) CORS() fiber.Handler {
 	return fiberCORS.New(fiberCORS.Config{
 		AllowOrigins: mm.cfg.App.CorsAllowedOrigins,
 		AllowMethods: mm.cfg.App.CorsAllowedMethods,
-	})
-}
-
-// Cache middleware
-func (mm appMiddlewareManager) Cache() fiber.Handler {
-	return fiberCache.New(fiberCache.Config{
-		KeyGenerator: func(ctx *fiber.Ctx) string {
-			return ctx.OriginalURL()
-		},
-		Next: func(ctx *fiber.Ctx) bool {
-			return ctx.Path() != "/api/v1/kinopoisk/films/search"
-		},
-		Expiration: mm.cfg.App.CacheExpiration,
 	})
 }
 

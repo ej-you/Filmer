@@ -35,11 +35,11 @@ func NewCockroachClient(cfg *config.Config, appLogger logger.Logger) *gorm.DB {
 			},
 			// disable NotFound errors logging
 			Logger: gormLogger.New(
-				log.New(os.Stderr, "[SQL ERROR]\t", log.Ldate|log.Ltime),
+				log.New(cfg.LogOutput.Error, "[SQL ERROR]\t", log.Ldate|log.Ltime),
 				gormLogger.Config{
 					LogLevel:                  gormLogger.Warn,
 					IgnoreRecordNotFoundError: true,
-					Colorful:                  true,
+					Colorful:                  false,
 				},
 			),
 		})

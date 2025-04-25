@@ -2,14 +2,15 @@ package logger
 
 import (
 	"testing"
-)
 
+	"Filmer/server/config"
+)
 
 func TestLogger(t *testing.T) {
 	t.Log("Try to init Logger")
 
 	fMessage := "message"
-	logger := NewLogger()
+	logger := NewLogger(config.NewConfig())
 	t.Logf("logger type: %T", logger)
 
 	logger.Debug("debug sample")

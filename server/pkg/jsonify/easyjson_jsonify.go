@@ -33,5 +33,5 @@ func (ej easyjsonJSONify) Unmarshal(data []byte, v interface{}) error {
 	if um, ok := v.(easyjson.Unmarshaler); ok {
 		return easyjson.Unmarshal(data, um)
 	}
-	return fmt.Errorf("the entity to serialize does not implement easyjson.Unmarshaler")
+	return fmt.Errorf("the entity to deserialize does not implement easyjson.Unmarshaler")
 }

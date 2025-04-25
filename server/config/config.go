@@ -2,10 +2,12 @@ package config
 
 import (
 	"fmt"
+	"io"
 	"sync"
 	"time"
 
 	"github.com/ilyakaznacheev/cleanenv"
+	lumberjack "gopkg.in/natefinch/lumberjack.v2"
 )
 
 type (
@@ -14,16 +16,17 @@ type (
 		Cache
 		Database
 		KinopoiskAPI
+		LogOutput
 	}
 
 	App struct {
 		Name               string        `env:"APP_NAME" env-default:"Filmer API" env-description:"app name for server (default: Filmer API)"`
 		Port               string        `env:"SERVER_PORT" env-default:"8000" env-description:"server port (default: 8000)"`
+		LogDir             string        `env:"LOG_DIR" env-default:"." env-description:"directory for log files (default: .)"`
 		CorsAllowedOrigins string        `env-required:"true" env:"SERVER_CORS_ALLOWED_ORIGINS" env-description:"cors allowed origins"`
 		CorsAllowedMethods string        `env-required:"true" env:"SERVER_CORS_ALLOWED_METHODS" env-description:"cors allowed methods"`
 		JwtSecret          string        `env-required:"true" env:"JWT_SECRET" env-description:"secret for JWT-token signature"`
 		TokenExpired       time.Duration `env:"TOKEN_EXPIRED" env-default:"30m" env-description:"JWT-token expired duration (default: 30m)"`
-		CacheExpiration    time.Duration `env:"CACHE_EXPIRATION" env-default:"24h" env-description:"Cache expiration time (default: 24h)"`
 	}
 
 	Cache struct {
@@ -45,6 +48,11 @@ type (
 		UnofficialKey string        `env-required:"true" env:"KINOPOISK_API_UNOFFICIAL_KEY" env-description:"key from Kinopoisk API Unofficial"`
 		Key           string        `env-required:"true" env:"KINOPOISK_API_KEY" env-description:"key from Kinopoisk API"`
 		DataExpired   time.Duration `env:"KINOPOISK_API_DATA_EXPIRED" env-default:"360h" env-description:"kinopoisk API data update duration (default: 360h)"`
+	}
+
+	LogOutput struct {
+		Info  io.Writer
+		Error io.Writer
 	}
 )
 
@@ -73,6 +81,20 @@ func NewConfig() *Config {
 			cfg.Database.Name,
 		)
 		cfg.Cache.ConnString = fmt.Sprintf("%s:%s", cfg.Cache.Host, cfg.Cache.Port)
+
+		cfg.LogOutput.Info = &lumberjack.Logger{
+			Filename:   cfg.App.LogDir + "/info.log",
+			MaxSize:    1, // megabytes
+			MaxBackups: 10,
+			Compress:   false,
+		}
+		// logging errors with log rotation
+		cfg.LogOutput.Error = &lumberjack.Logger{
+			Filename:   cfg.App.LogDir + "/error.log",
+			MaxSize:    1, // megabytes
+			MaxBackups: 5,
+			Compress:   false,
+		}
 	})
 	return cfg
 }
