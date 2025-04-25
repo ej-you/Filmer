@@ -4,10 +4,20 @@
 
 .list-movies {
 	width: 100%;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
 	gap: 15px;
+
+	display: grid;
+	grid-auto-flow: row;
+}
+
+/* styles for stared/want/watched pages */
+.list-movies-category {
+	grid-template-columns: repeat(2, 1fr);
+
+}
+/* styles for search page */
+.list-movies-search {
+	grid-template-columns: repeat(3, 1fr);
 }
 
 .movie {
@@ -63,6 +73,26 @@
 	margin-right: 4px;
 }
 
+/* for width to 1580px and less */
+@media screen and (max-width: 1580px) {
+	.list-movies-search {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+/* for width to 1430px and less */
+@media screen and (max-width: 1430px) {
+	.list-movies-category {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* for width to 1430px and less */
+@media screen and (max-width: 1200px) {
+	.list-movies-search {
+		grid-template-columns: 1fr;
+	}
+}
 
 /* for width to 750px and less */
 @media screen and (max-width: 750px) {

@@ -24,7 +24,7 @@
 			<h4 id="found-total"><span class="accent">Found movies: {{ total|floatformat:0 }}</span></h4>
 		{% endif %}
 
-		<div class="list-movies">
+		<div class="list-movies list-movies-search">
 		{% for movie in docs %}
 			<a class="movie" href="/filmer/user-movie/info/{{ movie.id|floatformat:0 }}">
 				<div class="movie-poster">

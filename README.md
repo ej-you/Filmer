@@ -9,9 +9,9 @@
 ### TODO
 
 - [x] Change interface language to Russian (`ru_locale` branch)
-- [ ] Fix frontend bugs (at least):
+- [x] Fix frontend bugs (at least):
 	- [x] Opening a modal not from the very top of the screen
-	- [ ] Remove movies cards stretch
+	- [x] Remove movies cards stretch
 	- [x] Set `width` for input `#search-keyword` in search movies
 - [ ] Add popular movies (or recomendations) to the main page
 - [ ] Add OpenID auth

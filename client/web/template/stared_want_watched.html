@@ -221,7 +221,7 @@
 				<button id="burger-btn">sort and filters</button>
 			</div>
 
-			<div class="list-movies">
+			<div class="list-movies list-movies-category">
 			{% for user_movie in movies %}
 				<a class="movie" href="/filmer/user-movie/info/{{ user_movie.movie.kinopoiskID|floatformat:0 }}">
 					<div class="movie-poster">
