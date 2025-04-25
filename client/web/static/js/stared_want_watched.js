@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// open modal window
     document.getElementById("burger-btn").addEventListener("click", function(event) {
 		console.log("open")
+		window.scrollTo(pageYOffset, 0)
 		document.getElementById("modal-flex-settings").style.display = "block"
 
 		const sortFilterSettingsElem = document.getElementById("flex-settings")
