@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	searchMoviesPerPage = "25" // movies per page (for search movies)
+	searchMoviesPerPage = "30" // movies per page (for search movies)
 	movieDirectorsLimit = 8    // parse max 8 directors for movie
 	movieActorsLimit    = 30   // parse max 30 actors for movie
 )
