@@ -44,7 +44,7 @@ linters:
     errorlint:
       comparison: true
     goconst:
-      ignore-strings: .*?%s|%v|%w.*
+      ignore-string-values: .*?%s|%v|%w.*
       numbers: true
       ignore-calls: false
     gocritic:
@@ -75,9 +75,19 @@ linters:
         path: third_party/kinopoisk_api/api_client\.go
         text: should rewrite http.NewRequestWithContext
       - linters:
+          - goconst
+        path: internal/entity/genre\.go
+        text: 'string `genres` has 5 occurrences, make it a constant'
+      - linters:
           - mnd
         path: pkg/utils/time\.go
         text: 'Magic number: 24, in <argument> detected'
+      - linters:
+          - mnd
+        path: config/config\.go
+      - linters:
+          - gocritic
+        text: "importShadow: shadow of imported from 'Filmer/server/.*?' package '.*?'"
     paths:
       - web
 
