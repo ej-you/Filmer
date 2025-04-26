@@ -5,22 +5,25 @@ services:
     restart: always
     expose:
       - "6379"
+    volumes:
+      - redis_data:/data:rw
     networks:
       main_network:
+    command: redis-server --save 60 1 --appendonly no --dir /data --dbfilename dump.rdb
 
   cockroach:
     image: cockroachdb/cockroach:v24.3.5
     container_name: filmer_cockroach
-    volumes:
-      - cockroach_data:/cockroach/cockroach-data:rw
-    expose:
-      - "26257"
+    restart: always
     ports:
       - "127.0.0.1:8881:8080"
+    expose:
+      - "26257"
+    volumes:
+      - cockroach_data:/cockroach/cockroach-data:rw
     networks:
       main_network:
     command: "start-single-node --insecure"
-    restart: always
 
   server:
     build:
@@ -30,10 +33,10 @@ services:
     restart: always
     env_file:
       - ./server/.env
-    volumes:
-      - server_logs:/logs:rw
     expose:
       - "3000"
+    volumes:
+      - server_logs:/logs:rw
     networks:
       main_network:
     depends_on:
@@ -48,10 +51,10 @@ services:
     restart: always
     env_file:
       - ./client/.env
-    volumes:
-      - client_logs:/logs:rw
     expose:
       - "3001"
+    volumes:
+      - client_logs:/logs:rw
     networks:
       main_network:
     depends_on:
@@ -77,6 +80,7 @@ networks:
 
 
 volumes:
+  redis_data:
   cockroach_data:
   server_logs:
   client_logs:

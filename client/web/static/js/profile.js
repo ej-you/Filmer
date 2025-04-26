@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", function () {
 	const url = new URL(window.location.href);
 	url.searchParams.delete("passwdChangedOK");
 	window.history.replaceState({}, document.title, url.pathname + url.search);
-    console.log("Param removed. New URL:", url.pathname + url.search);
 });
 
 // token expiration time countdown

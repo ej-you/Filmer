@@ -15,6 +15,8 @@ type Repository interface {
 type CacheRepository interface {
 	SetAPILimit(apiName string) error
 	IsAPILimitExhausted(apiName string) (bool, error)
+	SetSearchMovies(searchedMovies *entity.SearchedMovies) error
+	GetSearchMovies(searchedMovies *entity.SearchedMovies) (bool, error)
 }
 
 type KinopoiskWebAPIRepository interface {

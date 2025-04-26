@@ -46,6 +46,15 @@ func NewUsecase(cfg *config.Config, logger logger.Logger, movieRepo movie.Reposi
 // Query (searchedMovies.Query) and page (searchedMovies.Page) must be presented
 // Fill given searchedMovies struct
 func (mu movieUsecase) SearchMovies(searchedMovies *entity.SearchedMovies) error {
+	// get searched movies from cache
+	found, err := mu.movieCacheRepo.GetSearchMovies(searchedMovies)
+	if found {
+		return nil
+	}
+	if err != nil {
+		mu.logger.Errorf("movieUsecase.SearchMovies: get from cache: %v", err)
+	}
+
 	// check API limit is exhausted
 	isLimitExhausted, err := mu.movieCacheRepo.IsAPILimitExhausted(officialAPIName)
 	if err != nil {
@@ -65,6 +74,13 @@ func (mu movieUsecase) SearchMovies(searchedMovies *entity.SearchedMovies) error
 		// set API limit to cache if gotten error is 402 error
 		return fmt.Errorf("movieUsecase.SearchMovies: %w", mu.setAPILimitIfPaymentError(err, officialAPIName))
 	}
+
+	// save searched movies to cache
+	err = mu.movieCacheRepo.SetSearchMovies(searchedMovies)
+	if err != nil {
+		mu.logger.Errorf("movieUsecase.SearchMovies: set to cache: %v", err)
+	}
+
 	return nil
 }
 

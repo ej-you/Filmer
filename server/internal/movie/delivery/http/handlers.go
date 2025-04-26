@@ -3,6 +3,7 @@ package http
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	fiber "github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -30,7 +31,7 @@ func NewMovieHandlerManager(cfg *config.Config, jsonify jsonify.JSONify, logger 
 	validator validator.Validator) *MovieHandlerManager {
 
 	movieRepo := repository.NewRepository(dbClient)
-	movieCacheRepo := repository.NewCacheRepository(cache)
+	movieCacheRepo := repository.NewCacheRepository(cache, jsonify)
 	movieKinopoiskWebAPIRepo := repository.NewKinopoiskWebAPIRepository(cfg, jsonify)
 	movieUC := usecase.NewUsecase(cfg, logger, movieRepo, movieCacheRepo, movieKinopoiskWebAPIRepo)
 
@@ -69,7 +70,7 @@ func (mhm MovieHandlerManager) SearchFilms() fiber.Handler {
 			return fmt.Errorf("search films: %w", err)
 		}
 		// get data from API
-		searchedMovies.Query = dataIn.Query
+		searchedMovies.Query = strings.ToLower(dataIn.Query)
 		searchedMovies.Page = dataIn.Page
 		err = mhm.movieUC.SearchMovies(searchedMovies)
 		if err != nil {

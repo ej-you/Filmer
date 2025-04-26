@@ -11,16 +11,16 @@ services:
   cockroach:
     image: cockroachdb/cockroach:v24.3.5
     container_name: filmer_cockroach
-    volumes:
-      - cockroach_data:/cockroach/cockroach-data:rw
-    expose:
-      - "26257"
+    restart: always
     ports:
       - "8080:8080"
+    expose:
+      - "26257"
+    volumes:
+      - cockroach_data:/cockroach/cockroach-data:rw
     networks:
       filmer_network:
     command: "start-single-node --insecure"
-    restart: always
 
 
 networks:

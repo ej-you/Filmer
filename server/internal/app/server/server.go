@@ -39,7 +39,7 @@ type fiberServer struct {
 func NewServer(cfg *config.Config) Server {
 	return &fiberServer{
 		cfg:     cfg,
-		log:     logger.NewLogger(),
+		log:     logger.NewLogger(cfg),
 		jsonify: jsonify.NewJSONify(),
 	}
 }
@@ -87,7 +87,6 @@ func (s fiberServer) Run() {
 	fibertApp.Use(mwManager.Logger())
 	fibertApp.Use(mwManager.Recover())
 	fibertApp.Use(mwManager.CORS())
-	fibertApp.Use(mwManager.Cache())
 	fibertApp.Use(mwManager.Swagger())
 
 	// set up handlers

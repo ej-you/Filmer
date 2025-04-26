@@ -19,6 +19,9 @@ dev:
 lint:
 	golangci-lint run -c ./.golangci.yml ./...
 
+clear-logs:
+	rm -f ./error.log ./info.log
+
 # ------- #
 # SWAGGER #
 # ------- #

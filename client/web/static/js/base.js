@@ -122,3 +122,42 @@ window.addEventListener('resize', changeMenuButtons);
 
 // execute changeMenuButtons func with page loading
 document.addEventListener('DOMContentLoaded', changeMenuButtons);
+
+// +-----------+
+// + For forms +
+// +-----------+
+
+// add page GET query-params to POST request
+function addQueryParamsToForm(formElem) {
+	let paramsString = window.location.search;
+	let searchParams = new URLSearchParams(paramsString);
+	formElem.action = formElem.action + "?" + searchParams.toString();
+}
+
+// add current page path with query-params like hidden input to form with POST request
+function addHiddenNextAttributeToForm(formElem) {
+	let currentPage = window.location.pathname + window.location.search;
+	// create hidden input with current page path
+	let input = document.createElement("input");
+	input.type = "hidden";
+	input.name = "next";
+	input.value = currentPage;
+	// add input to form
+	formElem.appendChild(input);
+}
+
+// +-------------------+
+// + Movie back button +
+// +-------------------+
+
+document.addEventListener("DOMContentLoaded", function () {
+	let currentPath = window.location.pathname;
+	let currentQuery = window.location.search;
+
+	// skip for movie page
+	if (currentPath.startsWith("/filmer/user-movie/info")) {
+		return
+	}
+
+	localStorage.setItem("movie-back-url", currentPath+currentQuery);
+});

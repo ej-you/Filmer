@@ -13,12 +13,14 @@
 	- [x] Opening a modal not from the very top of the screen
 	- [x] Remove movies cards stretch
 	- [x] Set `width` for input `#search-keyword` in search movies
-- [ ] Add popular movies (or recomendations) to the main page
+- [x] Add `back` button to movie page
+- [x] Add limit for movie directors amount (max = 8 directors)
+- [x] Save cache data on redis shutdown (and load cache data on redis startup)
+- [x] Add log rotation for server
+- [ ] Add popular movies (or recomendations or random "daily" movie) to the main page
 - [ ] Add OpenID auth
 - [ ] Add the ability to recomend the movie to another user
 - [ ] Add the ability to browse recomended movies from other users
-- [ ] Add `step-down` flag for one step migrations rollback to migrator
 - [ ] Add director/actor page with his movies
-- [ ] Add `back` button to movie page
 - [ ] Add related movies to movie page
-- [x] Add limit for movie directors amount (max = 8 directors)
+- [ ] Add `step-down` flag for one step migrations rollback to migrator

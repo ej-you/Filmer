@@ -1,3 +1,48 @@
+/* disable default title */
+.title {
+	display: none;
+}
+header {
+	margin-bottom: 0;
+}
+
+/* custom title with back button for movie page */
+.movie-title {
+	text-align: center;
+    margin-bottom: 40px;
+
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.back-button-container {
+	width: 100%;
+	display: flex;
+
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	flex-grow: 1;
+}
+
+#back-button {
+	width: 60%;
+
+	display: flex;
+	margin: auto;
+	padding-left: 5px;
+}
+#back-button svg {
+	fill: var(--white);
+	height: 36px;
+	width: 36px;
+}
+#back-button:hover svg {
+    fill: var(--light-red);
+}
+
+
 h3 {
 	font-size: 30px;
 }
@@ -146,13 +191,18 @@ h3 {
 
 /* for width to 1500px and less */
 @media screen and (max-width: 1500px) {
-	.flex-content {
+	#back-button, .flex-content {
 		width: 80%;
 	}
 }
 
 /* for width to 1080px and less */
 @media screen and (max-width: 1080px) {
+	#back-button {
+		width: 400px;
+		padding-left: 0;
+	}
+
 	.movie {
 		flex-direction: column;
 	}
@@ -166,6 +216,14 @@ h3 {
 
 /* for width to 750px and less */
 @media screen and (max-width: 750px) {
+	#back-button {
+		width: 220px;
+	}
+	#back-button svg {
+		height: 28px;
+		width: 28px;
+	}
+
 	h3 {
 		font-size: 25px;
 	}
