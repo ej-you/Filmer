@@ -9,7 +9,7 @@ services:
       - redis_data:/data:rw
     networks:
       main_network:
-    command: redis-server --save 60 1 --appendonly no --dir /data --dbfilename dump.rdb
+    command: redis-stack-server --save 60 1 --appendonly no --dir /data --dbfilename dump.rdb
 
   cockroach:
     image: cockroachdb/cockroach:v24.3.5
