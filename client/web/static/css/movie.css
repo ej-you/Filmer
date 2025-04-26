@@ -25,12 +25,16 @@ header {
 	bottom: 0;
 	flex-grow: 1;
 }
-
-#back-button {
+.back-button-subcontainer {
 	width: 60%;
 
 	display: flex;
+	justify-content: flex-start;
 	margin: auto;
+}
+
+#back-button {
+	display: flex;
 	padding-left: 5px;
 }
 #back-button svg {
@@ -191,15 +195,17 @@ h3 {
 
 /* for width to 1500px and less */
 @media screen and (max-width: 1500px) {
-	#back-button, .flex-content {
+	.back-button-subcontainer, .flex-content {
 		width: 80%;
 	}
 }
 
 /* for width to 1080px and less */
 @media screen and (max-width: 1080px) {
-	#back-button {
+	.back-button-subcontainer {
 		width: 400px;
+	}
+	#back-button {
 		padding-left: 0;
 	}
 
@@ -216,7 +222,7 @@ h3 {
 
 /* for width to 750px and less */
 @media screen and (max-width: 750px) {
-	#back-button {
+	.back-button-subcontainer {
 		width: 220px;
 	}
 	#back-button svg {
