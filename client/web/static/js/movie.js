@@ -29,3 +29,18 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	});
 });
+
+// +-------------------+
+// + Movie back button +
+// +-------------------+
+
+document.addEventListener("DOMContentLoaded", function () {
+	let backButtonURL = localStorage.getItem("movie-back-url");
+
+	if (backButtonURL == null) {
+		backButtonURL = "/filmer"
+	}
+
+	let backButton = document.getElementById("back-button")
+	backButton.setAttribute("href", backButtonURL)
+});
