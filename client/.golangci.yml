@@ -44,7 +44,7 @@ linters:
     errorlint:
       comparison: true
     goconst:
-      ignore-strings: .*?%s|%v|%w.*
+      ignore-string-values: .*?%s|%v|%w.*
       numbers: true
       ignore-calls: false
     gocritic:
