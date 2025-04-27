@@ -1,25 +1,25 @@
 {% extends "base.html" %}
 
 {% block css %}
-	<link rel="stylesheet" type="text/css" href="/static/css/index.css">
+<link rel="stylesheet" type="text/css" href="/static/css/index.css">
 {% endblock %}
 
 {% block title %}Filmer{% endblock %}
 
 {% block content %}
-	<div class="content flex-content">
-		<div class="description">
-			<p class="description-p">Filmer is a service to manage movie lists</p>
-			<p class="description-p">
-				<a href="/filmer/movie/search">Search</a> movies,
-				<a href="/filmer/user-movie/stared">star</a> it and save it to
-				<a href="/filmer/user-movie/want">want</a> or
-				<a href="/filmer/user-movie/watched">watched</a> lists
-			</p>
-		</div>
-		<div class="entry-buttons">
-			<button class="link-button"><a href="/filmer/user/sign-up">Sign up</a></button>
-			<button class="link-button"><a href="/filmer/user/login">Login</a></button>
-		</div>
+<div class="content flex-content">
+	<div class="description">
+		<p class="description-p">Filmer is a service to manage movie lists</p>
+		<p class="description-p">
+			<a href="/filmer/movie/search">Search</a> movies,
+			<a href="/filmer/user-movie/stared">star</a> it and save it to
+			<a href="/filmer/user-movie/want">want</a> or
+			<a href="/filmer/user-movie/watched">watched</a> lists
+		</p>
 	</div>
+	<div class="entry-buttons">
+		<button class="link-button"><a href="/filmer/user/sign-up">Sign up</a></button>
+		<button class="link-button"><a href="/filmer/user/login">Login</a></button>
+	</div>
+</div>
 {% endblock %}

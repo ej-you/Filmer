@@ -1,12 +1,12 @@
 # Filmer server
 
+Server part use `clean architecture` described in [README_ARCH](./docs/README_ARCH.md)
 
-### Server part use `clean architecture` described in [README_ARCH](./docs/README_ARCH.md)
-### App description can be found [there](./docs/README_APP.md)
+App description can be found [there](./docs/README_APP.md)
 
-### Needed `env` variables:
+## Needed `env` variables
 
-```
+```dotenv
 SERVER_PORT=3000
 JWT_SECRET="samplelrhksgvi8n54kJWTgl58ehvyooSECREThielghi"
 
@@ -34,27 +34,32 @@ DB_NAME="filmer_db"
 
 ```
 
-<hr>
+---
 
-### Deploy
+## Deploy
 
-1. Create database
-```
+### 1. Create database
+
+```shell
 docker compose up -d cockroach
 docker exec -it filmer_cockroach ./cockroach sql --insecure --execute="CREATE DATABASE IF NOT EXISTS filmer_db;"
 ```
-2. Up full app
-```
+
+### 2. Up full app
+
+```shell
 docker compose up -d
 ```
-3. Migrate DB
-```
+
+### 3. Migrate DB
+
+```shell
 docker exec -it filmer_server sh -c "/app/app_server migrate"
 ```
 
-<hr>
+---
 
-### Used tools:
+## Used tools
 
 1. [CockroachDB](https://www.cockroachlabs.com/) as main DB
 2. DB migrations with [migrate module](https://github.com/golang-migrate/migrate)
@@ -66,7 +71,7 @@ docker exec -it filmer_server sh -c "/app/app_server migrate"
 8. Swagger docs with [swaggo](https://github.com/swaggo/swag)
 9. Golang linter - [golangci-lint](https://golangci-lint.run/)
 
-### Third party:
+## Third party
 
 1. Kinopoisk API Key from [Kinopoisk API Unofficial](https://kinopoiskapiunofficial.tech/)
 2. Kinopoisk API Key from [Kinopoisk API](https://kinopoisk.dev//)

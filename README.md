@@ -1,18 +1,15 @@
 # Filmer
 
-### About [server](./server/README.md)
-### About [client](./client/README.md)
-### About [nginx](./nginx/README.md)
+## About [server](./server/README.md)
 
-<hr>
+## About [client](./client/README.md)
+
+## About [nginx](./nginx/README.md)
 
 ### TODO
 
 - [x] Change interface language to Russian (`ru_locale` branch)
-- [x] Fix frontend bugs (at least):
-	- [x] Opening a modal not from the very top of the screen
-	- [x] Remove movies cards stretch
-	- [x] Set `width` for input `#search-keyword` in search movies
+- [x] Fix frontend bugs
 - [x] Add `back` button to movie page
 - [x] Add limit for movie directors amount (max = 8 directors)
 - [x] Save cache data on redis shutdown (and load cache data on redis startup)

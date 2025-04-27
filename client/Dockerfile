@@ -2,7 +2,7 @@
 # BUILD
 # -----
 
-FROM golang:1.22.4-alpine3.20 AS build
+FROM golang:1.24.2-alpine AS build
 
 # set up workdir
 WORKDIR /go/src
@@ -22,7 +22,7 @@ RUN go build -o ./app_client ./cmd/app/main.go
 # RUN
 # ---
 
-FROM alpine:3.20 AS run
+FROM alpine:3.21 AS run
 
 # make dir for logs
 RUN mkdir /logs

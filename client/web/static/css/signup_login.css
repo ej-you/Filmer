@@ -48,23 +48,30 @@ label {
 	background-color: var(--light-gray);
 	user-select: none;
 }
+
 .submit-btn:hover {
 	background-color: var(--gray);
 }
 
 /* line with link to login/signup page under form */
-.to-signup,.to-login {
+.to-signup,
+.to-login {
 	display: flex;
 	justify-content: center;
 }
-.to-signup *, .to-login * {
+
+.to-signup *,
+.to-login * {
 	margin: auto 5px;
 }
 
-.to-signup a, .to-login a {
+.to-signup a,
+.to-login a {
 	color: var(--light-red);
 }
-.to-signup a:hover, .to-login a:hover {
+
+.to-signup a:hover,
+.to-login a:hover {
 	text-decoration: underline;
 }
 

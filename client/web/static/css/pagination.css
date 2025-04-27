@@ -5,7 +5,9 @@
 	gap: 7px;
 }
 
-.page-three-dots, .page-button, .page-button-active {
+.page-three-dots,
+.page-button,
+.page-button-active {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -17,7 +19,9 @@
 	letter-spacing: 1px;
 	padding: 10px 5px;
 }
-.page-button, .page-button-active {
+
+.page-button,
+.page-button-active {
 	padding: 10px;
 	border-radius: 7px;
 	min-width: 45px;
@@ -46,7 +50,8 @@
 		padding: 10px 3px;
 	}
 
-	.page-button, .page-button-active {
+	.page-button,
+	.page-button-active {
 		padding: 5px;
 		min-width: 30px;
 	}

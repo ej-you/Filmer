@@ -1,7 +1,7 @@
 // change form action last path route (e.g. "smth" in action "/path/to/smth")
 function changeFormAction(formElem, newLastRoute) {
 	let formAction = formElem.action.split("/")
-	formAction[formAction.length-1] = newLastRoute
+	formAction[formAction.length - 1] = newLastRoute
 	formElem.action = formAction.join("/")
 }
 

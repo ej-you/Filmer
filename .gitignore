@@ -6,5 +6,6 @@
 env/
 *.env
 
-# local notes
+# local
+/.vscode
 notes.txt
