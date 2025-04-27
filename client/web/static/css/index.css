@@ -11,6 +11,7 @@
 .description-p a {
 	color: var(--light-red);
 }
+
 .description-p a:hover {
 	text-decoration: underline;
 }
@@ -35,6 +36,7 @@
 	background-color: var(--light-gray);
 	user-select: none;
 }
+
 .link-button:hover {
 	background-color: var(--gray);
 }

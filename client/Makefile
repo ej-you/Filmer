@@ -12,7 +12,3 @@ lint:
 
 clean-lint-cache:
 	golangci-lint cache clean
-
-# ------- #
-# SWAGGER #
-# ------- #

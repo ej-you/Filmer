@@ -3,6 +3,7 @@
 	user-select: none;
 	margin-bottom: 10px;
 }
+
 #found-total {
 	margin-bottom: 15px;
 }
@@ -17,10 +18,11 @@
 .flex-content-row {
 	display: flex;
 	flex-direction: row;
-    align-items: flex-start;
+	align-items: flex-start;
 	width: 100%;
 	gap: 15px;
 }
+
 #flex-settings {
 	display: flex;
 	flex-direction: column;
@@ -29,7 +31,7 @@
 .settings {
 	display: flex;
 	flex-direction: column;
-/* 	margin: 5px auto; */
+	/* 	margin: 5px auto; */
 	padding: 20px;
 	gap: 5px;
 
@@ -38,9 +40,11 @@
 	border-radius: 20px;
 	width: 350px;
 }
+
 #order-settings {
 	margin-bottom: 15px;
 }
+
 .setting-header {
 	font-size: 25px;
 	color: var(--light-red);
@@ -56,6 +60,7 @@
 	border-radius: 6px;
 	user-select: none;
 }
+
 .sort-field-link:hover {
 	color: var(--dark-white);
 }
@@ -64,11 +69,13 @@
 	overflow: hidden;
 	display: flex;
 }
-.links-switch > * {
+
+.links-switch>* {
 	float: left;
 	display: inline-block;
 	flex-grow: 1;
 }
+
 .sort-order-link {
 	display: flex;
 	justify-content: center;
@@ -78,13 +85,16 @@
 	cursor: pointer;
 	user-select: none;
 }
+
 .sort-order-link:hover {
 	color: var(--dark-white);
 }
+
 .asc-order {
 	border-radius: 6px 0 0 6px;
 	border-right: none;
 }
+
 .desc-order {
 	border-radius: 0 6px 6px 0;
 	border-right: 2px solid var(--light-gray);
@@ -97,9 +107,11 @@
 .radio-button {
 	display: inline-block;
 }
+
 .radio-button input[type=radio] {
 	display: none;
 }
+
 .radio-button label {
 	display: block;
 	cursor: pointer;
@@ -110,10 +122,12 @@
 	border-radius: 6px;
 	user-select: none;
 }
+
 .radio-button label:hover {
 	color: var(--dark-white);
 }
-.radio-button input[type=radio]:checked + label {
+
+.radio-button input[type=radio]:checked+label {
 	background: var(--light-gray);
 }
 
@@ -126,7 +140,8 @@
 	flex-direction: column;
 	gap: 5px;
 }
-.filter-setting > p {
+
+.filter-setting>p {
 	margin-bottom: 10px;
 }
 
@@ -154,6 +169,7 @@
 	line-height: 30px;
 	cursor: pointer;
 }
+
 .filters-submit-btn:hover {
 	background-color: var(--gray);
 }
@@ -168,9 +184,11 @@
 	user-select: none;
 	position: relative;
 }
+
 .checkbox-btn input[type=checkbox] {
 	display: none;
 }
+
 .checkbox-btn span {
 	display: inline-block;
 	cursor: pointer;
@@ -179,9 +197,11 @@
 	border: 2px solid var(--light-gray);
 	border-radius: 50px;
 }
-.checkbox-btn input[type=checkbox]:checked + span {
+
+.checkbox-btn input[type=checkbox]:checked+span {
 	background: var(--light-gray);
 }
+
 .checkbox-btn:hover {
 	color: var(--dark-white);
 }
@@ -213,6 +233,7 @@
 	border-radius: 15px;
 	overflow: hidden;
 }
+
 .range::-webkit-slider-thumb {
 	appearance: none;
 	width: 15px;
@@ -223,6 +244,7 @@
 	box-shadow: -407px 0 0 401px var(--dark-white);
 	cursor: pointer;
 }
+
 .range-value {
 	position: relative;
 	text-align: center;
@@ -245,6 +267,7 @@
 	border: 2px solid var(--light-gray);
 	border-radius: 10px;
 }
+
 .filter-year::-webkit-outer-spin-button,
 .filter-year::-webkit-inner-spin-button {
 	display: none;
@@ -258,6 +281,7 @@
 	display: none;
 	width: 100%;
 }
+
 #burger-btn {
 	width: 100%;
 
@@ -270,6 +294,7 @@
 	padding-bottom: 5px;
 	cursor: pointer;
 }
+
 #burger-btn:hover {
 	background-color: var(--gray);
 }
@@ -281,7 +306,7 @@
 	z-index: 1000;
 
 	background-color: var(--dark-gray);
-/* 	background-color: white; */
+	/* 	background-color: white; */
 	position: absolute;
 	width: 100%;
 	height: 100%;
@@ -294,12 +319,13 @@
 
 .modal-close {
 	position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 48px;
-    height: 48px;
-    cursor: pointer;
+	top: 10px;
+	right: 10px;
+	width: 48px;
+	height: 48px;
+	cursor: pointer;
 }
+
 .modal-close svg {
 	fill: var(--light-red);
 }
@@ -313,9 +339,10 @@
 	.flex-content-row {
 		flex-direction: column;
 	}
+
 	#flex-settings {
 		width: 100%;
-	    align-items: center;
+		align-items: center;
 	}
 }
 
@@ -324,6 +351,7 @@
 	h3 {
 		font-size: 25px;
 	}
+
 	.flex-content-row {
 		margin: auto 10px;
 	}
@@ -331,9 +359,16 @@
 	.setting-header {
 		font-size: 22px;
 	}
-	.sort-field-link, .sort-order-link, .checkbox-btn, .radio-button, .filter-year, .range-value {
+
+	.sort-field-link,
+	.sort-order-link,
+	.checkbox-btn,
+	.radio-button,
+	.filter-year,
+	.range-value {
 		font-size: 16px;
 	}
+
 	.filters-submit-btn {
 		font-size: 18px;
 	}
@@ -346,7 +381,10 @@
 		width: 325px;
 	}
 
-	.sort-field-link:hover, .sort-order-link:hover, .radio-button label:hover, .checkbox-btn:hover {
+	.sort-field-link:hover,
+	.sort-order-link:hover,
+	.radio-button label:hover,
+	.checkbox-btn:hover {
 		color: var(--white);
 	}
 }

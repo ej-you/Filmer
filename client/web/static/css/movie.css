@@ -2,6 +2,7 @@
 .title {
 	display: none;
 }
+
 header {
 	margin-bottom: 0;
 }
@@ -9,11 +10,11 @@ header {
 /* custom title with back button for movie page */
 .movie-title {
 	text-align: center;
-    margin-bottom: 40px;
+	margin-bottom: 40px;
 
-    display: flex;
-    justify-content: center;
-    position: relative;
+	display: flex;
+	justify-content: center;
+	position: relative;
 }
 
 .back-button-container {
@@ -25,6 +26,7 @@ header {
 	bottom: 0;
 	flex-grow: 1;
 }
+
 .back-button-subcontainer {
 	width: 60%;
 
@@ -37,13 +39,15 @@ header {
 	display: flex;
 	padding-left: 5px;
 }
+
 #back-button svg {
 	fill: var(--white);
 	height: 36px;
 	width: 36px;
 }
+
 #back-button:hover svg {
-    fill: var(--light-red);
+	fill: var(--light-red);
 }
 
 
@@ -60,7 +64,8 @@ h3 {
 	align-items: center;
 	width: 60%;
 }
-.flex-content > * {
+
+.flex-content>* {
 	margin-bottom: 15px;
 	width: 100%;
 }
@@ -76,6 +81,7 @@ h3 {
 .movie-title {
 	text-align: center;
 }
+
 /* h3 for directors and actors */
 .movie-staff-header {
 	text-align: left;
@@ -91,6 +97,7 @@ h3 {
 
 	align-items: center;
 }
+
 .movie-full-info-footer {
 	display: flex;
 	flex-direction: column;
@@ -105,18 +112,21 @@ h3 {
 	justify-content: center;
 	gap: 15px;
 }
-.movie-extra-icon > button {
+
+.movie-extra-icon>button {
 	display: flex;
 }
-.movie-extra-icon > button > svg {
+
+.movie-extra-icon>button>svg {
 	height: 36px;
 	width: 36px;
 }
 
-#external-link > button > svg {
+#external-link>button>svg {
 	stroke: var(--white);
 }
-#external-link > button > svg:hover {
+
+#external-link>button>svg:hover {
 	stroke: var(--dark-white);
 }
 
@@ -124,13 +134,16 @@ h3 {
 .fill-static-white {
 	fill: var(--white);
 }
+
 .fill-hover-light-red:hover {
 	fill: var(--light-red);
 }
+
 /* for active stared, want and watched icons */
 .fill-static-light-red {
 	fill: var(--light-red);
 }
+
 .fill-hover-white:hover {
 	fill: var(--white);
 }
@@ -150,6 +163,7 @@ h3 {
 
 	text-align: left;
 }
+
 .movie-info label {
 	cursor: auto;
 	color: var(--light-red);
@@ -179,6 +193,7 @@ h3 {
 	display: flex;
 	flex-direction: column;
 }
+
 .person-poster {
 	margin-bottom: 10px;
 }
@@ -195,7 +210,9 @@ h3 {
 
 /* for width to 1500px and less */
 @media screen and (max-width: 1500px) {
-	.back-button-subcontainer, .flex-content {
+
+	.back-button-subcontainer,
+	.flex-content {
 		width: 80%;
 	}
 }
@@ -205,6 +222,7 @@ h3 {
 	.back-button-subcontainer {
 		width: 400px;
 	}
+
 	#back-button {
 		padding-left: 0;
 	}
@@ -212,9 +230,11 @@ h3 {
 	.movie {
 		flex-direction: column;
 	}
+
 	.movie-staff-header {
 		text-align: center;
 	}
+
 	.movie-persons {
 		justify-content: center;
 	}
@@ -225,6 +245,7 @@ h3 {
 	.back-button-subcontainer {
 		width: 220px;
 	}
+
 	#back-button svg {
 		height: 28px;
 		width: 28px;
@@ -233,11 +254,12 @@ h3 {
 	h3 {
 		font-size: 25px;
 	}
+
 	.flex-content {
 		width: 90%;
 	}
 
-	.movie-extra-icon > button > svg {
+	.movie-extra-icon>button>svg {
 		height: 27px;
 		width: 27px;
 	}

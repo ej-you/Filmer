@@ -6,7 +6,7 @@ let iconIsSet = false
 // +---------------+
 
 document.addEventListener("DOMContentLoaded", function () {
-    let paramsString = window.location.search;
+	let paramsString = window.location.search;
 	let searchParams = new URLSearchParams(paramsString);
 
 	let errorMessage = searchParams.get("message")
@@ -35,8 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		setTimeout(() => {
 			console.log("Hide error message")
 			elemErrorMessage.style.display = "none"
-        }, 3000);
-    }
+		}, 3000);
+	}
 });
 
 
@@ -159,5 +159,5 @@ document.addEventListener("DOMContentLoaded", function () {
 		return
 	}
 
-	localStorage.setItem("movie-back-url", currentPath+currentQuery);
+	localStorage.setItem("movie-back-url", currentPath + currentQuery);
 });

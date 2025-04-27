@@ -1,280 +1,289 @@
 {% extends "base.html" %}
 
 {% block css %}
-	<link rel="stylesheet" type="text/css" href="/static/css/list_movies.css">
-	<link rel="stylesheet" type="text/css" href="/static/css/stared_want_watched.css">
-	<link rel="stylesheet" type="text/css" href="/static/css/pagination.css">
-	<script type="text/javascript" src="/static/js/base.js"></script>
-	<script type="text/javascript" src="/static/js/stared_want_watched.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/css/list_movies.css">
+<link rel="stylesheet" type="text/css" href="/static/css/stared_want_watched.css">
+<link rel="stylesheet" type="text/css" href="/static/css/pagination.css">
+<script type="text/javascript" src="/static/js/base.js"></script>
+<script type="text/javascript" src="/static/js/stared_want_watched.js"></script>
 {% endblock %}
 
 {% block title %}{{ title|capfirst|default:"Category" }} | Filmer{% endblock %}
 
 {% block content %}
-	<div id="modal-flex-settings">
-		<div class="modal-close">
-            <svg version="1.1" viewBox="0 0 24 24" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g id="grid_system"/><g id="_icons"><path d="M5.3,18.7C5.5,18.9,5.7,19,6,19s0.5-0.1,0.7-0.3l5.3-5.3l5.3,5.3c0.2,0.2,0.5,0.3,0.7,0.3s0.5-0.1,0.7-0.3   c0.4-0.4,0.4-1,0-1.4L13.4,12l5.3-5.3c0.4-0.4,0.4-1,0-1.4s-1-0.4-1.4,0L12,10.6L6.7,5.3c-0.4-0.4-1-0.4-1.4,0s-0.4,1,0,1.4   l5.3,5.3l-5.3,5.3C4.9,17.7,4.9,18.3,5.3,18.7z"/></g></svg>
-        </div>
-        <div class="modal-window"></div>
+<div id="modal-flex-settings">
+	<div class="modal-close">
+		<svg version="1.1" viewBox="0 0 24 24" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
+			xmlns:xlink="http://www.w3.org/1999/xlink">
+			<g id="grid_system" />
+			<g id="_icons">
+				<path
+					d="M5.3,18.7C5.5,18.9,5.7,19,6,19s0.5-0.1,0.7-0.3l5.3-5.3l5.3,5.3c0.2,0.2,0.5,0.3,0.7,0.3s0.5-0.1,0.7-0.3   c0.4-0.4,0.4-1,0-1.4L13.4,12l5.3-5.3c0.4-0.4,0.4-1,0-1.4s-1-0.4-1.4,0L12,10.6L6.7,5.3c-0.4-0.4-1-0.4-1.4,0s-0.4,1,0,1.4   l5.3,5.3l-5.3,5.3C4.9,17.7,4.9,18.3,5.3,18.7z" />
+			</g>
+		</svg>
 	</div>
+	<div class="modal-window"></div>
+</div>
 
-	<div class="content flex-content-column">
-		<h3 class="subtitle">{{ title|capfirst|default:"Category" }} movies</h3>
+<div class="content flex-content-column">
+	<h3 class="subtitle">{{ title|capfirst|default:"Category" }} movies</h3>
 
-		{% if pagination.total %}
-			<h4 id="found-total"><span class="accent">Found movies: {{ pagination.total|floatformat:0 }}</span></h4>
-		{% else %}
-			<h4 id="found-total"><span class="accent">Found movies: 0</span></h4>
-		{% endif %}
+	{% if pagination.total %}
+	<h4 id="found-total"><span class="accent">Found movies: {{ pagination.total|floatformat:0 }}</span></h4>
+	{% else %}
+	<h4 id="found-total"><span class="accent">Found movies: 0</span></h4>
+	{% endif %}
 
-		<div class="flex-content-row">
-			<div id="flex-settings">
-				<div id="order-settings" class="settings">
-					<p class="setting-header">Сортировать</p>
+	<div class="flex-content-row">
+		<div id="flex-settings">
+			<div id="order-settings" class="settings">
+				<p class="setting-header">Сортировать</p>
 
-					<a class="sort-field-link" data-link-value="title" href="?sortField=title">название</a>
-					<a class="sort-field-link" data-link-value="rating" href="?sortField=rating">рейтинг</a>
-					<a class="sort-field-link" data-link-value="year" href="?sortField=year">год</a>
-					<a class="sort-field-link" data-link-value="updated_at" href="?sortField=updated_at">обновлено</a>
+				<a class="sort-field-link" data-link-value="title" href="?sortField=title">название</a>
+				<a class="sort-field-link" data-link-value="rating" href="?sortField=rating">рейтинг</a>
+				<a class="sort-field-link" data-link-value="year" href="?sortField=year">год</a>
+				<a class="sort-field-link" data-link-value="updated_at" href="?sortField=updated_at">обновлено</a>
 
-					<div class="links-switch">
-						<a class="sort-order-link asc-order" data-link-value="asc" href="?sortOrder=asc">▲</a>
-						<a class="sort-order-link desc-order" data-link-value="desc" href="?sortOrder=desc">▼</a>
+				<div class="links-switch">
+					<a class="sort-order-link asc-order" data-link-value="asc" href="?sortOrder=asc">▲</a>
+					<a class="sort-order-link desc-order" data-link-value="desc" href="?sortOrder=desc">▼</a>
+				</div>
+			</div>
+
+			<form id="filter-form" class="settings" action="" method="get">
+				<p class="setting-header">Фильтровать</p>
+
+				<input id="sort-field-in-filter" type="hidden" name="sortField" value="">
+				<input id="sort-order-in-filter" type="hidden" name="sortOrder" value="">
+
+				<div class="filters-separator"></div>
+				<div class="filter-setting">
+					<p class="accent">жанры</p>
+
+					<div id="filter-genre-list">
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="детектив"><span>детектив</span>
+						</label>
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="комедия"><span>комедия</span>
+						</label>
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="криминал"><span>криминал</span>
+						</label>
+
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="мелодрама"><span>мелодрама</span>
+						</label>
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="триллер"><span>триллер</span>
+						</label>
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="боевик"><span>боевик</span>
+						</label>
+
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="фэнтези"><span>фэнтези</span>
+						</label>
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="фантастика"><span>фантастика</span>
+						</label>
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="драма"><span>драма</span>
+						</label>
+
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="мультфильм"><span>мультфильм</span>
+						</label>
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="спорт"><span>спорт</span>
+						</label>
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="военный"><span>военный</span>
+						</label>
+
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="приключения"><span>приключения</span>
+						</label>
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="документальный"><span>документальный</span>
+						</label>
+
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="короткометражка"><span>короткометражка</span>
+						</label>
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="реальное ТВ"><span>реальное ТВ</span>
+						</label>
+
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="семейный"><span>семейный</span>
+						</label>
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="биография"><span>биография</span>
+						</label>
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="аниме"><span>аниме</span>
+						</label>
+
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="церемония"><span>церемония</span>
+						</label>
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="новости"><span>новости</span>
+						</label>
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="концерт"><span>концерт</span>
+						</label>
+
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="фильм-нуар"><span>фильм-нуар</span>
+						</label>
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="детский"><span>детский</span>
+						</label>
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="ужасы"><span>ужасы</span>
+						</label>
+
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="вестерн"><span>вестерн</span>
+						</label>
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="история"><span>история</span>
+						</label>
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="мюзикл"><span>мюзикл</span>
+						</label>
+
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="музыка"><span>музыка</span>
+						</label>
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="ток-шоу"><span>ток-шоу</span>
+						</label>
+						<label class="checkbox-btn">
+							<input name="genres" type="checkbox" value="игра"><span>игра</span>
+						</label>
 					</div>
 				</div>
 
-				<form id="filter-form" class="settings" action="" method="get">
-					<p class="setting-header">Фильтровать</p>
+				<div class="filters-separator"></div>
+				<div class="filter-setting">
+					<p class="accent">рейтинг от</p>
 
-					<input id="sort-field-in-filter" type="hidden" name="sortField" value="">
-					<input id="sort-order-in-filter" type="hidden" name="sortOrder" value="">
+					<div class="range-box" id="filter-rating-from">
+						<input type="range" class="range" name="ratingFrom" min="0" max="10" value="0" step="0.1">
+						<span class="range-value">0</span>
+					</div>
+				</div>
 
-					<div class="filters-separator"></div>
-					<div class="filter-setting">
-						<p class="accent">жанры</p>
+				<div class="filters-separator"></div>
+				<div class="filter-setting">
+					<p class="accent">года с</p>
+					<input class="filter-year" id="filter-year-from" type="number" name="yearFrom" min="1500" max="3000"
+						value="1500">
+				</div>
 
-						<div id="filter-genre-list">
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="детектив"><span>детектив</span>
-							</label>
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="комедия"><span>комедия</span>
-							</label>
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="криминал"><span>криминал</span>
-							</label>
+				<div class="filters-separator"></div>
+				<div class="filter-setting">
+					<p class="accent">года по</p>
+					<input class="filter-year" id="filter-year-to" type="number" name="yearTo" min="1500" max="3000"
+						value="3000">
+				</div>
 
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="мелодрама"><span>мелодрама</span>
-							</label>
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="триллер"><span>триллер</span>
-							</label>
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="боевик"><span>боевик</span>
-							</label>
+				<div class="filters-separator"></div>
+				<div class="filter-setting" id="filter-type">
+					<p class="accent">тип</p>
 
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="фэнтези"><span>фэнтези</span>
-							</label>
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="фантастика"><span>фантастика</span>
-							</label>
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="драма"><span>драма</span>
-							</label>
-
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="мультфильм"><span>мультфильм</span>
-							</label>
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="спорт"><span>спорт</span>
-							</label>
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="военный"><span>военный</span>
-							</label>
-
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="приключения"><span>приключения</span>
-							</label>
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="документальный"><span>документальный</span>
-							</label>
-
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="короткометражка"><span>короткометражка</span>
-							</label>
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="реальное ТВ"><span>реальное ТВ</span>
-							</label>
-
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="семейный"><span>семейный</span>
-							</label>
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="биография"><span>биография</span>
-							</label>
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="аниме"><span>аниме</span>
-							</label>
-
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="церемония"><span>церемония</span>
-							</label>
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="новости"><span>новости</span>
-							</label>
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="концерт"><span>концерт</span>
-							</label>
-
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="фильм-нуар"><span>фильм-нуар</span>
-							</label>
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="детский"><span>детский</span>
-							</label>
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="ужасы"><span>ужасы</span>
-							</label>
-
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="вестерн"><span>вестерн</span>
-							</label>
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="история"><span>история</span>
-							</label>
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="мюзикл"><span>мюзикл</span>
-							</label>
-
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="музыка"><span>музыка</span>
-							</label>
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="ток-шоу"><span>ток-шоу</span>
-							</label>
-							<label class="checkbox-btn">
-								<input name="genres" type="checkbox" value="игра"><span>игра</span>
-							</label>
-						</div>
+					<div class="radio-button">
+						<input type="radio" name="type" value="все" id="type-all" />
+						<label for="type-all">все</label>
 					</div>
 
-					<div class="filters-separator"></div>
-					<div class="filter-setting">
-						<p class="accent">рейтинг от</p>
-
-						<div class="range-box" id="filter-rating-from">
-							<input type="range" class="range" name="ratingFrom" min="0" max="10" value="0" step="0.1">
-							<span class="range-value">0</span>
-						</div>
+					<div class="radio-button">
+						<input type="radio" name="type" value="фильм" id="type-film" />
+						<label for="type-film">фильм</label>
 					</div>
 
-					<div class="filters-separator"></div>
-					<div class="filter-setting">
-						<p class="accent">года с</p>
-						<input class="filter-year" id="filter-year-from" type="number" name="yearFrom" min="1500" max="3000" value="1500">
+					<div class="radio-button">
+						<input type="radio" name="type" value="сериал" id="type-series" />
+						<label for="type-series">сериал</label>
 					</div>
 
-					<div class="filters-separator"></div>
-					<div class="filter-setting">
-						<p class="accent">года по</p>
-						<input class="filter-year" id="filter-year-to" type="number" name="yearTo" min="1500" max="3000" value="3000">
+					<div class="radio-button">
+						<input type="radio" name="type" value="видео" id="type-video" />
+						<label for="type-video">видео</label>
 					</div>
 
-					<div class="filters-separator"></div>
-					<div class="filter-setting" id="filter-type">
-						<p class="accent">тип</p>
-
-						<div class="radio-button">
-							<input type="radio" name="type" value="все" id="type-all"/>
-							<label for="type-all">все</label>
-						</div>
-
-						<div class="radio-button">
-							<input type="radio" name="type" value="фильм" id="type-film"/>
-							<label for="type-film">фильм</label>
-						</div>
-
-						<div class="radio-button">
-							<input type="radio" name="type" value="сериал" id="type-series"/>
-							<label for="type-series">сериал</label>
-						</div>
-
-						<div class="radio-button">
-							<input type="radio" name="type" value="видео" id="type-video"/>
-							<label for="type-video">видео</label>
-						</div>
-
-						<div class="radio-button">
-							<input type="radio" name="type" value="мини-сериал" id="type-mini-series"/>
-							<label for="type-mini-series">мини-сериал</label>
-						</div>
+					<div class="radio-button">
+						<input type="radio" name="type" value="мини-сериал" id="type-mini-series" />
+						<label for="type-mini-series">мини-сериал</label>
 					</div>
+				</div>
 
-					<div class="filters-separator"></div>
-					<button class="filters-submit-btn" type="submit">Применить</button>
-				</form>
-			</div>
-
-			<div id="burger-flex-settings">
-				<button id="burger-btn">sort and filters</button>
-			</div>
-
-			<div class="list-movies list-movies-category">
-			{% for user_movie in movies %}
-				<a class="movie" href="/filmer/user-movie/info/{{ user_movie.movie.kinopoiskID|floatformat:0 }}">
-					<div class="movie-poster">
-						<img src='{{ user_movie.movie.imgURL|default:"/static/img/non_poster.svg" }}'>
-					</div>
-					<div class="movie-info">
-						<div class="movie-info-item">
-							<label class="movie-info-label">•</label>
-							<p>{{ user_movie.movie.title|default:"-" }}</p>
-						</div>
-
-						<div class="movie-info-item">
-							<label class="movie-info-label">Тип:</label>
-							<p>{{ user_movie.movie.type|default:"-" }}</p>
-						</div>
-
-						<div class="movie-info-item">
-							<label class="movie-info-label">Рейтинг:</label>
-							{% if user_movie.movie.rating == 0.0 %}
-							    <p>-</p>
-							{% else %}
-								<p>{{ user_movie.movie.rating|floatformat:1 }}</p>
-							{% endif %}
-						</div>
-
-						<div class="movie-info-item">
-							<label class="movie-info-label">Год:</label>
-							{% if user_movie.movie.year == 0.0 %}
-							    <p>-</p>
-							{% else %}
-								<p>{{ user_movie.movie.year|floatformat:0 }}</p>
-							{% endif %}
-						</div>
-
-						<div class="movie-info-item movie-genre-list">
-							<label class="movie-info-label">Жанры:</label>
-							<ul>
-							{% if user_movie.movie.genres|length == 0 %}
-								<li>-</li>
-							{% else %}
-								{% for genre in user_movie.movie.genres %}
-									<li>{{ genre.genre }}</li>
-								{% endfor %}
-							{% endif %}
-							</ul>
-						</div>
-					</div>
-				</a>
-			{% endfor %}
-			</div>
+				<div class="filters-separator"></div>
+				<button class="filters-submit-btn" type="submit">Применить</button>
+			</form>
 		</div>
 
-		<div id="pagination" data-pagination-pages="{{ pagination.pages|floatformat:0 }}"></div>
+		<div id="burger-flex-settings">
+			<button id="burger-btn">sort and filters</button>
+		</div>
+
+		<div class="list-movies list-movies-category">
+			{% for user_movie in movies %}
+			<a class="movie" href="/filmer/user-movie/info/{{ user_movie.movie.kinopoiskID|floatformat:0 }}">
+				<div class="movie-poster">
+					<img src='{{ user_movie.movie.imgURL|default:"/static/img/non_poster.svg" }}'>
+				</div>
+				<div class="movie-info">
+					<div class="movie-info-item">
+						<label class="movie-info-label">•</label>
+						<p>{{ user_movie.movie.title|default:"-" }}</p>
+					</div>
+
+					<div class="movie-info-item">
+						<label class="movie-info-label">Тип:</label>
+						<p>{{ user_movie.movie.type|default:"-" }}</p>
+					</div>
+
+					<div class="movie-info-item">
+						<label class="movie-info-label">Рейтинг:</label>
+						{% if user_movie.movie.rating == 0.0 %}
+						<p>-</p>
+						{% else %}
+						<p>{{ user_movie.movie.rating|floatformat:1 }}</p>
+						{% endif %}
+					</div>
+
+					<div class="movie-info-item">
+						<label class="movie-info-label">Год:</label>
+						{% if user_movie.movie.year == 0.0 %}
+						<p>-</p>
+						{% else %}
+						<p>{{ user_movie.movie.year|floatformat:0 }}</p>
+						{% endif %}
+					</div>
+
+					<div class="movie-info-item movie-genre-list">
+						<label class="movie-info-label">Жанры:</label>
+						<ul>
+							{% if user_movie.movie.genres|length == 0 %}
+							<li>-</li>
+							{% else %}
+							{% for genre in user_movie.movie.genres %}
+							<li>{{ genre.genre }}</li>
+							{% endfor %}
+							{% endif %}
+						</ul>
+					</div>
+				</div>
+			</a>
+			{% endfor %}
+		</div>
 	</div>
-	<script type="text/javascript" src="/static/js/pagination.js"></script>
+
+	<div id="pagination" data-pagination-pages="{{ pagination.pages|floatformat:0 }}"></div>
+</div>
+<script type="text/javascript" src="/static/js/pagination.js"></script>
 {% endblock %}

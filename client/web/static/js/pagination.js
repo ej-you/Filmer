@@ -8,8 +8,8 @@ function getPageQueryParam() {
 		let pageParam = parseInt(searchParams.get("page"))
 		if (pageParam > 0) {
 			return pageParam
-		// rewrite URL query param page to 1
 		} else {
+			// rewrite URL query param page to 1
 			searchParams.set("page", 1)
 			window.history.replaceState({}, "", `${window.location.pathname}?${searchParams.toString()}`)
 			return 1
@@ -62,22 +62,22 @@ function newThreeDots() {
 function addFirstLastToArray(pagesArr, pages) {
 	// if first elem is not 1 then add it
 	if (pagesArr[0].num !== 1) {
-		pagesArr.unshift({num: 1, isActive: false})
+		pagesArr.unshift({ num: 1, isActive: false })
 	}
 	// if last elem is not pages then add it
-	if (pagesArr[pagesArr.length-1].num !== pages) {
-		pagesArr.push({num: pages, isActive: false})
+	if (pagesArr[pagesArr.length - 1].num !== pages) {
+		pagesArr.push({ num: pages, isActive: false })
 	}
 }
 
 // add three dots elems to array of page elems
 function addThreeDotsToArray(pagesArr) {
 	if (pagesArr[1].num - pagesArr[0].num > 1) {
-		pagesArr.splice(1, 0, {num: null, isActive: false})
+		pagesArr.splice(1, 0, { num: null, isActive: false })
 	}
 	let len = pagesArr.length
-	if (pagesArr[len-1].num - pagesArr[len-2].num > 1) {
-		pagesArr.splice(len-1, 0, {num: null, isActive: false})
+	if (pagesArr[len - 1].num - pagesArr[len - 2].num > 1) {
+		pagesArr.splice(len - 1, 0, { num: null, isActive: false })
 	}
 }
 
@@ -99,10 +99,10 @@ document.addEventListener("DOMContentLoaded", function () {
 	if (pages < 5) {
 		for (let pageNum = 1; pageNum <= pages; pageNum++) {
 			if (pageNum === currentPage) {
-				pagesArr.push({num: pageNum, isActive: true})
+				pagesArr.push({ num: pageNum, isActive: true })
 				continue
 			}
-			pagesArr.push({num: pageNum, isActive: false})
+			pagesArr.push({ num: pageNum, isActive: false })
 		}
 	} else {
 		// set upper divide
@@ -118,10 +118,10 @@ document.addEventListener("DOMContentLoaded", function () {
 		// add currentPage elem and elems that above and below from it
 		for (let pageNum = currentPageBelow; pageNum <= currentPageAbove; pageNum++) {
 			if (pageNum === currentPage) {
-				pagesArr.push({num: pageNum, isActive: true})
+				pagesArr.push({ num: pageNum, isActive: true })
 				continue
 			}
-			pagesArr.push({num: pageNum, isActive: false})
+			pagesArr.push({ num: pageNum, isActive: false })
 		}
 		addFirstLastToArray(pagesArr, pages)
 		addThreeDotsToArray(pagesArr)

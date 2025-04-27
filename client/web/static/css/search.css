@@ -10,7 +10,8 @@ h3 {
 	flex-direction: column;
 	align-items: center;
 }
-.flex-content > * {
+
+.flex-content>* {
 	margin-bottom: 15px;
 }
 
@@ -27,7 +28,7 @@ h3 {
 	margin-right: 10px;
 	height: 100%;
 	padding: 6px 5px;
-    min-width: 210px;
+	min-width: 210px;
 
 
 	font-size: 20px;
@@ -39,12 +40,15 @@ h3 {
 	justify-content: space-between;
 	align-items: center;
 }
-.form-input > * {
+
+.form-input>* {
 	margin: auto 10px;
 }
+
 .form-input input {
 	flex-grow: 1;
 }
+
 .form-input img {
 	height: 36px;
 	width: 36px;
@@ -69,6 +73,7 @@ button[type="submit"] {
 	background-color: var(--light-gray);
 	user-select: none;
 }
+
 button[type="submit"]:hover {
 	background-color: var(--gray);
 }

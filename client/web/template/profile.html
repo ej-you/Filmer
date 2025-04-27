@@ -1,47 +1,47 @@
 {% extends "base.html" %}
 
 {% block css %}
-	<link rel="stylesheet" type="text/css" href="/static/css/signup_login.css">
-	<link rel="stylesheet" type="text/css" href="/static/css/profile.css">
+<link rel="stylesheet" type="text/css" href="/static/css/signup_login.css">
+<link rel="stylesheet" type="text/css" href="/static/css/profile.css">
 {% endblock %}
 
 {% block title %}Profile | Filmer{% endblock %}
 
 {% block content %}
-	<div class="content">
-		<h4>You are already authorized as <span class="accent">{{ email }}</span></h4>
+<div class="content">
+	<h4>You are already authorized as <span class="accent">{{ email }}</span></h4>
 
-		<p id="session-expiration">
-			Your session expires in
-			<span id="days">{{ days }}</span>d
-			<span id="hours">{{ hours }}</span>h
-			<span id="minutes">{{ minutes }}</span>m
-			<span id="seconds">{{ seconds }}</span>s
-		</p>
+	<p id="session-expiration">
+		Your session expires in
+		<span id="days">{{ days }}</span>d
+		<span id="hours">{{ hours }}</span>h
+		<span id="minutes">{{ minutes }}</span>m
+		<span id="seconds">{{ seconds }}</span>s
+	</p>
 
-		<form onsubmit="addQueryParamsToForm(this)" id="link-button-form" action="/filmer/user/logout" method="post">
-			<button id="link-button" class="link-button" type="submit">Logout Now</button>
-		</form>
+	<form onsubmit="addQueryParamsToForm(this)" id="link-button-form" action="/filmer/user/logout" method="post">
+		<button id="link-button" class="link-button" type="submit">Logout Now</button>
+	</form>
 
-		<form id="change-passwd-form" action="/filmer/user/change-password" method="post">
-			<h4>Change password</h4>
-			{% if passwdChangedOK %}
-				<p class="success change-passwd">Password was changed sucessfully!</p>
-			{% endif %}
+	<form id="change-passwd-form" action="/filmer/user/change-password" method="post">
+		<h4>Change password</h4>
+		{% if passwdChangedOK %}
+		<p class="success change-passwd">Password was changed sucessfully!</p>
+		{% endif %}
 
-			<div class="form-elem form-input-container">
-				<div class="form-elem form-input">
-					<label for="current-password">Current password</label>
-					<input class="form-elem" type="password" id="current-password" name="current-password">
-				</div>
-				<div class="form-elem form-input">
-					<label for="new-password">New password</label>
-					<input class="form-elem" type="password" id="new-password" name="new-password">
-				</div>
+		<div class="form-elem form-input-container">
+			<div class="form-elem form-input">
+				<label for="current-password">Current password</label>
+				<input class="form-elem" type="password" id="current-password" name="current-password">
 			</div>
-			<button class="form-elem change-passwd-btn" type="submit">Change password</button>
-		</form>
-	</div>
+			<div class="form-elem form-input">
+				<label for="new-password">New password</label>
+				<input class="form-elem" type="password" id="new-password" name="new-password">
+			</div>
+		</div>
+		<button class="form-elem change-passwd-btn" type="submit">Change password</button>
+	</form>
+</div>
 
-	<script type="text/javascript" src="/static/js/profile.js"></script>
+<script type="text/javascript" src="/static/js/profile.js"></script>
 {% endblock %}

@@ -9,9 +9,9 @@ var authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDI4MjE1NDQsIn
 func TestGetJWTExpirationData(t *testing.T) {
 	t.Log("Test getting JWT expiration data")
 
-	h, m, s, err := GetJWTExpirationData(authToken)
+	d, h, m, s, err := GetJWTExpirationData(authToken)
 	if err != nil {
 		t.Fatalf("Failed to got JWT expiration data: %v", err)
 	}
-	t.Logf("Successfully got JWT expiration data: %dh %dm %ds", h, m, s)
+	t.Logf("Successfully got JWT expiration data: %dd %dh %dm %ds", d, h, m, s)
 }

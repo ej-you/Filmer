@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,6 +11,7 @@
 	<script type="text/javascript" src="/static/js/base.js"></script>
 	<title>{% block title %}{% endblock %}</title>
 </head>
+
 <body>
 	<div id="error-message">
 		<h2 id="error-message-title">Error</h2>
@@ -23,8 +25,8 @@
 		<nav>
 			<div class="logo-container">
 				<button class="nav-elem logo"><a href="/">
-					<img src="/favicon.ico" alt="logo">
-				</a></button>
+						<img src="/favicon.ico" alt="logo">
+					</a></button>
 			</div>
 			<div class="right-nav-container">
 				<button class="nav-elem nav-menu-button-elem">
@@ -41,8 +43,8 @@
 				</button>
 
 				<button class="nav-elem profile"><a href="/filmer/user/profile">
-					<img src="/static/img/profile.svg" alt="profile">
-				</a></button>
+						<img src="/static/img/profile.svg" alt="profile">
+					</a></button>
 			</div>
 		</nav>
 
@@ -51,4 +53,5 @@
 
 	{% block content %}{% endblock %}
 </body>
+
 </html>

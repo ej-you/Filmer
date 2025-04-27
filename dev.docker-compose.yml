@@ -3,10 +3,11 @@ services:
     image: redis/redis-stack-server:6.2.6-v15
     container_name: filmer_redis
     restart: always
-    expose:
-      - "6379"
+    ports:
+      - "6379:6379"
     networks:
       filmer_network:
+
 
   cockroach:
     image: cockroachdb/cockroach:v24.3.5
@@ -14,19 +15,16 @@ services:
     restart: always
     ports:
       - "8080:8080"
-    expose:
-      - "26257"
+      - "26257:26257"
     volumes:
       - cockroach_data:/cockroach/cockroach-data:rw
     networks:
       filmer_network:
     command: "start-single-node --insecure"
 
-
 networks:
   filmer_network:
     driver: bridge
-
 
 volumes:
   cockroach_data:

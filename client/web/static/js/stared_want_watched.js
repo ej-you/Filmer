@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', changeSortFilterSettings);
 // open and close modal window with sort and filters with clicking buttons
 document.addEventListener('DOMContentLoaded', () => {
 	// open modal window
-    document.getElementById("burger-btn").addEventListener("click", function(event) {
+	document.getElementById("burger-btn").addEventListener("click", function (event) {
 		console.log("open")
 		window.scrollTo(pageYOffset, 0)
 		document.getElementById("modal-flex-settings").style.display = "block"
@@ -52,9 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.body.style.overflow = "hidden";
 	});
 	// close modal window
-    document.querySelector("#modal-flex-settings .modal-close").addEventListener("click", function(event) {
-    	console.log("close")
-    	document.getElementById("modal-flex-settings").style.display = "none"
+	document.querySelector("#modal-flex-settings .modal-close").addEventListener("click", function (event) {
+		console.log("close")
+		document.getElementById("modal-flex-settings").style.display = "none"
 
 		const sortFilterSettingsElem = document.getElementById("flex-settings")
 		const asideContainer = document.querySelector(".flex-content-row")
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 		// enable back main page scroll
 		document.body.style.overflow = "auto";
-    });
+	});
 });
 
 // +----------------------------+
@@ -152,8 +152,8 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
 	var ratingFromRangeInput = document.querySelector("#filter-rating-from input");
 	var ratingFromRangeValue = document.querySelector("#filter-rating-from span");
-	ratingFromRangeInput.oninput = function() {
-	    ratingFromRangeValue.textContent = this.value;
+	ratingFromRangeInput.oninput = function () {
+		ratingFromRangeValue.textContent = this.value;
 	}
 });
 
@@ -204,16 +204,16 @@ document.addEventListener('DOMContentLoaded', () => {
 // add filter query params (from page URL) to sort links (then click to follow link)
 document.addEventListener('DOMContentLoaded', () => {
 	document.querySelectorAll(".sort-field-link, .sort-order-link").forEach(sortLink => {
-	    sortLink.addEventListener("click", function(event) {
-	    	// abort link following
-	        event.preventDefault();
-	        // get sort link query params
+		sortLink.addEventListener("click", function (event) {
+			// abort link following
+			event.preventDefault();
+			// get sort link query params
 			const linkSearchParams = new URLSearchParams(new URL(sortLink.href).search);
 			// update page query params with sort link query params
-	        searchParams.set("sortField", linkSearchParams.get("sortField"));
-	        searchParams.set("sortOrder", linkSearchParams.get("sortOrder"));
-	        // follow the new link
-	        window.location.href = `${window.location.pathname}?${searchParams.toString()}`;
-	    });
+			searchParams.set("sortField", linkSearchParams.get("sortField"));
+			searchParams.set("sortOrder", linkSearchParams.get("sortOrder"));
+			// follow the new link
+			window.location.href = `${window.location.pathname}?${searchParams.toString()}`;
+		});
 	});
 });
