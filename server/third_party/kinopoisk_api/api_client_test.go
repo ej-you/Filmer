@@ -3,11 +3,10 @@ package kinopoisk_api
 import (
 	"testing"
 
+	"Filmer/server/config"
 	"Filmer/server/internal/entity"
 	"Filmer/server/pkg/jsonify"
-	"Filmer/server/config"
 )
-
 
 func TestKinopoiskAPI(t *testing.T) {
 	t.Log("Try to get film staff from Kinopoisk API")
@@ -19,7 +18,7 @@ func TestKinopoiskAPI(t *testing.T) {
 	queryParams := map[string]string{"filmId": "301"}
 	kinopoiskAPI := NewKinopoiskAPI(url, cfg.KinopoiskAPI.UnofficialKey, queryParams, jsonify)
 
-	var rawFilmStaff entity.RawFilmStaffSlice
+	var rawFilmStaff entity.RawMovieStaffSlice
 
 	err := kinopoiskAPI.SendGET(&rawFilmStaff)
 	if err != nil {
