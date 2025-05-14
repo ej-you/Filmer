@@ -4,7 +4,7 @@ Server part use `clean architecture` described in [README_ARCH](./docs/README_AR
 
 App description can be found [there](./docs/README_APP.md)
 
-Swagger for running server part may be found at `/api/v1/docs`
+Swagger for running server part can be found at `/api/v1/docs`
 
 ## Needed `env` variables
 
