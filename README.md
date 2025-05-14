@@ -14,10 +14,11 @@
 - [x] Add limit for movie directors amount (max = 8 directors)
 - [x] Save cache data on redis shutdown (and load cache data on redis startup)
 - [x] Add log rotation for server
-- [ ] Add popular movies (or recomendations or random "daily" movie) to the main page
-- [ ] Add OpenID auth
-- [ ] Add the ability to recomend the movie to another user
-- [ ] Add the ability to browse recomended movies from other users
+- [ ] Add to user category pages filter by substring
 - [ ] Add director/actor page with his movies
 - [ ] Add related movies to movie page
+- [ ] Add popular movies (or recomendations or random "daily" movie) to the main page
+- [ ] Add the ability to recomend the movie to another user
+- [ ] Add the ability to browse recomended movies from other users
 - [ ] Add `step-down` flag for one step migrations rollback to migrator
+- [ ] Add OpenID auth
