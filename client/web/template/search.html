@@ -28,7 +28,7 @@
 		{% for movie in docs %}
 		<a class="movie" href="/filmer/user-movie/info/{{ movie.id|floatformat:0 }}">
 			<div class="movie-poster">
-				<img src='{{ movie.poster.url|default:"/static/img/non_poster.svg" }}'>
+				<img src='https://kinopoiskapiunofficial.tech/images/posters/kp_small/{{ movie.id|floatformat:0 }}.jpg'>
 			</div>
 			<div class="movie-info">
 				<div class="movie-info-item">
