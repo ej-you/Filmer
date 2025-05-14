@@ -218,6 +218,9 @@ definitions:
       ratingFrom:
         minimum: 0
         type: number
+      title:
+        maxLength: 20
+        type: string
       type:
         enum:
         - фильм
@@ -590,6 +593,11 @@ paths:
         in: query
         name: sortOrder
         type: string
+      - description: 'подстрока названия фильма (Например: гнев | Допустимая длина:
+          до 20 символов)'
+        in: query
+        name: title
+        type: string
       - description: 'минимальный рейтинг (Например: 7.5 | Допустимые значения: 0
           и больше)'
         in: query
@@ -649,6 +657,11 @@ paths:
         in: query
         name: sortOrder
         type: string
+      - description: 'подстрока названия фильма (Например: гнев | Допустимая длина:
+          до 20 символов)'
+        in: query
+        name: title
+        type: string
       - description: 'минимальный рейтинг (Например: 7.5 | Допустимые значения: 0
           и больше)'
         in: query
@@ -707,6 +720,11 @@ paths:
           updated_at: desc] | Допустимые значения: asc, desc)'
         in: query
         name: sortOrder
+        type: string
+      - description: 'подстрока названия фильма (Например: гнев | Допустимая длина:
+          до 20 символов)'
+        in: query
+        name: title
         type: string
       - description: 'минимальный рейтинг (Например: 7.5 | Допустимые значения: 0
           и больше)'

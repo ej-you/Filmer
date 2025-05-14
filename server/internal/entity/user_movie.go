@@ -32,7 +32,7 @@ func (UserMovie) TableName() string {
 
 //easyjson:json
 type UserMoviesFilter struct {
-	Title      string   `json:"title,omitempty" query:"title" validate:"omitempty"`
+	Title      string   `json:"title,omitempty" query:"title" validate:"omitempty,max=20"`
 	RatingFrom *float64 `json:"ratingFrom,omitempty" query:"ratingFrom" validate:"omitempty,min=0"`
 	YearFrom   int      `json:"yearFrom,omitempty" query:"yearFrom" validate:"omitempty,min=1500,max=3000"`
 	YearTo     int      `json:"yearTo,omitempty" query:"yearTo" validate:"omitempty,min=1500,max=3000"`
