@@ -22,3 +22,4 @@
 - [ ] Add the ability to browse recomended movies from other users
 - [ ] Add `step-down` flag for one step migrations rollback to migrator
 - [ ] Add OpenID auth
+- [ ] Add an admin panel to monitor user activity
