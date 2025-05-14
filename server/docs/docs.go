@@ -210,6 +210,12 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "type": "string",
+                        "description": "подстрока названия фильма (Например: гнев | Допустимая длина: до 20 символов)",
+                        "name": "title",
+                        "in": "query"
+                    },
+                    {
                         "type": "number",
                         "description": "минимальный рейтинг (Например: 7.5 | Допустимые значения: 0 и больше)",
                         "name": "ratingFrom",
@@ -293,6 +299,12 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "type": "string",
+                        "description": "подстрока названия фильма (Например: гнев | Допустимая длина: до 20 символов)",
+                        "name": "title",
+                        "in": "query"
+                    },
+                    {
                         "type": "number",
                         "description": "минимальный рейтинг (Например: 7.5 | Допустимые значения: 0 и больше)",
                         "name": "ratingFrom",
@@ -373,6 +385,12 @@ const docTemplate = `{
                         "type": "string",
                         "description": "направление сортировки (Например: desc | По умолчанию: asc [для updated_at: desc] | Допустимые значения: asc, desc)",
                         "name": "sortOrder",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "подстрока названия фильма (Например: гнев | Допустимая длина: до 20 символов)",
+                        "name": "title",
                         "in": "query"
                     },
                     {
@@ -1022,6 +1040,10 @@ const docTemplate = `{
                 "ratingFrom": {
                     "type": "number",
                     "minimum": 0
+                },
+                "title": {
+                    "type": "string",
+                    "maxLength": 20
                 },
                 "type": {
                     "type": "string",
