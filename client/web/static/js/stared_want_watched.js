@@ -174,6 +174,15 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.getElementById("filter-year-to").value = yearTo;
 });
 
+// +--------------------------------+
+// + test input for title substring +
+// +--------------------------------+
+
+document.addEventListener('DOMContentLoaded', () => {
+	let title = searchParams.get("title")
+	document.getElementById("filter-title").value = title;
+});
+
 // +-----------------------------+
 // + radio input for type filter +
 // +-----------------------------+

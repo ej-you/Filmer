@@ -72,7 +72,6 @@
 
 .links-switch>* {
 	float: left;
-	display: inline-block;
 	flex-grow: 1;
 }
 
@@ -271,6 +270,13 @@
 .filter-year::-webkit-outer-spin-button,
 .filter-year::-webkit-inner-spin-button {
 	display: none;
+}
+
+.filter-title {
+	text-align: center;
+	padding: 8px;
+	border: 2px solid var(--light-gray);
+	border-radius: 10px;
 }
 
 /* --------------- *
