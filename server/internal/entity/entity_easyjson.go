@@ -447,6 +447,8 @@ func easyjson163c17a9DecodeFilmerServerInternalEntity4(in *jlexer.Lexer, out *Us
 			continue
 		}
 		switch key {
+		case "title":
+			out.Title = string(in.String())
 		case "ratingFrom":
 			if in.IsNull() {
 				in.Skip()
@@ -500,10 +502,20 @@ func easyjson163c17a9EncodeFilmerServerInternalEntity4(out *jwriter.Writer, in U
 	out.RawByte('{')
 	first := true
 	_ = first
-	if in.RatingFrom != nil {
-		const prefix string = ",\"ratingFrom\":"
+	if in.Title != "" {
+		const prefix string = ",\"title\":"
 		first = false
 		out.RawString(prefix[1:])
+		out.String(string(in.Title))
+	}
+	if in.RatingFrom != nil {
+		const prefix string = ",\"ratingFrom\":"
+		if first {
+			first = false
+			out.RawString(prefix[1:])
+		} else {
+			out.RawString(prefix)
+		}
 		out.Float64(float64(*in.RatingFrom))
 	}
 	if in.YearFrom != 0 {
