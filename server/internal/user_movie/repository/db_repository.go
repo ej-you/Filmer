@@ -145,6 +145,10 @@ func (umr *userMovieRepository) addSort(selectQuery *gorm.DB, sort *entity.UserM
 
 // Add filter to select query
 func (umr *userMovieRepository) addFilter(selectQuery *gorm.DB, filter *entity.UserMoviesFilter) *gorm.DB {
+	// non-case-sensitive title substring
+	if filter.Title != "" {
+		selectQuery = selectQuery.Where("title ILIKE ?", fmt.Sprintf("%%%s%%", filter.Title))
+	}
 	if filter.RatingFrom != nil {
 		selectQuery = selectQuery.Where("rating >= ?", filter.RatingFrom)
 	}
