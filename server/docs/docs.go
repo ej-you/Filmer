@@ -952,7 +952,11 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "type": "string"
-                    }
+                    },
+                    "example": [
+                        "Полное имя - Квентин Джером Тарантино.",
+                        "Имеет двух сестёр и одного брата."
+                    ]
                 },
                 "id": {
                     "description": "person kinopoisk ID",

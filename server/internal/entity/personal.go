@@ -92,7 +92,7 @@ type PersonFull struct {
 	// person death date (can be not set)
 	Death string `json:"death,omitempty" example:"1963-03-27"`
 	// facts about person
-	Facts []string `json:"facts"`
+	Facts []string `json:"facts" example:"Полное имя - Квентин Джером Тарантино.,Имеет двух сестёр и одного брата."`
 	// person movies were directed by him
 	MoviesDirector []PersonFullMovie `json:"moviesDirector"`
 	// person movies in those he was an actor

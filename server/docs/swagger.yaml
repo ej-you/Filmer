@@ -121,6 +121,9 @@ definitions:
         type: string
       facts:
         description: facts about person
+        example:
+        - Полное имя - Квентин Джером Тарантино.
+        - Имеет двух сестёр и одного брата.
         items:
           type: string
         type: array
