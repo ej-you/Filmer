@@ -10,6 +10,7 @@ import (
 
 	authHTTP "Filmer/server/internal/auth/delivery/http"
 	movieHTTP "Filmer/server/internal/movie/delivery/http"
+	personalHTTP "Filmer/server/internal/personal/delivery/http"
 	userHTTP "Filmer/server/internal/user/delivery/http"
 	userMovieHTTP "Filmer/server/internal/user_movie/delivery/http"
 
@@ -107,6 +108,10 @@ func (s fiberServer) Run() {
 	userHandlerManager := userHTTP.NewUserHandlerManager(s.cfg, appDB, validator)
 	userRouter := userHTTP.NewUserRouter(mwManager, userHandlerManager)
 	userRouter.SetRoutes(apiV1.Group("/user"))
+	// personal
+	personalHandlerManager := personalHTTP.NewPersonalHandlerManager(s.cfg, s.jsonify, s.log, appCache, validator)
+	personalRouter := personalHTTP.NewPersonalRouter(mwManager, personalHandlerManager)
+	personalRouter.SetRoutes(apiV1.Group("/personal"))
 
 	// start server
 	go func() {

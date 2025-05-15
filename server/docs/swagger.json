@@ -700,6 +700,53 @@
                 }
             }
         },
+        "/personal/full-info/{personID}": {
+            "get": {
+                "security": [
+                    {
+                        "JWT": []
+                    }
+                ],
+                "description": "Получение информации о личности по её ID",
+                "tags": [
+                    "personal"
+                ],
+                "summary": "Получение информации о личности",
+                "operationId": "kinopoisk-get-person-info",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID личности",
+                        "name": "personID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.PersonFull"
+                        }
+                    },
+                    "401": {
+                        "description": "Пустой или неправильный токен"
+                    },
+                    "402": {
+                        "description": "Превышен дневной лимит запросов к Kinopoisk API"
+                    },
+                    "403": {
+                        "description": "Истекший или невалидный токен"
+                    },
+                    "404": {
+                        "description": "Личность не найдена"
+                    },
+                    "429": {
+                        "description": "Слишком много запросов. Лимит 5 запросов в секунду"
+                    }
+                }
+            }
+        },
         "/user/change-password": {
             "post": {
                 "security": [
@@ -875,6 +922,87 @@
                     "description": "person role (if person is actor)",
                     "type": "string",
                     "example": "Neo"
+                }
+            }
+        },
+        "entity.PersonFull": {
+            "description": "person full info",
+            "type": "object",
+            "properties": {
+                "age": {
+                    "description": "person age",
+                    "type": "integer",
+                    "example": 62
+                },
+                "birthday": {
+                    "description": "person birthday",
+                    "type": "string",
+                    "example": "1963-03-27"
+                },
+                "death": {
+                    "description": "person death date (can be not set)",
+                    "type": "string",
+                    "example": "1963-03-27"
+                },
+                "id": {
+                    "description": "person kinopoisk ID",
+                    "type": "integer",
+                    "example": 7640
+                },
+                "imgUrl": {
+                    "description": "person img URL",
+                    "type": "string",
+                    "example": "https://kinopoiskapiunofficial.tech/images/actor_posters/kp/7640.jpg"
+                },
+                "moviesActor": {
+                    "description": "person movies in those he was an actor",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.PersonFullMovie"
+                    }
+                },
+                "moviesDirector": {
+                    "description": "person movies were directed by him",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/entity.PersonFullMovie"
+                    }
+                },
+                "name": {
+                    "description": "person name",
+                    "type": "string",
+                    "example": "Квентин Тарантино"
+                },
+                "profession": {
+                    "description": "person profession",
+                    "type": "string",
+                    "example": "Актер, Сценарист, Режиссер"
+                },
+                "sex": {
+                    "description": "person sex",
+                    "type": "string",
+                    "example": "мужской"
+                }
+            }
+        },
+        "entity.PersonFullMovie": {
+            "description": "person movies for person full info",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "movie kinopoisk ID",
+                    "type": "integer",
+                    "example": 342
+                },
+                "role": {
+                    "description": "person role (if person is actor)",
+                    "type": "string",
+                    "example": "Jimmie"
+                },
+                "title": {
+                    "description": "movie title",
+                    "type": "string",
+                    "example": "Криминальное чтиво"
                 }
             }
         },

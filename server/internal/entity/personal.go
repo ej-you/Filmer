@@ -58,3 +58,65 @@ type RawMovieStaff struct {
 
 //easyjson:json
 type RawMovieStaffSlice []RawMovieStaff
+
+// @description person movies for person full info
+//
+//easyjson:json
+type PersonFullMovie struct {
+	// movie kinopoisk ID
+	ID int `json:"id" example:"342"`
+	// movie title
+	Title string `json:"title" example:"Криминальное чтиво"`
+	// person role (if person is actor)
+	Role string `json:"role,omitempty" example:"Jimmie"`
+}
+
+// @description person full info
+//
+//easyjson:json
+type PersonFull struct {
+	// person kinopoisk ID
+	ID int `json:"id" example:"7640"`
+	// person name
+	Name string `json:"name" example:"Квентин Тарантино"`
+	// person img URL
+	ImgURL string `json:"imgUrl" example:"https://kinopoiskapiunofficial.tech/images/actor_posters/kp/7640.jpg"`
+	// person sex
+	Sex string `json:"sex" example:"мужской"`
+	// person profession
+	Profession string `json:"profession" example:"Актер, Сценарист, Режиссер"`
+	// person age
+	Age int `json:"age" example:"62"`
+	// person birthday
+	Birthday string `json:"birthday" example:"1963-03-27"`
+	// person death date (can be not set)
+	Death string `json:"death,omitempty" example:"1963-03-27"`
+	// person movies were directed by him
+	MoviesDirector []PersonFullMovie `json:"moviesDirector"`
+	// person movies in those he was an actor
+	MoviesActor []PersonFullMovie `json:"moviesActor"`
+}
+
+// for parsing API response
+//
+//easyjson:json
+type RawPersonFull struct {
+	PersonID   int                  `json:"personId"`
+	Name       string               `json:"nameRu"`
+	ImgURL     string               `json:"posterUrl"`
+	Sex        string               `json:"sex"`
+	Profession string               `json:"profession"`
+	Age        int                  `json:"age"`
+	Birthday   string               `json:"birthday"`
+	Death      string               `json:"death,omitempty"`
+	Movies     []RawPersonFullMovie `json:"films"`
+}
+
+//easyjson:json
+type RawPersonFullMovie struct {
+	ID            int    `json:"filmId"`
+	Name          string `json:"nameRu"`
+	Description   string `json:"description,omitempty"`
+	Rating        string `json:"rating"`
+	ProfessionKey string `json:"professionKey"`
+}
