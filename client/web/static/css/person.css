@@ -110,7 +110,7 @@ h3 {
 .person-info {
 	display: grid;
 
-	grid-template-columns: minmax(auto, 100px) auto;
+	grid-template-columns: minmax(auto, 135px) auto;
 	grid-template-rows: auto repeat(4, 20px);
 	column-gap: 2%;
 	row-gap: 15px;
