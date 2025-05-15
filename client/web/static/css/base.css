@@ -120,10 +120,12 @@ nav {
 	margin-right: auto;
 }
 
-/* every movie poster */
+/* every movie and person poster */
 .movie-poster,
 .movie-poster-big,
-.person-poster {
+.person-poster,
+.person-poster-big,
+.movie-poster-small {
 	flex-shrink: 0;
 	display: flex;
 	justify-content: center;
@@ -131,7 +133,8 @@ nav {
 }
 
 .movie-poster,
-.person-poster {
+.person-poster,
+.movie-poster-small {
 	align-self: center;
 }
 
@@ -141,14 +144,16 @@ nav {
 	width: 200px;
 }
 
-/* every movie poster size in movie info */
-.movie-poster-big img {
+/* every movie poster size in movie info && person poster size in person info */
+.movie-poster-big img,
+.person-poster-big img {
 	height: 600px;
 	width: 400px;
 }
 
 /* every director/actor poster */
-.person-poster img {
+.person-poster img,
+.movie-poster-small img {
 	height: 180px;
 	width: 120px;
 }
@@ -195,12 +200,14 @@ nav {
 		width: 110px;
 	}
 
-	.movie-poster-big img {
+	.movie-poster-big img,
+	.person-poster-big img {
 		height: 330px;
 		width: 220px;
 	}
 
-	.person-poster img {
+	.person-poster img,
+	.movie-poster-small img {
 		height: 135px;
 		width: 90px;
 	}

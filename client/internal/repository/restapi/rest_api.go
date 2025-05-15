@@ -19,6 +19,8 @@ import (
 
 const apiRequestTimeout = 5 * time.Second // timeout for requests to REST API
 
+var _ repository.RestAPI = (*restAPIClient)(nil)
+
 // REST API client implementation
 type restAPIClient struct {
 	cfg            *config.Config
@@ -112,6 +114,16 @@ func (api restAPIClient) ChangePassword(authToken string, body repository.Change
 		return fmt.Errorf("change password using rest api: send post request: %w", err)
 	}
 	return nil
+}
+
+func (api restAPIClient) GetPerson(authToken string, kinopoiskID int) (*repository.APIResponse, error) {
+	apiResp := new(repository.APIResponse)
+	headers := map[string]string{"Authorization": fmt.Sprintf("Bearer %s", authToken)}
+	url := fmt.Sprintf("%s/api/v1/personal/full-info/%d", api.cfg.RestAPI.Host, kinopoiskID)
+	if err := api.sendGET(url, headers, nil, apiResp); err != nil {
+		return nil, fmt.Errorf("get full person info using rest api: send get request: %w", err)
+	}
+	return apiResp, nil
 }
 
 // Parse error from response

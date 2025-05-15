@@ -154,10 +154,28 @@ document.addEventListener("DOMContentLoaded", function () {
 	let currentPath = window.location.pathname;
 	let currentQuery = window.location.search;
 
-	// skip for movie page
-	if (currentPath.startsWith("/filmer/user-movie/info")) {
+	// skip for movie page and person page
+	if (currentPath.startsWith("/filmer/user-movie/info") ||
+		currentPath.startsWith("/filmer/personal/info")) {
+
 		return
 	}
 
 	localStorage.setItem("movie-back-url", currentPath + currentQuery);
+});
+
+// +--------------------+
+// + Person back button +
+// +--------------------+
+
+document.addEventListener("DOMContentLoaded", function () {
+	let currentPath = window.location.pathname;
+	let currentQuery = window.location.search;
+
+	// skip for person page
+	if (currentPath.startsWith("/filmer/personal/info")) {
+		return
+	}
+
+	localStorage.setItem("person-back-url", currentPath + currentQuery);
 });
