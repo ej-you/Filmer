@@ -1,14 +1,25 @@
-// +--------------------+
-// + Person back button +
-// +--------------------+
+// +---------------------+
+// + Back buttons system +
+// +---------------------+
+
+// Returns href for back button
+function getBackHref() {
+    let history = getPageMovingHistory()
+
+    if (history == null || history.length <= 1) {
+        return "/filmer"
+    }
+    return history[history.length - 2]
+}
 
 document.addEventListener("DOMContentLoaded", function () {
-	let backButtonURL = localStorage.getItem("person-back-url");
-
-	if (backButtonURL == null) {
-		backButtonURL = "/filmer"
-	}
-
-	let backButton = document.getElementById("back-button")
-	backButton.setAttribute("href", backButtonURL)
+    let backButton = document.getElementById("back-button")
+    backButton.setAttribute("href", getBackHref())
 });
+
+// update page moving history list: remove last elem
+function onBackButtonClick() {
+    let history = getPageMovingHistory()
+    history.pop()
+    setPageMovingHistory(history)
+}
