@@ -944,12 +944,19 @@
                     "type": "string",
                     "example": "1963-03-27"
                 },
+                "facts": {
+                    "description": "facts about person",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "id": {
                     "description": "person kinopoisk ID",
                     "type": "integer",
                     "example": 7640
                 },
-                "imgUrl": {
+                "imgURL": {
                     "description": "person img URL",
                     "type": "string",
                     "example": "https://kinopoiskapiunofficial.tech/images/actor_posters/kp/7640.jpg"

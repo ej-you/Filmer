@@ -119,11 +119,16 @@ definitions:
         description: person death date (can be not set)
         example: "1963-03-27"
         type: string
+      facts:
+        description: facts about person
+        items:
+          type: string
+        type: array
       id:
         description: person kinopoisk ID
         example: 7640
         type: integer
-      imgUrl:
+      imgURL:
         description: person img URL
         example: https://kinopoiskapiunofficial.tech/images/actor_posters/kp/7640.jpg
         type: string

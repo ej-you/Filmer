@@ -72,23 +72,11 @@ func (p personalKinopoiskWebAPIRepository) GetFullInfoByID(person *entity.Person
 	person.Age = rawPerson.Age
 	person.Birthday = rawPerson.Birthday
 	person.Death = rawPerson.Death
+	person.Facts = rawPerson.Facts
 
 	// filter all person movies to two slices by actor/director movie key
-	// var allMoviesDirector, allMoviesActor []entity.RawPersonFullMovie
-	// for _, rawMovie := range rawPerson.Movies {
-	// 	// skip unnamed movies
-	// 	if rawMovie.Name == "" {
-	// 		continue
-	// 	}
-	// 	switch rawMovie.ProfessionKey {
-	// 	case directorMoviesKey:
-	// 		allMoviesDirector = append(allMoviesDirector, rawMovie)
-	// 	case actorMoviesKey:
-	// 		allMoviesActor = append(allMoviesActor, rawMovie)
-	// 	}
-	// }
 	allMoviesDirector, allMoviesActor := filterRawMovieList(rawPerson.Movies)
-
+	// process filtered slices
 	person.MoviesDirector = processFilteredMovieList(allMoviesDirector)
 	person.MoviesActor = processFilteredMovieList(allMoviesActor)
 	return nil
@@ -110,11 +98,13 @@ func filterRawMovieList(rawMovieList []entity.RawPersonFullMovie) (
 		}
 		switch rawMovie.ProfessionKey {
 		case directorMoviesKey:
+			// if movie with such ID not in director slice yet
 			if _, exists = directorDupl[rawMovie.ID]; !exists {
 				allMoviesDirector = append(allMoviesDirector, rawMovie)
 				directorDupl[rawMovie.ID] = struct{}{}
 			}
 		case actorMoviesKey:
+			// if movie with such ID not in actor slice yet
 			if _, exists = actorDupl[rawMovie.ID]; !exists {
 				allMoviesActor = append(allMoviesActor, rawMovie)
 				actorDupl[rawMovie.ID] = struct{}{}
@@ -149,93 +139,3 @@ func processFilteredMovieList(filteredMovieList []entity.RawPersonFullMovie) []e
 	}
 	return processedMovieList
 }
-
-// // Get main movie info (without movie staff)
-// // Fill given movie struct (apart of movie.Staff)
-// func (mkr movieKinopoiskWebAPIRepository) getMovieInfoByKinopoiskID(movie *entity.Movie) error {
-// 	apiClient := kinopoiskAPI.NewKinopoiskAPI(
-// 		fmt.Sprintf("https://kinopoiskapiunofficial.tech/api/v2.2/films/%d", movie.KinopoiskID),
-// 		mkr.cfg.KinopoiskAPI.UnofficialKey,
-// 		nil,
-// 		mkr.jsonify,
-// 	)
-// 	// send request and process response
-// 	rawFilmInfo := new(entity.RawMovieInfo)
-// 	err := apiClient.SendGET(rawFilmInfo)
-// 	if err != nil {
-// 		return fmt.Errorf("get movie info with kinopoisk API: %w", err)
-// 	}
-
-// 	// process received data
-// 	movie.KinopoiskID = rawFilmInfo.KinopoiskID
-// 	movie.Title = rawFilmInfo.Title
-// 	movie.ImgURL = rawFilmInfo.PosterURL
-// 	movie.Rating = rawFilmInfo.RatingKinopoisk
-// 	movie.WebURL = rawFilmInfo.WebURL
-// 	movie.Year = rawFilmInfo.Year
-// 	movie.Description = rawFilmInfo.Description
-// 	movie.Genres = rawFilmInfo.Genres
-// 	// if movie length was not found
-// 	if rawFilmInfo.FilmLenMinutes == 0 {
-// 		movie.MovieLength = ""
-// 	} else {
-// 		movie.MovieLength = utils.RawMinutesToTime(rawFilmInfo.FilmLenMinutes)
-// 	}
-// 	// "фильм" by default
-// 	movie.Type = movieTypesMap[rawFilmInfo.Type]
-// 	if movie.Type == "" {
-// 		movie.Type = "фильм"
-// 	}
-// 	return nil
-// }
-
-// // Get info about the movie staff
-// // Fill given movieStaff struct
-// func (mkr movieKinopoiskWebAPIRepository) getMovieStaffByMovieKinopoiskID(movieKinopoiskID int, movieStaff *entity.MovieStaff) error {
-// 	apiClient := kinopoiskAPI.NewKinopoiskAPI(
-// 		"https://kinopoiskapiunofficial.tech/api/v1/staff",
-// 		mkr.cfg.KinopoiskAPI.UnofficialKey,
-// 		map[string]string{
-// 			"filmId": fmt.Sprint(movieKinopoiskID),
-// 		},
-// 		mkr.jsonify,
-// 	)
-
-// 	var rawFilmStaffSlice entity.RawMovieStaffSlice
-// 	// send request and process response
-// 	err := apiClient.SendGET(&rawFilmStaffSlice)
-// 	if err != nil {
-// 		return fmt.Errorf("get movie staff with kinopoisk API: %w", err)
-// 	}
-
-// 	// init slices for movie staff
-// 	movieStaff.Directors = make([]entity.Person, 0)
-// 	movieStaff.Actors = make([]entity.Person, 0, movieActorsLimit)
-// 	// sort movie staff to slices
-// 	for _, rawFilmStaff := range rawFilmStaffSlice {
-// 		switch rawFilmStaff.ProfessionKey {
-// 		case "DIRECTOR":
-// 			// max movieDirectorsLimit actors for movie
-// 			if len(movieStaff.Directors) == movieDirectorsLimit {
-// 				continue
-// 			}
-// 			movieStaff.Directors = append(movieStaff.Directors, entity.Person{
-// 				ID:     rawFilmStaff.StaffID,
-// 				Name:   rawFilmStaff.Name,
-// 				ImgURL: rawFilmStaff.ImgURL,
-// 			})
-// 		case "ACTOR":
-// 			// max movieActorsLimit actors for movie
-// 			if len(movieStaff.Actors) == movieActorsLimit {
-// 				continue
-// 			}
-// 			movieStaff.Actors = append(movieStaff.Actors, entity.Person{
-// 				ID:     rawFilmStaff.StaffID,
-// 				Name:   rawFilmStaff.Name,
-// 				Role:   &rawFilmStaff.Description,
-// 				ImgURL: rawFilmStaff.ImgURL,
-// 			})
-// 		}
-// 	}
-// 	return nil
-// }

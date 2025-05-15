@@ -80,7 +80,7 @@ type PersonFull struct {
 	// person name
 	Name string `json:"name" example:"Квентин Тарантино"`
 	// person img URL
-	ImgURL string `json:"imgUrl" example:"https://kinopoiskapiunofficial.tech/images/actor_posters/kp/7640.jpg"`
+	ImgURL string `json:"imgURL" example:"https://kinopoiskapiunofficial.tech/images/actor_posters/kp/7640.jpg"`
 	// person sex
 	Sex string `json:"sex" example:"мужской"`
 	// person profession
@@ -91,6 +91,8 @@ type PersonFull struct {
 	Birthday string `json:"birthday" example:"1963-03-27"`
 	// person death date (can be not set)
 	Death string `json:"death,omitempty" example:"1963-03-27"`
+	// facts about person
+	Facts []string `json:"facts"`
 	// person movies were directed by him
 	MoviesDirector []PersonFullMovie `json:"moviesDirector"`
 	// person movies in those he was an actor
@@ -109,6 +111,7 @@ type RawPersonFull struct {
 	Age        int                  `json:"age"`
 	Birthday   string               `json:"birthday"`
 	Death      string               `json:"death,omitempty"`
+	Facts      []string             `json:"facts"`
 	Movies     []RawPersonFullMovie `json:"films"`
 }
 

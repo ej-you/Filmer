@@ -1357,6 +1357,29 @@ func easyjson163c17a9DecodeFilmerServerInternalEntity13(in *jlexer.Lexer, out *R
 			out.Birthday = string(in.String())
 		case "death":
 			out.Death = string(in.String())
+		case "facts":
+			if in.IsNull() {
+				in.Skip()
+				out.Facts = nil
+			} else {
+				in.Delim('[')
+				if out.Facts == nil {
+					if !in.IsDelim(']') {
+						out.Facts = make([]string, 0, 4)
+					} else {
+						out.Facts = []string{}
+					}
+				} else {
+					out.Facts = (out.Facts)[:0]
+				}
+				for !in.IsDelim(']') {
+					var v13 string
+					v13 = string(in.String())
+					out.Facts = append(out.Facts, v13)
+					in.WantComma()
+				}
+				in.Delim(']')
+			}
 		case "films":
 			if in.IsNull() {
 				in.Skip()
@@ -1373,9 +1396,9 @@ func easyjson163c17a9DecodeFilmerServerInternalEntity13(in *jlexer.Lexer, out *R
 					out.Movies = (out.Movies)[:0]
 				}
 				for !in.IsDelim(']') {
-					var v13 RawPersonFullMovie
-					(v13).UnmarshalEasyJSON(in)
-					out.Movies = append(out.Movies, v13)
+					var v14 RawPersonFullMovie
+					(v14).UnmarshalEasyJSON(in)
+					out.Movies = append(out.Movies, v14)
 					in.WantComma()
 				}
 				in.Delim(']')
@@ -1435,17 +1458,33 @@ func easyjson163c17a9EncodeFilmerServerInternalEntity13(out *jwriter.Writer, in 
 		out.String(string(in.Death))
 	}
 	{
+		const prefix string = ",\"facts\":"
+		out.RawString(prefix)
+		if in.Facts == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
+			out.RawString("null")
+		} else {
+			out.RawByte('[')
+			for v15, v16 := range in.Facts {
+				if v15 > 0 {
+					out.RawByte(',')
+				}
+				out.String(string(v16))
+			}
+			out.RawByte(']')
+		}
+	}
+	{
 		const prefix string = ",\"films\":"
 		out.RawString(prefix)
 		if in.Movies == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
 			out.RawString("null")
 		} else {
 			out.RawByte('[')
-			for v14, v15 := range in.Movies {
-				if v14 > 0 {
+			for v17, v18 := range in.Movies {
+				if v17 > 0 {
 					out.RawByte(',')
 				}
-				(v15).MarshalEasyJSON(out)
+				(v18).MarshalEasyJSON(out)
 			}
 			out.RawByte(']')
 		}
@@ -1493,9 +1532,9 @@ func easyjson163c17a9DecodeFilmerServerInternalEntity14(in *jlexer.Lexer, out *R
 			*out = (*out)[:0]
 		}
 		for !in.IsDelim(']') {
-			var v16 RawMovieStaff
-			(v16).UnmarshalEasyJSON(in)
-			*out = append(*out, v16)
+			var v19 RawMovieStaff
+			(v19).UnmarshalEasyJSON(in)
+			*out = append(*out, v19)
 			in.WantComma()
 		}
 		in.Delim(']')
@@ -1509,11 +1548,11 @@ func easyjson163c17a9EncodeFilmerServerInternalEntity14(out *jwriter.Writer, in 
 		out.RawString("null")
 	} else {
 		out.RawByte('[')
-		for v17, v18 := range in {
-			if v17 > 0 {
+		for v20, v21 := range in {
+			if v20 > 0 {
 				out.RawByte(',')
 			}
-			(v18).MarshalEasyJSON(out)
+			(v21).MarshalEasyJSON(out)
 		}
 		out.RawByte(']')
 	}
@@ -1689,9 +1728,9 @@ func easyjson163c17a9DecodeFilmerServerInternalEntity16(in *jlexer.Lexer, out *R
 					out.Genres = (out.Genres)[:0]
 				}
 				for !in.IsDelim(']') {
-					var v19 Genre
-					(v19).UnmarshalEasyJSON(in)
-					out.Genres = append(out.Genres, v19)
+					var v22 Genre
+					(v22).UnmarshalEasyJSON(in)
+					out.Genres = append(out.Genres, v22)
 					in.WantComma()
 				}
 				in.Delim(']')
@@ -1762,11 +1801,11 @@ func easyjson163c17a9EncodeFilmerServerInternalEntity16(out *jwriter.Writer, in 
 			out.RawString("null")
 		} else {
 			out.RawByte('[')
-			for v20, v21 := range in.Genres {
-				if v20 > 0 {
+			for v23, v24 := range in.Genres {
+				if v23 > 0 {
 					out.RawByte(',')
 				}
-				(v21).MarshalEasyJSON(out)
+				(v24).MarshalEasyJSON(out)
 			}
 			out.RawByte(']')
 		}
@@ -1900,7 +1939,7 @@ func easyjson163c17a9DecodeFilmerServerInternalEntity18(in *jlexer.Lexer, out *P
 			out.ID = int(in.Int())
 		case "name":
 			out.Name = string(in.String())
-		case "imgUrl":
+		case "imgURL":
 			out.ImgURL = string(in.String())
 		case "sex":
 			out.Sex = string(in.String())
@@ -1912,6 +1951,29 @@ func easyjson163c17a9DecodeFilmerServerInternalEntity18(in *jlexer.Lexer, out *P
 			out.Birthday = string(in.String())
 		case "death":
 			out.Death = string(in.String())
+		case "facts":
+			if in.IsNull() {
+				in.Skip()
+				out.Facts = nil
+			} else {
+				in.Delim('[')
+				if out.Facts == nil {
+					if !in.IsDelim(']') {
+						out.Facts = make([]string, 0, 4)
+					} else {
+						out.Facts = []string{}
+					}
+				} else {
+					out.Facts = (out.Facts)[:0]
+				}
+				for !in.IsDelim(']') {
+					var v25 string
+					v25 = string(in.String())
+					out.Facts = append(out.Facts, v25)
+					in.WantComma()
+				}
+				in.Delim(']')
+			}
 		case "moviesDirector":
 			if in.IsNull() {
 				in.Skip()
@@ -1928,9 +1990,9 @@ func easyjson163c17a9DecodeFilmerServerInternalEntity18(in *jlexer.Lexer, out *P
 					out.MoviesDirector = (out.MoviesDirector)[:0]
 				}
 				for !in.IsDelim(']') {
-					var v22 PersonFullMovie
-					(v22).UnmarshalEasyJSON(in)
-					out.MoviesDirector = append(out.MoviesDirector, v22)
+					var v26 PersonFullMovie
+					(v26).UnmarshalEasyJSON(in)
+					out.MoviesDirector = append(out.MoviesDirector, v26)
 					in.WantComma()
 				}
 				in.Delim(']')
@@ -1951,9 +2013,9 @@ func easyjson163c17a9DecodeFilmerServerInternalEntity18(in *jlexer.Lexer, out *P
 					out.MoviesActor = (out.MoviesActor)[:0]
 				}
 				for !in.IsDelim(']') {
-					var v23 PersonFullMovie
-					(v23).UnmarshalEasyJSON(in)
-					out.MoviesActor = append(out.MoviesActor, v23)
+					var v27 PersonFullMovie
+					(v27).UnmarshalEasyJSON(in)
+					out.MoviesActor = append(out.MoviesActor, v27)
 					in.WantComma()
 				}
 				in.Delim(']')
@@ -1983,7 +2045,7 @@ func easyjson163c17a9EncodeFilmerServerInternalEntity18(out *jwriter.Writer, in 
 		out.String(string(in.Name))
 	}
 	{
-		const prefix string = ",\"imgUrl\":"
+		const prefix string = ",\"imgURL\":"
 		out.RawString(prefix)
 		out.String(string(in.ImgURL))
 	}
@@ -2013,17 +2075,33 @@ func easyjson163c17a9EncodeFilmerServerInternalEntity18(out *jwriter.Writer, in 
 		out.String(string(in.Death))
 	}
 	{
+		const prefix string = ",\"facts\":"
+		out.RawString(prefix)
+		if in.Facts == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
+			out.RawString("null")
+		} else {
+			out.RawByte('[')
+			for v28, v29 := range in.Facts {
+				if v28 > 0 {
+					out.RawByte(',')
+				}
+				out.String(string(v29))
+			}
+			out.RawByte(']')
+		}
+	}
+	{
 		const prefix string = ",\"moviesDirector\":"
 		out.RawString(prefix)
 		if in.MoviesDirector == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
 			out.RawString("null")
 		} else {
 			out.RawByte('[')
-			for v24, v25 := range in.MoviesDirector {
-				if v24 > 0 {
+			for v30, v31 := range in.MoviesDirector {
+				if v30 > 0 {
 					out.RawByte(',')
 				}
-				(v25).MarshalEasyJSON(out)
+				(v31).MarshalEasyJSON(out)
 			}
 			out.RawByte(']')
 		}
@@ -2035,11 +2113,11 @@ func easyjson163c17a9EncodeFilmerServerInternalEntity18(out *jwriter.Writer, in 
 			out.RawString("null")
 		} else {
 			out.RawByte('[')
-			for v26, v27 := range in.MoviesActor {
-				if v26 > 0 {
+			for v32, v33 := range in.MoviesActor {
+				if v32 > 0 {
 					out.RawByte(',')
 				}
-				(v27).MarshalEasyJSON(out)
+				(v33).MarshalEasyJSON(out)
 			}
 			out.RawByte(']')
 		}
@@ -2204,9 +2282,9 @@ func easyjson163c17a9DecodeFilmerServerInternalEntity20(in *jlexer.Lexer, out *M
 					out.Directors = (out.Directors)[:0]
 				}
 				for !in.IsDelim(']') {
-					var v28 Person
-					(v28).UnmarshalEasyJSON(in)
-					out.Directors = append(out.Directors, v28)
+					var v34 Person
+					(v34).UnmarshalEasyJSON(in)
+					out.Directors = append(out.Directors, v34)
 					in.WantComma()
 				}
 				in.Delim(']')
@@ -2227,9 +2305,9 @@ func easyjson163c17a9DecodeFilmerServerInternalEntity20(in *jlexer.Lexer, out *M
 					out.Actors = (out.Actors)[:0]
 				}
 				for !in.IsDelim(']') {
-					var v29 Person
-					(v29).UnmarshalEasyJSON(in)
-					out.Actors = append(out.Actors, v29)
+					var v35 Person
+					(v35).UnmarshalEasyJSON(in)
+					out.Actors = append(out.Actors, v35)
 					in.WantComma()
 				}
 				in.Delim(']')
@@ -2255,11 +2333,11 @@ func easyjson163c17a9EncodeFilmerServerInternalEntity20(out *jwriter.Writer, in 
 			out.RawString("null")
 		} else {
 			out.RawByte('[')
-			for v30, v31 := range in.Directors {
-				if v30 > 0 {
+			for v36, v37 := range in.Directors {
+				if v36 > 0 {
 					out.RawByte(',')
 				}
-				(v31).MarshalEasyJSON(out)
+				(v37).MarshalEasyJSON(out)
 			}
 			out.RawByte(']')
 		}
@@ -2271,11 +2349,11 @@ func easyjson163c17a9EncodeFilmerServerInternalEntity20(out *jwriter.Writer, in 
 			out.RawString("null")
 		} else {
 			out.RawByte('[')
-			for v32, v33 := range in.Actors {
-				if v32 > 0 {
+			for v38, v39 := range in.Actors {
+				if v38 > 0 {
 					out.RawByte(',')
 				}
-				(v33).MarshalEasyJSON(out)
+				(v39).MarshalEasyJSON(out)
 			}
 			out.RawByte(']')
 		}
@@ -2377,9 +2455,9 @@ func easyjson163c17a9DecodeFilmerServerInternalEntity21(in *jlexer.Lexer, out *M
 					out.Genres = (out.Genres)[:0]
 				}
 				for !in.IsDelim(']') {
-					var v34 Genre
-					(v34).UnmarshalEasyJSON(in)
-					out.Genres = append(out.Genres, v34)
+					var v40 Genre
+					(v40).UnmarshalEasyJSON(in)
+					out.Genres = append(out.Genres, v40)
 					in.WantComma()
 				}
 				in.Delim(']')
@@ -2465,11 +2543,11 @@ func easyjson163c17a9EncodeFilmerServerInternalEntity21(out *jwriter.Writer, in 
 			out.RawString("null")
 		} else {
 			out.RawByte('[')
-			for v35, v36 := range in.Genres {
-				if v35 > 0 {
+			for v41, v42 := range in.Genres {
+				if v41 > 0 {
 					out.RawByte(',')
 				}
-				(v36).MarshalEasyJSON(out)
+				(v42).MarshalEasyJSON(out)
 			}
 			out.RawByte(']')
 		}
