@@ -146,18 +146,44 @@ function addHiddenNextAttributeToForm(formElem) {
 	formElem.appendChild(input);
 }
 
-// +-------------------+
-// + Movie back button +
-// +-------------------+
+// +---------------------+
+// + Back buttons system +
+// +---------------------+
+
+// Returns list of page moving history
+function getPageMovingHistory() {
+	return JSON.parse(localStorage.getItem("page-moving-history"))
+}
+
+// Set list of page moving history to localStorage
+function setPageMovingHistory(pageMovingHistory) {
+	return localStorage.setItem("page-moving-history", JSON.stringify(pageMovingHistory))
+}
+
+// Returns true if current page is movie page or person page
+function isMovieOrPersonPage(currentPath) {
+	return currentPath.startsWith("/filmer/user-movie/info") || currentPath.startsWith("/filmer/personal/info")
+}
 
 document.addEventListener("DOMContentLoaded", function () {
-	let currentPath = window.location.pathname;
-	let currentQuery = window.location.search;
+	const currentPath = window.location.pathname;
+	const currentQuery = window.location.search;
+	let currentURL = currentPath + currentQuery;
 
-	// skip for movie page
-	if (currentPath.startsWith("/filmer/user-movie/info")) {
+	let history = getPageMovingHistory()
+
+	console.log(history)
+	console.log(currentPath)
+	// skip if current page URL equals to last history URL
+	if (history != null && history[history.length - 1] == currentURL) {
+		console.log(history[history.length - 1])
 		return
 	}
+	if (!Array.isArray(history) || !isMovieOrPersonPage(currentPath)) {
+		history = []
+	}
 
-	localStorage.setItem("movie-back-url", currentPath + currentQuery);
+	history.push(currentURL)
+	console.log(history)
+	setPageMovingHistory(history)
 });

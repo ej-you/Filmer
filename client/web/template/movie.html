@@ -10,7 +10,7 @@
 <div class="movie-title">
 	<div class="back-button-container">
 		<div class="back-button-subcontainer">
-			<a id="back-button" href="/filmer">
+			<a id="back-button" href="/filmer" onclick="onBackButtonClick()">
 				<svg version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
 					xmlns:xlink="http://www.w3.org/1999/xlink">
 					<path
@@ -136,12 +136,12 @@
 	<h3 class="movie-staff-header">Режиссёры:</h3>
 	<div class="movie-persons movie-directors">
 		{% for director in movie.staff.directors %}
-		<div class="person">
+		<a class="person" href="/filmer/personal/info/{{ director.id|floatformat:0 }}">
 			<div class="person-poster">
 				<img src='{{ director.imgUrl|default:"/static/img/non_poster.svg" }}'>
 			</div>
 			<p class="person-name">{{ director.name }}</p>
-		</div>
+		</a>
 		{% endfor %}
 	</div>
 	{% endif %}
@@ -150,13 +150,13 @@
 	<h3 class="movie-staff-header">Актёры:</h3>
 	<div class="movie-persons movie-actors">
 		{% for actor in movie.staff.actors %}
-		<div class="person">
+		<a class="person" href="/filmer/personal/info/{{ actor.id|floatformat:0 }}">
 			<div class="person-poster">
 				<img src='{{ actor.imgUrl|default:"/static/img/non_poster.svg" }}'>
 			</div>
 			<span class="accent">{{ actor.role }}</span>
 			<p class="person-name">{{ actor.name }}</p>
-		</div>
+		</a>
 		{% endfor %}
 	</div>
 	{% endif %}

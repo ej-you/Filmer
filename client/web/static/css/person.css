@@ -1,0 +1,236 @@
+/* disable default title */
+.title {
+	display: none;
+}
+
+header {
+	margin-bottom: 0;
+}
+
+/* custom title with back button for person page */
+.person-title {
+	text-align: center;
+	margin-bottom: 40px;
+
+	display: flex;
+	justify-content: center;
+	position: relative;
+}
+
+.back-button-container {
+	width: 100%;
+	display: flex;
+
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	flex-grow: 1;
+}
+
+.back-button-subcontainer {
+	width: 60%;
+
+	display: flex;
+	justify-content: flex-start;
+	margin: auto;
+}
+
+#back-button {
+	display: flex;
+	padding-left: 5px;
+}
+
+#back-button svg {
+	fill: var(--white);
+	height: 36px;
+	width: 36px;
+}
+
+#back-button:hover svg {
+	fill: var(--light-red);
+}
+
+
+h3 {
+	font-size: 30px;
+}
+
+.flex-content {
+	margin: auto;
+	margin-bottom: 150px;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 60%;
+}
+
+.flex-content>* {
+	margin-bottom: 15px;
+	width: 100%;
+}
+
+/* full person container */
+.person {
+	display: flex;
+	justify-content: space-between;
+	gap: 20px;
+}
+
+/* h3 person name */
+.person-name {
+	text-align: center;
+}
+
+/* h3 for person movies */
+.person-movie-header {
+	text-align: left;
+	user-select: none;
+}
+
+/* movie info container (all about movie without staff) */
+.person-full-info {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	gap: 10px;
+
+	align-items: center;
+	width: 100%;
+}
+
+.person-full-info-footer {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	width: 100%;
+}
+
+/* grid movie info without poster and description */
+.person-info {
+	display: grid;
+
+	grid-template-columns: minmax(auto, 100px) auto;
+	grid-template-rows: auto repeat(4, 20px);
+	column-gap: 2%;
+	row-gap: 15px;
+
+	text-align: left;
+}
+
+.person-info label {
+	cursor: auto;
+	color: var(--light-red);
+}
+
+.person-facts>ul {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.person-fact-elem {
+	display: inline;
+	position: relative;
+}
+
+.person-fact-elem>span {
+	position: absolute;
+	left: 0;
+}
+
+.person-fact-elem>div {
+	text-align: justify;
+	text-indent: 15px;
+}
+
+.person-movies {
+	width: 100%;
+
+	display: flex;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.movie {
+	width: 160px;
+	padding: 20px;
+	border-radius: 20px;
+
+	box-shadow: 0px 0px 25px 1px var(--light-black);
+	display: flex;
+	flex-direction: column;
+}
+
+.movie-poster-small {
+	margin-bottom: 10px;
+}
+
+
+/* for width from 1080px and more */
+@media screen and (min-width: 1080px) {
+	.person {
+		box-shadow: 0px 0px 25px 1px var(--light-black);
+		padding: 20px;
+		border-radius: 20px;
+	}
+}
+
+/* for width to 1500px and less */
+@media screen and (max-width: 1500px) {
+
+	.back-button-subcontainer,
+	.flex-content {
+		width: 80%;
+	}
+}
+
+/* for width to 1080px and less */
+@media screen and (max-width: 1080px) {
+	.back-button-subcontainer {
+		width: 400px;
+	}
+
+	#back-button {
+		padding-left: 0;
+	}
+
+	.person {
+		flex-direction: column;
+	}
+
+	.person-movie-header {
+		text-align: center;
+	}
+
+	.person-movies {
+		justify-content: center;
+	}
+}
+
+/* for width to 750px and less */
+@media screen and (max-width: 750px) {
+	.back-button-subcontainer {
+		width: 220px;
+	}
+
+	#back-button svg {
+		height: 28px;
+		width: 28px;
+	}
+
+	h3 {
+		font-size: 25px;
+	}
+
+	.flex-content {
+		width: 90%;
+	}
+
+	.movie {
+		width: 152px;
+		padding: 16px;
+		border-radius: 16px;
+	}
+}

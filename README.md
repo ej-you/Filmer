@@ -15,7 +15,7 @@
 - [x] Save cache data on redis shutdown (and load cache data on redis startup)
 - [x] Add log rotation for server
 - [x] Add to user category pages filter by substring
-- [ ] Add director/actor page with his movies
+- [x] Add director/actor page with his movies
 - [ ] Add related movies to movie page
 - [ ] Add popular movies (or recomendations or random "daily" movie) to the main page
 - [ ] Add the ability to recomend the movie to another user

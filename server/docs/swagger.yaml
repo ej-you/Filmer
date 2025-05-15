@@ -104,6 +104,76 @@ definitions:
         example: Neo
         type: string
     type: object
+  entity.PersonFull:
+    description: person full info
+    properties:
+      age:
+        description: person age
+        example: 62
+        type: integer
+      birthday:
+        description: person birthday
+        example: "1963-03-27"
+        type: string
+      death:
+        description: person death date (can be not set)
+        example: "1963-03-27"
+        type: string
+      facts:
+        description: facts about person
+        example:
+        - Полное имя - Квентин Джером Тарантино.
+        - Имеет двух сестёр и одного брата.
+        items:
+          type: string
+        type: array
+      id:
+        description: person kinopoisk ID
+        example: 7640
+        type: integer
+      imgURL:
+        description: person img URL
+        example: https://kinopoiskapiunofficial.tech/images/actor_posters/kp/7640.jpg
+        type: string
+      moviesActor:
+        description: person movies in those he was an actor
+        items:
+          $ref: '#/definitions/entity.PersonFullMovie'
+        type: array
+      moviesDirector:
+        description: person movies were directed by him
+        items:
+          $ref: '#/definitions/entity.PersonFullMovie'
+        type: array
+      name:
+        description: person name
+        example: Квентин Тарантино
+        type: string
+      profession:
+        description: person profession
+        example: Актер, Сценарист, Режиссер
+        type: string
+      sex:
+        description: person sex
+        example: мужской
+        type: string
+    type: object
+  entity.PersonFullMovie:
+    description: person movies for person full info
+    properties:
+      id:
+        description: movie kinopoisk ID
+        example: 342
+        type: integer
+      role:
+        description: person role (if person is actor)
+        example: Jimmie
+        type: string
+      title:
+        description: movie title
+        example: Криминальное чтиво
+        type: string
+    type: object
   entity.SearchedMovie:
     description: received movie data (for search movies)
     properties:
@@ -800,6 +870,36 @@ paths:
       summary: Поиск фильмов
       tags:
       - movie
+  /personal/full-info/{personID}:
+    get:
+      description: Получение информации о личности по её ID
+      operationId: kinopoisk-get-person-info
+      parameters:
+      - description: ID личности
+        in: path
+        name: personID
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.PersonFull'
+        "401":
+          description: Пустой или неправильный токен
+        "402":
+          description: Превышен дневной лимит запросов к Kinopoisk API
+        "403":
+          description: Истекший или невалидный токен
+        "404":
+          description: Личность не найдена
+        "429":
+          description: Слишком много запросов. Лимит 5 запросов в секунду
+      security:
+      - JWT: []
+      summary: Получение информации о личности
+      tags:
+      - personal
   /user/change-password:
     post:
       description: Установка нового пароля юзеру с подтверждением через старый пароль
