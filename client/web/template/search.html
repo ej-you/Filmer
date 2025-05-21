@@ -32,12 +32,12 @@
 			</div>
 			<div class="movie-info">
 				<div class="movie-info-item">
-					<label class="movie-info-label">•</label>
+					<label class="movie-info-label">Title:</label>
 					<p>{{ movie.name|default:"-" }}</p>
 				</div>
 
 				<div class="movie-info-item">
-					<label class="movie-info-label">Тип:</label>
+					<label class="movie-info-label">Type:</label>
 					{% if movie.type == "" %}
 					<p>-</p>
 					{% elif movie.type == "movie" %}
@@ -54,7 +54,7 @@
 				</div>
 
 				<div class="movie-info-item">
-					<label class="movie-info-label">Рейтинг:</label>
+					<label class="movie-info-label">Rating:</label>
 					{% if movie.rating.kp == 0.0 %}
 					<p>-</p>
 					{% else %}
@@ -63,7 +63,7 @@
 				</div>
 
 				<div class="movie-info-item">
-					<label class="movie-info-label">Год:</label>
+					<label class="movie-info-label">Year:</label>
 					{% if movie.year == 0.0 %}
 					<p>-</p>
 					{% else %}
@@ -72,7 +72,7 @@
 				</div>
 
 				<div class="movie-info-item movie-genre-list">
-					<label class="movie-info-label">Жанры:</label>
+					<label class="movie-info-label">Genres:</label>
 					<ul>
 						{% if movie.genres|length == 0 %}
 						<li>-</li>

@@ -37,34 +37,34 @@
 	<div class="flex-content-row">
 		<div id="flex-settings">
 			<div id="order-settings" class="settings">
-				<p class="setting-header">Сортировать</p>
+				<p class="setting-header">Order</p>
 
-				<a class="sort-field-link" data-link-value="title" href="?sortField=title">название</a>
-				<a class="sort-field-link" data-link-value="rating" href="?sortField=rating">рейтинг</a>
-				<a class="sort-field-link" data-link-value="year" href="?sortField=year">год</a>
-				<a class="sort-field-link" data-link-value="updated_at" href="?sortField=updated_at">обновлено</a>
+				<a class="sort-field-link" data-link-value="title" href="?sortField=title">title</a>
+				<a class="sort-field-link" data-link-value="rating" href="?sortField=rating">rating</a>
+				<a class="sort-field-link" data-link-value="year" href="?sortField=year">year</a>
+				<a class="sort-field-link" data-link-value="updated_at" href="?sortField=updated_at">updated at</a>
 
 				<div class="links-switch">
-					<a class="sort-order-link asc-order" data-link-value="asc" href="?sortOrder=asc">▲</a>
-					<a class="sort-order-link desc-order" data-link-value="desc" href="?sortOrder=desc">▼</a>
+					<a class="sort-order-link asc-order" data-link-value="asc" href="?sortOrder=asc">ASC</a>
+					<a class="sort-order-link desc-order" data-link-value="desc" href="?sortOrder=desc">DESC</a>
 				</div>
 			</div>
 
 			<form id="filter-form" class="settings" action="" method="get">
-				<p class="setting-header">Фильтровать</p>
+				<p class="setting-header">Filters</p>
 
 				<input id="sort-field-in-filter" type="hidden" name="sortField" value="">
 				<input id="sort-order-in-filter" type="hidden" name="sortOrder" value="">
 
 				<div class="filters-separator"></div>
 				<div class="filter-setting">
-					<p class="accent">по названию</p>
+					<p class="accent">title</p>
 					<input class="filter-title" id="filter-title" type="text" name="title">
 				</div>
 
 				<div class="filters-separator"></div>
 				<div class="filter-setting">
-					<p class="accent">жанры</p>
+					<p class="accent">genres</p>
 
 					<div id="filter-genre-list">
 						<label class="checkbox-btn">
@@ -175,7 +175,7 @@
 
 				<div class="filters-separator"></div>
 				<div class="filter-setting">
-					<p class="accent">рейтинг от</p>
+					<p class="accent">rating from</p>
 
 					<div class="range-box" id="filter-rating-from">
 						<input type="range" class="range" name="ratingFrom" min="0" max="10" value="0" step="0.1">
@@ -185,21 +185,21 @@
 
 				<div class="filters-separator"></div>
 				<div class="filter-setting">
-					<p class="accent">года с</p>
+					<p class="accent">year from</p>
 					<input class="filter-year" id="filter-year-from" type="number" name="yearFrom" min="1500" max="3000"
 						value="1500">
 				</div>
 
 				<div class="filters-separator"></div>
 				<div class="filter-setting">
-					<p class="accent">года по</p>
+					<p class="accent">year to</p>
 					<input class="filter-year" id="filter-year-to" type="number" name="yearTo" min="1500" max="3000"
 						value="3000">
 				</div>
 
 				<div class="filters-separator"></div>
 				<div class="filter-setting" id="filter-type">
-					<p class="accent">тип</p>
+					<p class="accent">type</p>
 
 					<div class="radio-button">
 						<input type="radio" name="type" value="все" id="type-all" />
@@ -228,7 +228,7 @@
 				</div>
 
 				<div class="filters-separator"></div>
-				<button class="filters-submit-btn" type="submit">Применить</button>
+				<button class="filters-submit-btn" type="submit">Apply</button>
 			</form>
 		</div>
 
@@ -244,17 +244,17 @@
 				</div>
 				<div class="movie-info">
 					<div class="movie-info-item">
-						<label class="movie-info-label">•</label>
+						<label class="movie-info-label">Title:</label>
 						<p>{{ user_movie.movie.title|default:"-" }}</p>
 					</div>
 
 					<div class="movie-info-item">
-						<label class="movie-info-label">Тип:</label>
+						<label class="movie-info-label">Type:</label>
 						<p>{{ user_movie.movie.type|default:"-" }}</p>
 					</div>
 
 					<div class="movie-info-item">
-						<label class="movie-info-label">Рейтинг:</label>
+						<label class="movie-info-label">Rating:</label>
 						{% if user_movie.movie.rating == 0.0 %}
 						<p>-</p>
 						{% else %}
@@ -263,7 +263,7 @@
 					</div>
 
 					<div class="movie-info-item">
-						<label class="movie-info-label">Год:</label>
+						<label class="movie-info-label">Year:</label>
 						{% if user_movie.movie.year == 0.0 %}
 						<p>-</p>
 						{% else %}
@@ -272,7 +272,7 @@
 					</div>
 
 					<div class="movie-info-item movie-genre-list">
-						<label class="movie-info-label">Жанры:</label>
+						<label class="movie-info-label">Genres:</label>
 						<ul>
 							{% if user_movie.movie.genres|length == 0 %}
 							<li>-</li>

@@ -39,7 +39,7 @@
 						{% if person.facts|length == 0 %}
 						<li class="person-fact-elem">
 							<span class="accent">•</span>
-							<div>Факты не найдены</div>
+							<div>Facts not found</div>
 						</li>
 						{% else %}
 						{% for fact in person.facts %}
@@ -52,23 +52,23 @@
 					</ul>
 				</div>
 				<div class="person-info">
-					<label>Карьера:</label>
+					<label>Career:</label>
 					<p>{{ person.profession|default:"-" }}</p>
 
-					<label>Пол:</label>
+					<label>Sex:</label>
 					<p>{{ person.sex|default:"-" }}</p>
 
-					<label>Возраст:</label>
+					<label>Age:</label>
 					{% if person.age == 0.0 %}
 					<p>-</p>
 					{% else %}
 					<p>{{ person.age|floatformat:0 }}</p>
 					{% endif %}
 
-					<label>Дата рождения:</label>
+					<label>Birthday:</label>
 					<p>{{ person.birthday|default:"-" }}</p>
 
-					<label>Дата смерти:</label>
+					<label>Death:</label>
 					<p>{{ person.death|default:"-" }}</p>
 				</div>
 			</div>
@@ -76,7 +76,7 @@
 	</div>
 
 	{% if person.moviesDirector|length != 0 %}
-	<h3 class="person-movie-header">Режиссёр фильмов:</h3>
+	<h3 class="person-movie-header">Director of movies:</h3>
 	<div class="person-movies movie-directors">
 		{% for movie in person.moviesDirector %}
 		<a class="movie" href="/filmer/user-movie/info/{{ movie.id|floatformat:0 }}">
@@ -90,7 +90,7 @@
 	{% endif %}
 
 	{% if person.moviesActor|length != 0 %}
-	<h3 class="person-movie-header">Актёр в фильмах:</h3>
+	<h3 class="person-movie-header">Actor in movies:</h3>
 	<div class="person-movies movie-actors">
 		{% for movie in person.moviesActor %}
 		<a class="movie" href="/filmer/user-movie/info/{{ movie.id|floatformat:0 }}">
