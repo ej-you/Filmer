@@ -11,7 +11,10 @@ import (
 func TestKinopoiskAPI(t *testing.T) {
 	t.Log("Try to get film staff from Kinopoisk API")
 
-	cfg := config.NewConfig()
+	cfg, err := config.New()
+	if err != nil {
+		t.Fatal(err)
+	}
 	jsonify := jsonify.NewJSONify()
 
 	url := "https://kinopoiskapiunofficial.tech/api/v1/staff"
@@ -20,8 +23,7 @@ func TestKinopoiskAPI(t *testing.T) {
 
 	var rawFilmStaff entity.RawMovieStaffSlice
 
-	err := kinopoiskAPI.SendGET(&rawFilmStaff)
-	if err != nil {
+	if err := kinopoiskAPI.SendGET(&rawFilmStaff); err != nil {
 		t.Error("ERROR:", err)
 		return
 	}

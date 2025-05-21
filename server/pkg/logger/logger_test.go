@@ -9,8 +9,13 @@ import (
 func TestLogger(t *testing.T) {
 	t.Log("Try to init Logger")
 
+	cfg, err := config.New()
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	fMessage := "message"
-	logger := NewLogger(config.NewConfig())
+	logger := NewLogger(cfg)
 	t.Logf("logger type: %T", logger)
 
 	logger.Debug("debug sample")

@@ -20,6 +20,6 @@
 - [ ] Add popular movies (or recomendations or random "daily" movie) to the main page
 - [ ] Add the ability to recomend the movie to another user
 - [ ] Add the ability to browse recomended movies from other users
-- [ ] Add `step-down` flag for one step migrations rollback to migrator
+- [x] Add `step-down` flag for one step migrations rollback to migrator
 - [ ] Add OpenID auth
 - [ ] Add an admin panel to monitor user activity

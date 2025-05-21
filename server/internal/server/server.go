@@ -1,3 +1,4 @@
+// Package server contains server interface and middleware manager interface for server.
 package server
 
 import (
@@ -15,7 +16,7 @@ import (
 	userMovieHTTP "Filmer/server/internal/user_movie/delivery/http"
 
 	"Filmer/server/config"
-	"Filmer/server/internal/app/middlewares"
+	"Filmer/server/internal/server/middlewares"
 	"Filmer/server/pkg/cache"
 	"Filmer/server/pkg/database"
 	"Filmer/server/pkg/jsonify"
@@ -24,20 +25,22 @@ import (
 	"Filmer/server/pkg/validator"
 )
 
-// Server interface
+var _ Server = (*fiberServer)(nil)
+
+// Server interface.
 type Server interface {
-	Run()
+	Run() error
 }
 
-// Fiber server
+// Fiber server.
 type fiberServer struct {
 	cfg     *config.Config
 	log     logger.Logger
 	jsonify jsonify.JSONify
 }
 
-// Server constructor
-func NewServer(cfg *config.Config) Server {
+// Server constructor.
+func New(cfg *config.Config) Server {
 	return &fiberServer{
 		cfg:     cfg,
 		log:     logger.NewLogger(cfg),
@@ -64,9 +67,9 @@ func NewServer(cfg *config.Config) Server {
 // @in							header
 // @name						Authorization
 // @description				JWT security accessToken. Please, add it in the format "Bearer {AccessToken}" to authorize your requests.
-func (s fiberServer) Run() {
+func (s fiberServer) Run() error {
 	// app init
-	fibertApp := fiber.New(fiber.Config{
+	fiberApp := fiber.New(fiber.Config{
 		AppName:      fmt.Sprintf("%s v1.0.0", s.cfg.App.Name),
 		ErrorHandler: utils.CustomErrorHandler,
 		JSONEncoder:  s.jsonify.Marshal,
@@ -85,13 +88,13 @@ func (s fiberServer) Run() {
 
 	// set up base middlewares
 	mwManager := middlewares.NewMiddlewareManager(s.cfg, appDB, appCache)
-	fibertApp.Use(mwManager.Logger())
-	fibertApp.Use(mwManager.Recover())
-	fibertApp.Use(mwManager.CORS())
-	fibertApp.Use(mwManager.Swagger())
+	fiberApp.Use(mwManager.Logger())
+	fiberApp.Use(mwManager.Recover())
+	fiberApp.Use(mwManager.CORS())
+	fiberApp.Use(mwManager.Swagger())
 
 	// set up handlers
-	apiV1 := fibertApp.Group("/api/v1")
+	apiV1 := fiberApp.Group("/api/v1")
 	// auth
 	authHandlerManager := authHTTP.NewAuthHandlerManager(s.cfg, appDB, appCache, validator)
 	authRouter := authHTTP.NewAuthRouter(mwManager, authHandlerManager)
@@ -113,13 +116,6 @@ func (s fiberServer) Run() {
 	personalRouter := personalHTTP.NewPersonalRouter(mwManager, personalHandlerManager)
 	personalRouter.SetRoutes(apiV1.Group("/personal"))
 
-	// start server
-	go func() {
-		if err := fibertApp.Listen(fmt.Sprintf(":%s", s.cfg.App.Port)); err != nil {
-			s.log.Fatal("[FATAL] failed to start server:", err)
-		}
-	}()
-
 	// handle shutdown process signals
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit,
@@ -128,11 +124,25 @@ func (s fiberServer) Run() {
 		syscall.SIGTERM,
 		syscall.SIGQUIT,
 	)
-	<-quit
 
-	// shutdown server
-	if err := fibertApp.Shutdown(); err != nil {
-		s.log.Fatal("[FATAL] failed to shutdown server:", err)
+	shutdownDone := make(chan struct{})
+	// create gracefully shutdown task
+	go func() {
+		handledSignal := <-quit
+		s.log.Infof("Get %q signal. Shutdown %d server process...",
+			handledSignal.String(), os.Getpid())
+		// shutdown app
+		fiberApp.ShutdownWithTimeout(s.cfg.App.KeepAliveTimeout)
+		shutdownDone <- struct{}{}
+	}()
+
+	// start app
+	if err := fiberApp.Listen(fmt.Sprintf(":%s", s.cfg.App.Port)); err != nil {
+		return fmt.Errorf("start app: %w", err)
 	}
+
+	// wait for gracefully shutdown
+	<-shutdownDone
 	s.log.Infof("Server process %d shutdown successfully!", os.Getpid())
+	return nil
 }

@@ -33,7 +33,6 @@ DB_USER="root"
 DB_HOST=172.21.0.2
 DB_PORT=26257
 DB_NAME="filmer_db"
-
 ```
 
 ---
@@ -56,7 +55,7 @@ docker compose up -d
 ### 3. Migrate DB
 
 ```shell
-docker exec -it filmer_server sh -c "/app/app_server migrate"
+docker exec -it filmer_server sh -c "/app/migrator up"
 ```
 
 ---

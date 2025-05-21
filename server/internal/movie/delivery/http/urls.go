@@ -3,7 +3,7 @@ package http
 import (
 	fiber "github.com/gofiber/fiber/v2"
 
-	"Filmer/server/internal/app/middlewares"
+	"Filmer/server/internal/server/middlewares"
 )
 
 // Movie router

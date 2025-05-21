@@ -28,7 +28,7 @@ services:
   server:
     build:
       context: ./server
-      dockerfile: Dockerfile
+      dockerfile: ./build/Dockerfile
     container_name: filmer_server
     restart: always
     env_file:
@@ -73,11 +73,9 @@ services:
     depends_on:
       - client
 
-
 networks:
   main_network:
     driver: bridge
-
 
 volumes:
   redis_data:

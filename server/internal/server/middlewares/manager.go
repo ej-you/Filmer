@@ -1,3 +1,4 @@
+// Package middleware provides middleware manager with all server middlewares.
 package middlewares
 
 import (
@@ -25,7 +26,9 @@ import (
 	"Filmer/server/pkg/utils"
 )
 
-// Interface with all necessary middlewares for server
+var _ MiddlewareManager = (*middlewareManager)(nil)
+
+// Interface with all necessary middlewares for server.
 type MiddlewareManager interface {
 	Logger() fiber.Handler
 	Recover() fiber.Handler
@@ -34,63 +37,63 @@ type MiddlewareManager interface {
 	JWTAuth() fiber.Handler
 }
 
-// MiddlewareManager interface implementation
-type appMiddlewareManager struct {
+// MiddlewareManager implementation.
+type middlewareManager struct {
 	cfg    *config.Config
 	authUC auth.Usecase
 }
 
-// MiddlewareManager constructor
+// MiddlewareManager constructor.
 func NewMiddlewareManager(cfg *config.Config, dbClient *gorm.DB, cache cache.Cache) MiddlewareManager {
 	authRepo := authRepository.NewRepository(dbClient)
 	authCacheRepo := authRepository.NewCacheRepository(cfg, cache)
 	authUsecase := authUsecase.NewUsecase(cfg, authRepo, authCacheRepo)
 
-	return &appMiddlewareManager{
+	return &middlewareManager{
 		cfg:    cfg,
 		authUC: authUsecase,
 	}
 }
 
-// Middleware for logging requests to server
-func (mm appMiddlewareManager) Logger() fiber.Handler {
+// Middleware for logging requests to server.
+func (m middlewareManager) Logger() fiber.Handler {
 	return fiberLogger.New(fiberLogger.Config{
 		TimeFormat:    "2006-01-02T15:04:05-0700",
 		Format:        "${time} | pid ${pid} | ${status} | ${latency} | ${method} | ${path} | ${error}\n",
-		Output:        mm.cfg.LogOutput.Info,
+		Output:        m.cfg.LogOutput.Info,
 		DisableColors: false,
 	})
 }
 
-// Middleware for panic recovery for continuous work
-func (mm appMiddlewareManager) Recover() fiber.Handler {
+// Middleware for panic recovery for continuous work.
+func (m middlewareManager) Recover() fiber.Handler {
 	return fiberRecover.New()
 }
 
-// CORS middleware
-func (mm appMiddlewareManager) CORS() fiber.Handler {
+// CORS middleware.
+func (m middlewareManager) CORS() fiber.Handler {
 	return fiberCORS.New(fiberCORS.Config{
-		AllowOrigins: mm.cfg.App.CorsAllowedOrigins,
-		AllowMethods: mm.cfg.App.CorsAllowedMethods,
+		AllowOrigins: m.cfg.App.CorsAllowedOrigins,
+		AllowMethods: m.cfg.App.CorsAllowedMethods,
 	})
 }
 
-// Middleware for Swagger docs
-func (mm appMiddlewareManager) Swagger() fiber.Handler {
+// Middleware for Swagger docs.
+func (m middlewareManager) Swagger() fiber.Handler {
 	return fiberSwagger.New(fiberSwagger.Config{
 		BasePath: "/api/v1/",
 		FilePath: "./docs/swagger.json",
 		Path:     "docs",
-		Title:    fmt.Sprintf("%s docs", mm.cfg.App.Name),
+		Title:    fmt.Sprintf("%s docs", m.cfg.App.Name),
 	})
 }
 
-// Middleware for parsing access token from headers to context and validate it
-func (mm appMiddlewareManager) JWTAuth() fiber.Handler {
+// Middleware for parsing access token from headers to context and validate it.
+func (m middlewareManager) JWTAuth() fiber.Handler {
 	return fiberJWT.New(fiberJWT.Config{
 		ContextKey:     "accessToken",
-		SigningKey:     fiberJWT.SigningKey{Key: []byte(mm.cfg.App.JwtSecret)},
-		SuccessHandler: mm.checkBlacklistedToken(),
+		SigningKey:     fiberJWT.SigningKey{Key: []byte(m.cfg.App.JwtSecret)},
+		SuccessHandler: m.checkBlacklistedToken(),
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
 			switch {
 			// if token expired error
@@ -105,12 +108,12 @@ func (mm appMiddlewareManager) JWTAuth() fiber.Handler {
 	})
 }
 
-// Next-step middleware after JWTAuth for restrict user access with blacklisted tokens
-func (mm appMiddlewareManager) checkBlacklistedToken() fiber.Handler {
+// Next-step middleware after JWTAuth for restrict user access with blacklisted tokens.
+func (m middlewareManager) checkBlacklistedToken() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		token := utils.ParseRawTokenFromContext(ctx)
 		// check token is blacklisted
-		if err := mm.authUC.RestrictBlacklistedToken(token); err != nil {
+		if err := m.authUC.RestrictBlacklistedToken(token); err != nil {
 			return err
 		}
 		return ctx.Next()

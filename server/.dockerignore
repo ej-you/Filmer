@@ -1,7 +1,8 @@
 .env
 .golangci.yml
+.golangci.v1.yml
 
-Dockerfile
+build/
 Makefile
 
 README.md
