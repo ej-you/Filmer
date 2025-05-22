@@ -89,7 +89,7 @@
 
 			<div class="movie-full-info-footer">
 				<p class="movie-description">
-					{{ movie.description }}
+					{{ movie.description|default:"Description not found" }}
 				</p>
 				<div class="movie-info">
 					<label>Type:</label>
