@@ -11,7 +11,7 @@ import (
 
 	"Filmer/server/cmd/migrator/commands"
 	"Filmer/server/config"
-	"Filmer/server/pkg/migrate"
+	"Filmer/server/internal/pkg/migrate"
 )
 
 func main() {
