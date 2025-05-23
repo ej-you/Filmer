@@ -41,7 +41,8 @@ func (r dbRepo) GetUserMovie(userMovie *entity.UserMovie) (bool, error) {
 	if err := selectResult.Error; err != nil {
 		// if NOT "Not found" error
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			return false, httperror.NewHTTPError(http.StatusInternalServerError, "failed to get user movie", err)
+			return false, httperror.NewHTTPError(http.StatusInternalServerError,
+				"failed to get user movie", err)
 		}
 		return false, nil
 	}
@@ -54,7 +55,8 @@ func (r dbRepo) GetUserMovie(userMovie *entity.UserMovie) (bool, error) {
 func (r dbRepo) FindOrCreateUserMovie(userMovie *entity.UserMovie) error {
 	selectResult := r.dbClient.Where(userMovie).FirstOrCreate(userMovie)
 	if err := selectResult.Error; err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError, "failed to find or create user movie", err)
+		return httperror.NewHTTPError(http.StatusInternalServerError,
+			"failed to find or create user movie", err)
 	}
 	return nil
 }
@@ -67,7 +69,8 @@ func (r dbRepo) UpdateUserMovieStared(userMovie *entity.UserMovie, newStared boo
 	// update stared
 	updateResult := r.dbClient.Model(userMovie).Update("stared", newStared)
 	if err := updateResult.Error; err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError, "failed to update stared field of user movie", err)
+		return httperror.NewHTTPError(http.StatusInternalServerError,
+			"failed to update stared field of user movie", err)
 	}
 	return nil
 }
@@ -80,15 +83,19 @@ func (r dbRepo) UpdateUserMovieStatus(userMovie *entity.UserMovie, newStatus int
 	// update status
 	updateResult := r.dbClient.Model(userMovie).Update("status", newStatus)
 	if err := updateResult.Error; err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError, "failed to update status field of user movie", err)
+		return httperror.NewHTTPError(http.StatusInternalServerError,
+			"failed to update status field of user movie", err)
 	}
 	return nil
 }
 
 // Get user movies in given category (stared || want || watched).
-// Must be presented category (userMoviesWithCategory.Category) and user ID (userMoviesWithCategory.UserID).
+// Must be presented category (userMoviesWithCategory.Category) and
+// user ID (userMoviesWithCategory.UserID).
 // Fill given userMoviesWithCategory struct.
-func (r dbRepo) GetUserMoviesWithCategory(userMoviesWithCategory *entity.UserMoviesWithCategory) error {
+func (r dbRepo) GetUserMoviesWithCategory(
+	userMoviesWithCategory *entity.UserMoviesWithCategory) error {
+
 	// define select condition for given category
 	var categoryCond string
 	switch userMoviesWithCategory.Category {
@@ -121,7 +128,8 @@ func (r dbRepo) GetUserMoviesWithCategory(userMoviesWithCategory *entity.UserMov
 	// do select query
 	selectResult := selectQuery.Find(&userMoviesWithCategory.UserMovies)
 	if err := selectResult.Error; err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError, "failed to get user movies with category", err)
+		return httperror.NewHTTPError(http.StatusInternalServerError,
+			"failed to get user movies with category", err)
 	}
 	return nil
 }
@@ -171,7 +179,9 @@ func (r *dbRepo) addFilter(selectQuery *gorm.DB, filter *entity.UserMoviesFilter
 }
 
 // Add pagination to select query (add after all filters).
-func (r *dbRepo) addPagination(selectQuery *gorm.DB, pagination *entity.UserMoviesPagination) *gorm.DB {
+func (r *dbRepo) addPagination(selectQuery *gorm.DB,
+	pagination *entity.UserMoviesPagination) *gorm.DB {
+
 	// set page = 1 if page is not defined
 	if pagination.Page == 0 {
 		pagination.Page = 1

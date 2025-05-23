@@ -24,6 +24,7 @@ linters:
     - goprintffuncname
     - gosec
     - ineffassign
+    - lll
     - makezero
     - misspell
     - mnd
@@ -51,6 +52,8 @@ linters:
       enable-all: true
     gocyclo:
       min-complexity: 10
+    lll:
+      line-length: 99
     nestif:
       min-complexity: 3
     prealloc:
@@ -67,29 +70,50 @@ linters:
       - legacy
       - std-error-handling
     rules:
-      - linters:
-          - revive
-        text: don't use an underscore in package name
-      - linters:
+      - linters: # used timeout in client that call request
           - noctx
-        path: third_party/kinopoisk_api/api_client\.go
-        text: should rewrite http.NewRequestWithContext
-      - linters:
-          - goconst
-        path: internal/entity/genre\.go
-        text: 'string `genres` has 5 occurrences, make it a constant'
-      - linters:
+        text: "should rewrite http\\.NewRequestWithContext or add \\(\\*Request\\)\\.WithContext"
+      - linters: # too obviously
           - mnd
         path: pkg/utils/time\.go
-        text: 'Magic number: 24, in <argument> detected'
-      - linters:
+        text: "Magic number: 24, in <argument> detected"
+      - linters: # more readable for config
           - mnd
         path: config/config\.go
-      - linters:
+      - linters: # cannot occurs
+          - errcheck
+        path: internal/app/server/server\.go
+        text: "Error return value of `fiberApp.ShutdownWithTimeout` is not checked"
+      - linters: # more readable
+          - goconst
+        path: cmd/migrator/commands/
+        text: "string `Successfully!` has 3 occurrences, make it a constant"
+      - linters: # more readable
+          - goconst
+        path: internal/app/entity/genre\.go
+        text: 'string `genres` has 5 occurrences, make it a constant'
+      - linters: # it's too late for changes
           - gocritic
-        text: "importShadow: shadow of imported from 'Filmer/server/.*?' package '.*?'"
+        text: "importShadow: shadow of imported from 'Filmer/server/internal.*?' package '.*?'"
+      - linters: # more readable for struct tags
+          - lll
+        path: internal/app/.+?/delivery/http/data_in\.go
+      - linters: # more readable for struct tags
+          - lll
+        path: internal/app/entity/
+      - linters: # more readable for struct tags
+          - lll
+        path: config/config\.go
+      - linters: # more readable for swagger tags
+          - lll
+        path: internal/app/.+?/delivery/http/handlers\.go
+      - linters: # more readable for swagger tags
+          - lll
+        path: internal/app/server/server\.go
     paths:
-      - web
+      - docs
+      - build
+      - migrations
 
 issues:
   fix: false

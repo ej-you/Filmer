@@ -42,7 +42,9 @@ type middlewareManager struct {
 }
 
 // MiddlewareManager constructor.
-func NewMiddlewareManager(cfg *config.Config, dbClient *gorm.DB, cache cache.Cache) MiddlewareManager {
+func NewMiddlewareManager(cfg *config.Config,
+	dbClient *gorm.DB, cache cache.Cache) MiddlewareManager {
+
 	authRepo := authRepository.NewDBRepo(dbClient)
 	authCacheRepo := authRepository.NewCacheRepository(cfg, cache)
 	authUsecase := authUsecase.NewUsecase(cfg, authRepo, authCacheRepo)
@@ -55,9 +57,11 @@ func NewMiddlewareManager(cfg *config.Config, dbClient *gorm.DB, cache cache.Cac
 
 // Middleware for logging requests to server.
 func (m middlewareManager) Logger() fiber.Handler {
+	logFormat := "${time} | ${pid} | ${status} | ${latency} | ${method} | ${path} | ${error}\n"
+
 	return fiberLogger.New(fiberLogger.Config{
 		TimeFormat:    "2006-01-02T15:04:05-0700",
-		Format:        "${time} | pid ${pid} | ${status} | ${latency} | ${method} | ${path} | ${error}\n",
+		Format:        logFormat,
 		Output:        m.cfg.LogOutput.Info,
 		DisableColors: false,
 	})
@@ -96,10 +100,12 @@ func (m middlewareManager) JWTAuth() fiber.Handler {
 			switch {
 			// if token expired error
 			case errors.Is(err, jwt.ErrTokenExpired):
-				err = httperror.NewHTTPError(http.StatusForbidden, "token is expired", err)
+				err = httperror.NewHTTPError(http.StatusForbidden,
+					"token is expired", err)
 			// if token is missing
 			case errors.Is(err, fiberJWT.ErrJWTMissingOrMalformed):
-				err = httperror.NewHTTPError(http.StatusUnauthorized, "token is missing or malformed", err)
+				err = httperror.NewHTTPError(http.StatusUnauthorized,
+					"token is missing or malformed", err)
 			}
 			return utils.CustomErrorHandler(ctx, err)
 		},

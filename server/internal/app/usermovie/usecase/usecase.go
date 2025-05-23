@@ -27,7 +27,8 @@ func NewUsecase(usermovieDBRepo usermovie.DBRepo, movieUC movie.Usecase) usermov
 }
 
 // Get user movie (with full movie info) by its kinopoisk ID.
-// Must be presented kinopoisk movie ID (userMovie.Movie.KinopoiskID) and user ID (userMovie.UserID).
+// Must be presented kinopoisk movie ID (userMovie.Movie.KinopoiskID) and
+// user ID (userMovie.UserID).
 // Fill given userMovie struct.
 // Returns true, if movie was found in DB, else false.
 func (u usecase) GetUserMovieByKinopoiskID(userMovie *entity.UserMovie) error {
@@ -61,7 +62,8 @@ func (u usecase) UpdateUserMovieStared(userMovie *entity.UserMovie, newStared bo
 	}
 	// if movie was not found
 	if !exists {
-		return httperror.NewHTTPError(http.StatusNotFound, "movie with given id was not found", fmt.Errorf("change movie stared to %v", newStared))
+		return httperror.NewHTTPError(http.StatusNotFound,
+			"movie was not found", fmt.Errorf("change movie stared to %v", newStared))
 	}
 
 	// get or create (if not exists) user movie
@@ -96,7 +98,8 @@ func (u usecase) UpdateUserMovieStatus(userMovie *entity.UserMovie, newStatus in
 	}
 	// if movie was not found
 	if !exists {
-		return httperror.NewHTTPError(http.StatusNotFound, "movie with given id was not found", fmt.Errorf("change movie status to %v", newStatus))
+		return httperror.NewHTTPError(http.StatusNotFound,
+			"movie was not found", fmt.Errorf("change movie status to %v", newStatus))
 	}
 
 	// get or create (if not exists) user movie
@@ -121,8 +124,10 @@ func (u usecase) UpdateUserMovieStatus(userMovie *entity.UserMovie, newStatus in
 // Must be presented category (userMoviesCat.Category) and user ID (userMoviesCat.UserID).
 // Fill given userMoviesCat struct.
 func (u usecase) GetUserMoviesWithCategory(userMoviesCat *entity.UserMoviesWithCategory) error {
-	if userMoviesCat.Category != "stared" && userMoviesCat.Category != "want" && userMoviesCat.Category != "watched" {
-		return httperror.NewHTTPError(http.StatusInternalServerError, "invalid movies category", fmt.Errorf("invalid movies category"))
+	category := userMoviesCat.Category
+	if category != "want" && category != "watched" && category != "stared" {
+		return httperror.NewHTTPError(http.StatusInternalServerError,
+			"invalid movies category", fmt.Errorf("invalid movies category"))
 	}
 	if err := u.usermovieDBRepo.GetUserMoviesWithCategory(userMoviesCat); err != nil {
 		return fmt.Errorf("userMovieUsecase.GetUserMoviesWithCategory: %w", err)

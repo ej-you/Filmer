@@ -49,7 +49,7 @@ func NewKinopoiskRepo(cfg *config.Config, jsonify jsonify.JSONify) staff.Kinopoi
 // Person ID must be presented.
 // Fill given struct.
 func (r kinopoiskRepo) GetFullInfoByID(person *entity.PersonFull) error {
-	apiClient := kinopoisk.NewKinopoiskAPI(
+	apiClient := kinopoisk.NewAPI(
 		fmt.Sprintf("https://kinopoiskapiunofficial.tech/api/v1/staff/%d", person.ID),
 		r.cfg.KinopoiskAPI.UnofficialKey,
 		nil,
@@ -113,7 +113,9 @@ func filterRawMovieList(rawMovieList []entity.RawPersonFullMovie) (
 }
 
 // Full processing of "actor" or "director" person movie list.
-func processFilteredMovieList(filteredMovieList []entity.RawPersonFullMovie) []entity.PersonFullMovie {
+func processFilteredMovieList(
+	filteredMovieList []entity.RawPersonFullMovie) []entity.PersonFullMovie {
+
 	// skip movie list if movies count is too small
 	if len(filteredMovieList) < personMoviesMinLimit {
 		return nil

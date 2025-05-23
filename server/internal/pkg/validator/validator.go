@@ -54,16 +54,14 @@ func (v restValidator) Validate(s any) error {
 	}
 	// handle error messages
 	rawTranstaledMap := validateErrors.Translate(v.translator)
-	// for concat string
-	transtaledStringSlice := make([]string, 0, len(rawTranstaledMap))
-	// sort out errors and concat them into string
-	var tempSlice []string
-	var key string
-	for k, v := range rawTranstaledMap {
-		tempSlice = strings.Split(k, ".")
-		key = tempSlice[len(tempSlice)-1]
 
-		transtaledStringSlice = append(transtaledStringSlice, key+": "+v)
+	// sort out errors and concat them into string
+	transtaledStringSlice := make([]string, 0, len(rawTranstaledMap))
+	for _, v := range rawTranstaledMap {
+		transtaledStringSlice = append(transtaledStringSlice, strings.ToLower(v))
 	}
-	return httperror.NewHTTPError(http.StatusBadRequest, strings.Join(transtaledStringSlice, " | "), fmt.Errorf("validate error"))
+
+	errMsg := strings.Join(transtaledStringSlice, " && ")
+	return httperror.NewHTTPError(http.StatusBadRequest,
+		errMsg, fmt.Errorf("validate error"))
 }

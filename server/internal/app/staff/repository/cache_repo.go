@@ -40,12 +40,14 @@ func (r cacheRepo) SetPersonInfo(person *entity.PersonFull) error {
 	// serialize struct to JSON-data bytes
 	bytes, err := r.jsonify.Marshal(person)
 	if err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError, "serialize person data", err)
+		return httperror.NewHTTPError(http.StatusInternalServerError,
+			"serialize person data", err)
 	}
 	// set cache key-value
 	err = r.cacheClient.Set(key, bytes, utils.ToNextDayDuration(time.Now().UTC()))
 	if err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError, "set person data", err)
+		return httperror.NewHTTPError(http.StatusInternalServerError,
+			"set person data", err)
 	}
 	return nil
 }
@@ -60,7 +62,8 @@ func (r cacheRepo) GetPersonInfo(person *entity.PersonFull) (bool, error) {
 	// get bytes from cache
 	bytesData, err := r.cacheClient.GetBytes(key)
 	if err != nil {
-		return false, httperror.NewHTTPError(http.StatusInternalServerError, "get person data", err)
+		return false, httperror.NewHTTPError(http.StatusInternalServerError,
+			"get person data", err)
 	}
 	// if data was not found in cache
 	if bytesData == nil {
@@ -70,7 +73,8 @@ func (r cacheRepo) GetPersonInfo(person *entity.PersonFull) (bool, error) {
 	// deserialize JSON-data to struct
 	err = r.jsonify.Unmarshal(bytesData, person)
 	if err != nil {
-		return false, httperror.NewHTTPError(http.StatusInternalServerError, "deserialize person data", err)
+		return false, httperror.NewHTTPError(http.StatusInternalServerError,
+			"deserialize person data", err)
 	}
 	return true, nil
 }

@@ -24,7 +24,8 @@ func NewCockroachClient(cfg *config.Config, appLogger logger.Logger) *gorm.DB {
 	var err error
 
 	once.Do(func() {
-		appLogger.Infof("Process %d is connecting to CockroachDB node with %q", os.Getpid(), cfg.Database.ConnString)
+		appLogger.Infof("Process %d is connecting to CockroachDB node with %q",
+			os.Getpid(), cfg.Database.ConnString)
 
 		dbConnection, err = gorm.Open(postgres.New(postgres.Config{
 			DSN: cfg.Database.ConnString,

@@ -13,7 +13,9 @@ type UserRouter struct {
 }
 
 // UserRouter constructor
-func NewUserRouter(mwManager middlewares.MiddlewareManager, userHandlerManager *UserHandlerManager) *UserRouter {
+func NewUserRouter(mwManager middlewares.MiddlewareManager,
+	userHandlerManager *UserHandlerManager) *UserRouter {
+
 	return &UserRouter{
 		mwManager:          mwManager,
 		userHandlerManager: userHandlerManager,

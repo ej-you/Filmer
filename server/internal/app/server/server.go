@@ -99,11 +99,13 @@ func (s fiberServer) Run() error {
 	authRouter := authHTTP.NewAuthRouter(mwManager, authHandlerManager)
 	authRouter.SetRoutes(apiV1.Group("/auth"))
 	// movie
-	movieHandlerManager := movieHTTP.NewMovieHandlerManager(s.cfg, s.jsonify, s.log, appDB, appCache, validator)
+	movieHandlerManager := movieHTTP.NewMovieHandlerManager(s.cfg, s.jsonify, s.log,
+		appDB, appCache, validator)
 	movieRouter := movieHTTP.NewMovieRouter(mwManager, movieHandlerManager)
 	movieRouter.SetRoutes(apiV1.Group("/kinopoisk/films"))
 	// user movie
-	userMovieHandlerManager := userMovieHTTP.NewUserMovieHandlerManager(s.cfg, s.jsonify, s.log, appDB, appCache, validator)
+	userMovieHandlerManager := userMovieHTTP.NewUserMovieHandlerManager(s.cfg, s.jsonify, s.log,
+		appDB, appCache, validator)
 	userMovieRouter := userMovieHTTP.NewUserMovieRouter(mwManager, userMovieHandlerManager)
 	userMovieRouter.SetRoutes(apiV1.Group("/films"))
 	// user
@@ -111,7 +113,8 @@ func (s fiberServer) Run() error {
 	userRouter := userHTTP.NewUserRouter(mwManager, userHandlerManager)
 	userRouter.SetRoutes(apiV1.Group("/user"))
 	// personal
-	personalHandlerManager := personalHTTP.NewPersonalHandlerManager(s.cfg, s.jsonify, s.log, appCache, validator)
+	personalHandlerManager := personalHTTP.NewPersonalHandlerManager(s.cfg, s.jsonify, s.log,
+		appCache, validator)
 	personalRouter := personalHTTP.NewPersonalRouter(mwManager, personalHandlerManager)
 	personalRouter.SetRoutes(apiV1.Group("/personal"))
 

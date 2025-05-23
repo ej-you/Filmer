@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson9e2e77eaDecodeFilmerServerThirdPartyKinopoiskApi(in *jlexer.Lexer, out *kinopoiskAPIError) {
+func easyjson11c9b717DecodeFilmerServerInternalPkgKinopoisk(in *jlexer.Lexer, out *apiError) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -48,7 +48,7 @@ func easyjson9e2e77eaDecodeFilmerServerThirdPartyKinopoiskApi(in *jlexer.Lexer, 
 		in.Consumed()
 	}
 }
-func easyjson9e2e77eaEncodeFilmerServerThirdPartyKinopoiskApi(out *jwriter.Writer, in kinopoiskAPIError) {
+func easyjson11c9b717EncodeFilmerServerInternalPkgKinopoisk(out *jwriter.Writer, in apiError) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -61,25 +61,25 @@ func easyjson9e2e77eaEncodeFilmerServerThirdPartyKinopoiskApi(out *jwriter.Write
 }
 
 // MarshalJSON supports json.Marshaler interface
-func (v kinopoiskAPIError) MarshalJSON() ([]byte, error) {
+func (v apiError) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson9e2e77eaEncodeFilmerServerThirdPartyKinopoiskApi(&w, v)
+	easyjson11c9b717EncodeFilmerServerInternalPkgKinopoisk(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
-func (v kinopoiskAPIError) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson9e2e77eaEncodeFilmerServerThirdPartyKinopoiskApi(w, v)
+func (v apiError) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjson11c9b717EncodeFilmerServerInternalPkgKinopoisk(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
-func (v *kinopoiskAPIError) UnmarshalJSON(data []byte) error {
+func (v *apiError) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson9e2e77eaDecodeFilmerServerThirdPartyKinopoiskApi(&r, v)
+	easyjson11c9b717DecodeFilmerServerInternalPkgKinopoisk(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *kinopoiskAPIError) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson9e2e77eaDecodeFilmerServerThirdPartyKinopoiskApi(l, v)
+func (v *apiError) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjson11c9b717DecodeFilmerServerInternalPkgKinopoisk(l, v)
 }

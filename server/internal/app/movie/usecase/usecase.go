@@ -72,7 +72,8 @@ func (u usecase) SearchMovies(searchedMovies *entity.SearchedMovies) error {
 	// get searched movies from API
 	if err = u.movieKinopoiskRepo.SearchMovies(searchedMovies); err != nil {
 		// set API limit to cache if gotten error is 402 error
-		return fmt.Errorf("movieUsecase.SearchMovies: %w", u.setAPILimitIfPaymentError(err, officialAPIName))
+		return fmt.Errorf("movieUsecase.SearchMovies: %w",
+			u.setAPILimitIfPaymentError(err, officialAPIName))
 	}
 
 	// save searched movies to cache
@@ -135,7 +136,8 @@ func (u usecase) GetMovieByKinopoiskID(movie *entity.Movie) (bool, error) {
 	}
 	// get movie from kinopoisk API if movie was not found in DB
 	if err = u.movieKinopoiskRepo.GetFullMovieByKinopoiskID(movie); err != nil {
-		return false, fmt.Errorf("movieUsecase.GetMovieByKinopoiskID: %w", u.setAPILimitIfPaymentError(err, unofficialAPIName))
+		return false, fmt.Errorf("movieUsecase.GetMovieByKinopoiskID: %w",
+			u.setAPILimitIfPaymentError(err, unofficialAPIName))
 	}
 	// save received movie from API in the DB
 	if err = u.movieDBRepo.SaveMovie(movie); err != nil {
@@ -159,12 +161,14 @@ func (u usecase) updateMovieData(movie *entity.Movie) {
 	var err error
 	// turn to the kinopoisk API
 	if err = u.movieKinopoiskRepo.GetFullMovieByKinopoiskID(movie); err != nil {
-		u.logger.Errorf("background update for film %d: failed to get film info from API: %v", movie.KinopoiskID, err)
+		u.logger.Errorf("background update for film %d: failed to get film info from API: %v",
+			movie.KinopoiskID, err)
 		return
 	}
 	// update movie in DB (so, PK is presented then data will update)
 	if err = u.movieDBRepo.FullUpdateMovie(movie); err != nil {
-		u.logger.Errorf("background update for film %d: failed to save movie: %v", movie.KinopoiskID, err)
+		u.logger.Errorf("background update for film %d: failed to save movie: %v",
+			movie.KinopoiskID, err)
 		return
 	}
 	u.logger.Infof("Background update for film %d", movie.KinopoiskID)

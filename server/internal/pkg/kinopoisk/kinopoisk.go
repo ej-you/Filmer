@@ -18,22 +18,22 @@ const (
 	sendRequestTimeout = 3 * time.Second // request timeout
 )
 
-// Kinopoisk API client interface
-type KinopoiskAPI interface {
+// API client interface.
+type API interface {
 	SendGET(outStruct any) error
 }
 
-// Kinopoisk API client for GET-requests
-type KinopoiskAPIGet struct {
+// API client for GET-requests.
+type apiGet struct {
 	url         string
 	apiKey      string
 	queryParams map[string]string
 	jsonify     jsonify.JSONify
 }
 
-// KinopoiskAPI constructor
-func NewKinopoiskAPI(url, apiKey string, queryParams map[string]string, jsonify jsonify.JSONify) KinopoiskAPI {
-	return &KinopoiskAPIGet{
+// Returns API interface.
+func NewAPI(url, apiKey string, queryParams map[string]string, jsonify jsonify.JSONify) API {
+	return &apiGet{
 		url:         url,
 		apiKey:      apiKey,
 		queryParams: queryParams,
@@ -44,46 +44,51 @@ func NewKinopoiskAPI(url, apiKey string, queryParams map[string]string, jsonify 
 // struct for parsing error JSON-response from API
 //
 //easyjson:json
-type kinopoiskAPIError struct {
+type apiError struct {
 	Message string `json:"message"`
 }
 
-// Parse error from response
-func (kAPI KinopoiskAPIGet) parseError(resp *http.Response) error {
-	var rawErr kinopoiskAPIError
+// Parse error from response.
+func (a apiGet) parseError(resp *http.Response) error {
+	var rawErr apiError
 
 	// if 404 error code
 	if resp.StatusCode == http.StatusNotFound {
-		return httperror.NewHTTPError(http.StatusNotFound, "movie not found", fmt.Errorf("got not found error"))
+		return httperror.NewHTTPError(http.StatusNotFound,
+			"movie not found", fmt.Errorf("got not found error"))
 	}
 
 	bytesErrorMessage, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError, "parse error: failed to read error answer", err)
+		return httperror.NewHTTPError(http.StatusInternalServerError,
+			"parse error: failed to read error answer", err)
 	}
 	// decode response to struct
-	if err := kAPI.jsonify.Unmarshal(bytesErrorMessage, &rawErr); err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError, "parse error: failed to decode error answer", err)
+	if err := a.jsonify.Unmarshal(bytesErrorMessage, &rawErr); err != nil {
+		return httperror.NewHTTPError(http.StatusInternalServerError,
+			"parse error: failed to decode error answer", err)
 	}
 	// return processed error
-	return httperror.NewHTTPError(resp.StatusCode, rawErr.Message, fmt.Errorf("parsed error"))
+	return httperror.NewHTTPError(resp.StatusCode,
+		rawErr.Message, fmt.Errorf("parsed error"))
 }
 
-// Send request and process response (outStruct - pointer to struct)
-func (kAPI KinopoiskAPIGet) SendGET(outStruct any) error {
+// Send request and process response (outStruct - pointer to struct).
+func (a apiGet) SendGET(outStruct any) error {
 	var err error
 
 	// create request
-	req, err := http.NewRequest("GET", kAPI.url, http.NoBody)
+	req, err := http.NewRequest("GET", a.url, http.NoBody)
 	if err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError, "failed to send request", err)
+		return httperror.NewHTTPError(http.StatusInternalServerError,
+			"failed to send request", err)
 	}
 	// add API key to request headers
-	req.Header.Set("X-API-KEY", kAPI.apiKey)
+	req.Header.Set("X-API-KEY", a.apiKey)
 
 	// add query-params
 	queryParams := req.URL.Query()
-	for k, v := range kAPI.queryParams {
+	for k, v := range a.queryParams {
 		queryParams.Add(k, v)
 	}
 	req.URL.RawQuery = queryParams.Encode()
@@ -97,26 +102,30 @@ func (kAPI KinopoiskAPIGet) SendGET(outStruct any) error {
 	// wrap request for auto-retry
 	retryReq, err := retryHTTP.FromRequest(req)
 	if err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError, "failed to wrap request for retry", err)
+		return httperror.NewHTTPError(http.StatusInternalServerError,
+			"failed to wrap request for retry", err)
 	}
 	// send request
 	resp, err := client.Do(retryReq)
 	if err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError, "failed to do request", err)
+		return httperror.NewHTTPError(http.StatusInternalServerError,
+			"failed to do request", err)
 	}
 	defer resp.Body.Close()
 	// if error reqponse was received
 	if resp.StatusCode != http.StatusOK {
-		return kAPI.parseError(resp)
+		return a.parseError(resp)
 	}
 
 	// if request is success - decode reqponse to struct
 	bytesData, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError, "failed to read answer", err)
+		return httperror.NewHTTPError(http.StatusInternalServerError,
+			"failed to read answer", err)
 	}
-	if err := kAPI.jsonify.Unmarshal(bytesData, outStruct); err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError, "failed to decode answer", err)
+	if err := a.jsonify.Unmarshal(bytesData, outStruct); err != nil {
+		return httperror.NewHTTPError(http.StatusInternalServerError,
+			"failed to decode answer", err)
 	}
 	return nil
 }

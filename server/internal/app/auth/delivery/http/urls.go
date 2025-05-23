@@ -13,7 +13,9 @@ type AuthRouter struct {
 }
 
 // AuthRouter constructor
-func NewAuthRouter(mwManager middlewares.MiddlewareManager, authHandlerManager *AuthHandlerManager) *AuthRouter {
+func NewAuthRouter(mwManager middlewares.MiddlewareManager,
+	authHandlerManager *AuthHandlerManager) *AuthRouter {
+
 	return &AuthRouter{
 		mwManager:          mwManager,
 		authHandlerManager: authHandlerManager,

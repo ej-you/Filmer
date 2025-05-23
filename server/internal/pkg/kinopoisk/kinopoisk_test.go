@@ -19,7 +19,7 @@ func TestKinopoiskAPI(t *testing.T) {
 
 	url := "https://kinopoiskapiunofficial.tech/api/v1/staff"
 	queryParams := map[string]string{"filmId": "301"}
-	kinopoiskAPI := NewKinopoiskAPI(url, cfg.KinopoiskAPI.UnofficialKey, queryParams, jsonify)
+	kinopoiskAPI := NewAPI(url, cfg.KinopoiskAPI.UnofficialKey, queryParams, jsonify)
 
 	var rawFilmStaff entity.RawMovieStaffSlice
 

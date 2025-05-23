@@ -22,7 +22,9 @@ type usecase struct {
 }
 
 // Returns auth.Usecase interface.
-func NewUsecase(cfg *config.Config, authDBRepo auth.DBRepo, authCacheRepo auth.CacheRepo) auth.Usecase {
+func NewUsecase(cfg *config.Config,
+	authDBRepo auth.DBRepo, authCacheRepo auth.CacheRepo) auth.Usecase {
+
 	return &usecase{
 		cfg:           cfg,
 		authDBRepo:    authDBRepo,
@@ -74,7 +76,8 @@ func (u usecase) Login(user *entity.User) (*entity.UserWithToken, error) {
 
 	// check entered password is correct
 	if !utils.PasswordIsCorrect(enteredPasswd, user.Password) {
-		return nil, httperror.NewHTTPError(http.StatusUnauthorized, "invalid password", fmt.Errorf("authUsecase.Login"))
+		return nil, httperror.NewHTTPError(http.StatusUnauthorized,
+			"invalid password", fmt.Errorf("authUsecase.Login"))
 	}
 
 	// generate access token
@@ -108,7 +111,8 @@ func (u usecase) RestrictBlacklistedToken(token string) error {
 	}
 	// return forbidden error if token is in blacklist
 	if isBlacklisted {
-		return httperror.NewHTTPError(http.StatusForbidden, "token is not valid", fmt.Errorf("authUsecase.RestrictBlacklistedToken"))
+		return httperror.NewHTTPError(http.StatusForbidden,
+			"token is not valid", fmt.Errorf("authUsecase.RestrictBlacklistedToken"))
 	}
 	return nil
 }

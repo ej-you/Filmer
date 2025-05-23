@@ -34,13 +34,17 @@ type UserMovieHandlerManager struct {
 }
 
 // UserMovieHandlerManager constructor
-func NewUserMovieHandlerManager(cfg *config.Config, jsonify jsonify.JSONify, logger logger.Logger,
-	dbClient *gorm.DB, cache cache.Cache, validator validator.Validator) *UserMovieHandlerManager {
+func NewUserMovieHandlerManager(cfg *config.Config,
+	jsonify jsonify.JSONify, logger logger.Logger,
+	dbClient *gorm.DB, cache cache.Cache,
+	validator validator.Validator) *UserMovieHandlerManager {
+
 	// init movie usecase
-	movieRepo := movieRepository.NewDBRepo(dbClient)
+	movieDBRepo := movieRepository.NewDBRepo(dbClient)
 	movieCacheRepo := movieRepository.NewCacheRepo(cache, jsonify)
-	movieKinopoiskWebAPIRepo := movieRepository.NewKinopoiskRepo(cfg, jsonify)
-	movieUC := movieUsecase.NewUsecase(cfg, logger, movieRepo, movieCacheRepo, movieKinopoiskWebAPIRepo)
+	movieKinopoiskRepo := movieRepository.NewKinopoiskRepo(cfg, jsonify)
+	movieUC := movieUsecase.NewUsecase(cfg, logger,
+		movieDBRepo, movieCacheRepo, movieKinopoiskRepo)
 	// init user movie usecase
 	userMovieRepo := repository.NewDBRepo(dbClient)
 	userMovieUC := usecase.NewUsecase(userMovieRepo, movieUC)
@@ -173,7 +177,9 @@ func (umhm UserMovieHandlerManager) Watched() fiber.Handler {
 }
 
 // get user movies from certain category
-func (umhm UserMovieHandlerManager) getMoviesWithCategory(ctx *fiber.Ctx, userMoviesWithCategory *entity.UserMoviesWithCategory) error {
+func (umhm UserMovieHandlerManager) getMoviesWithCategory(ctx *fiber.Ctx,
+	userMoviesWithCategory *entity.UserMoviesWithCategory) error {
+
 	var err error
 	dataIn := new(categoryFilmsIn)
 

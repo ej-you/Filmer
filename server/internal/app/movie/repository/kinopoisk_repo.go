@@ -46,7 +46,7 @@ func NewKinopoiskRepo(cfg *config.Config, jsonify jsonify.JSONify) movie.Kinopoi
 // Must be presented query (searchedMovies.Query) and page (searchedMovies.Page).
 // Fill given searchedMovies struct.
 func (r kinopoiskRepo) SearchMovies(searchedMovies *entity.SearchedMovies) error {
-	apiClient := kinopoisk.NewKinopoiskAPI(
+	apiClient := kinopoisk.NewAPI(
 		"https://api.kinopoisk.dev/v1.4/movie/search",
 		r.cfg.KinopoiskAPI.Key,
 		map[string]string{
@@ -83,7 +83,7 @@ func (r kinopoiskRepo) GetFullMovieByKinopoiskID(movie *entity.Movie) error {
 // Get main movie info (without movie staff).
 // Fill given movie struct (apart of movie.Staff).
 func (r kinopoiskRepo) getMovieInfoByKinopoiskID(movie *entity.Movie) error {
-	apiClient := kinopoisk.NewKinopoiskAPI(
+	apiClient := kinopoisk.NewAPI(
 		fmt.Sprintf("https://kinopoiskapiunofficial.tech/api/v2.2/films/%d", movie.KinopoiskID),
 		r.cfg.KinopoiskAPI.UnofficialKey,
 		nil,
@@ -121,8 +121,10 @@ func (r kinopoiskRepo) getMovieInfoByKinopoiskID(movie *entity.Movie) error {
 
 // Get info about the movie staff.
 // Fill given movieStaff struct.
-func (r kinopoiskRepo) getMovieStaffByMovieKinopoiskID(movieKinopoiskID int, movieStaff *entity.MovieStaff) error {
-	apiClient := kinopoisk.NewKinopoiskAPI(
+func (r kinopoiskRepo) getMovieStaffByMovieKinopoiskID(
+	movieKinopoiskID int, movieStaff *entity.MovieStaff) error {
+
+	apiClient := kinopoisk.NewAPI(
 		"https://kinopoiskapiunofficial.tech/api/v1/staff",
 		r.cfg.KinopoiskAPI.UnofficialKey,
 		map[string]string{

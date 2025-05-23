@@ -13,7 +13,9 @@ type UserMovieRouter struct {
 }
 
 // UserMovieRouter constructor
-func NewUserMovieRouter(mwManager middlewares.MiddlewareManager, userMovieHandlerManager *UserMovieHandlerManager) *UserMovieRouter {
+func NewUserMovieRouter(mwManager middlewares.MiddlewareManager,
+	userMovieHandlerManager *UserMovieHandlerManager) *UserMovieRouter {
+
 	return &UserMovieRouter{
 		mwManager:               mwManager,
 		userMovieHandlerManager: userMovieHandlerManager,
