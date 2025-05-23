@@ -8,14 +8,13 @@ import (
 	"gorm.io/gorm"
 
 	"Filmer/server/config"
+	"Filmer/server/internal/app/auth"
+	"Filmer/server/internal/app/auth/repository"
+	"Filmer/server/internal/app/auth/usecase"
 	"Filmer/server/internal/app/entity"
 	"Filmer/server/internal/pkg/cache"
 	"Filmer/server/internal/pkg/utils"
 	"Filmer/server/internal/pkg/validator"
-
-	"Filmer/server/internal/app/auth"
-	"Filmer/server/internal/app/auth/repository"
-	"Filmer/server/internal/app/auth/usecase"
 )
 
 // Auth handlers manager
@@ -28,7 +27,7 @@ type AuthHandlerManager struct {
 func NewAuthHandlerManager(cfg *config.Config, dbClient *gorm.DB, cacheClient cache.Cache,
 	validator validator.Validator) *AuthHandlerManager {
 
-	authRepo := repository.NewRepository(dbClient)
+	authRepo := repository.NewDBRepo(dbClient)
 	authCacheRepo := repository.NewCacheRepository(cfg, cacheClient)
 	authUC := usecase.NewUsecase(cfg, authRepo, authCacheRepo)
 

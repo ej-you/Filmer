@@ -10,14 +10,13 @@ import (
 
 	"Filmer/server/config"
 	"Filmer/server/internal/app/entity"
+	"Filmer/server/internal/app/movie"
+	"Filmer/server/internal/app/movie/repository"
+	"Filmer/server/internal/app/movie/usecase"
 	"Filmer/server/internal/pkg/cache"
 	"Filmer/server/internal/pkg/jsonify"
 	"Filmer/server/internal/pkg/logger"
 	"Filmer/server/internal/pkg/validator"
-
-	"Filmer/server/internal/app/movie"
-	"Filmer/server/internal/app/movie/repository"
-	"Filmer/server/internal/app/movie/usecase"
 )
 
 // Movie handlers manager
@@ -30,9 +29,9 @@ type MovieHandlerManager struct {
 func NewMovieHandlerManager(cfg *config.Config, jsonify jsonify.JSONify, logger logger.Logger, dbClient *gorm.DB, cache cache.Cache,
 	validator validator.Validator) *MovieHandlerManager {
 
-	movieRepo := repository.NewRepository(dbClient)
-	movieCacheRepo := repository.NewCacheRepository(cache, jsonify)
-	movieKinopoiskWebAPIRepo := repository.NewKinopoiskWebAPIRepository(cfg, jsonify)
+	movieRepo := repository.NewDBRepo(dbClient)
+	movieCacheRepo := repository.NewCacheRepo(cache, jsonify)
+	movieKinopoiskWebAPIRepo := repository.NewKinopoiskRepo(cfg, jsonify)
 	movieUC := usecase.NewUsecase(cfg, logger, movieRepo, movieCacheRepo, movieKinopoiskWebAPIRepo)
 
 	return &MovieHandlerManager{

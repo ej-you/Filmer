@@ -1,9 +1,8 @@
 package utils
 
 import (
-	"time"
-
 	"testing"
+	"time"
 )
 
 func TestToNextDayDuration(t *testing.T) {

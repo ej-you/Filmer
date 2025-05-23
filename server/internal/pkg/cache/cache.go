@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	goRedis "github.com/redis/go-redis/v9"
+	goredis "github.com/redis/go-redis/v9"
 
 	"Filmer/server/config"
 	"Filmer/server/internal/pkg/logger"
@@ -25,7 +25,7 @@ type Cache interface {
 // Cache implementation through Redis
 type redisCache struct {
 	cfg   *config.Config
-	redis *goRedis.Client
+	redis *goredis.Client
 }
 
 var redisCacheInstance redisCache
@@ -37,7 +37,7 @@ func NewCache(cfg *config.Config, log logger.Logger) Cache {
 		log.Infof("Process %d is connecting to redis on %s...", os.Getpid(), cfg.Cache.ConnString)
 
 		// create new client
-		redisCacheInstance.redis = goRedis.NewClient(&goRedis.Options{
+		redisCacheInstance.redis = goredis.NewClient(&goredis.Options{
 			Addr: cfg.Cache.ConnString,
 			DB:   0,
 		})
@@ -71,7 +71,7 @@ func (rc redisCache) GetBool(key string) (bool, error) {
 	value, err := rc.redis.Get(ctx, key).Bool()
 
 	// if NOT "Not found" error
-	if err != nil && !goRedis.HasErrorPrefix(err, "redis: nil") {
+	if err != nil && !goredis.HasErrorPrefix(err, "redis: nil") {
 		return false, err
 	}
 	return value, nil
@@ -84,7 +84,7 @@ func (rc redisCache) GetBytes(key string) ([]byte, error) {
 	value, err := rc.redis.Get(ctx, key).Bytes()
 
 	// if NOT "Not found" error
-	if err != nil && !goRedis.HasErrorPrefix(err, "redis: nil") {
+	if err != nil && !goredis.HasErrorPrefix(err, "redis: nil") {
 		return nil, err
 	}
 	return value, nil

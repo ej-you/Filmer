@@ -5,7 +5,7 @@ import (
 
 	fiber "github.com/gofiber/fiber/v2"
 
-	httpError "Filmer/server/internal/pkg/http_error"
+	"Filmer/server/internal/pkg/httperror"
 )
 
 //easyjson:json
@@ -19,7 +19,7 @@ func CustomErrorHandler(ctx *fiber.Ctx, err error) error {
 	var errResp errorResponse
 
 	var fiberErr *fiber.Error
-	var httpErr httpError.HTTPError
+	var httpErr httperror.HTTPError
 
 	switch {
 	// if *fiber.Error error

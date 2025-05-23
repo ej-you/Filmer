@@ -12,17 +12,15 @@ import (
 	fiberCORS "github.com/gofiber/fiber/v2/middleware/cors"
 	fiberLogger "github.com/gofiber/fiber/v2/middleware/logger"
 	fiberRecover "github.com/gofiber/fiber/v2/middleware/recover"
-
 	jwt "github.com/golang-jwt/jwt/v5"
 	"gorm.io/gorm"
 
+	"Filmer/server/config"
 	"Filmer/server/internal/app/auth"
 	authRepository "Filmer/server/internal/app/auth/repository"
 	authUsecase "Filmer/server/internal/app/auth/usecase"
-
-	"Filmer/server/config"
 	"Filmer/server/internal/pkg/cache"
-	httpError "Filmer/server/internal/pkg/http_error"
+	"Filmer/server/internal/pkg/httperror"
 	"Filmer/server/internal/pkg/utils"
 )
 
@@ -45,7 +43,7 @@ type middlewareManager struct {
 
 // MiddlewareManager constructor.
 func NewMiddlewareManager(cfg *config.Config, dbClient *gorm.DB, cache cache.Cache) MiddlewareManager {
-	authRepo := authRepository.NewRepository(dbClient)
+	authRepo := authRepository.NewDBRepo(dbClient)
 	authCacheRepo := authRepository.NewCacheRepository(cfg, cache)
 	authUsecase := authUsecase.NewUsecase(cfg, authRepo, authCacheRepo)
 
@@ -98,10 +96,10 @@ func (m middlewareManager) JWTAuth() fiber.Handler {
 			switch {
 			// if token expired error
 			case errors.Is(err, jwt.ErrTokenExpired):
-				err = httpError.NewHTTPError(http.StatusForbidden, "token is expired", err)
+				err = httperror.NewHTTPError(http.StatusForbidden, "token is expired", err)
 			// if token is missing
 			case errors.Is(err, fiberJWT.ErrJWTMissingOrMalformed):
-				err = httpError.NewHTTPError(http.StatusUnauthorized, "token is missing or malformed", err)
+				err = httperror.NewHTTPError(http.StatusUnauthorized, "token is missing or malformed", err)
 			}
 			return utils.CustomErrorHandler(ctx, err)
 		},

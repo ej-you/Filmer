@@ -4,7 +4,7 @@ import (
 	"Filmer/server/internal/app/entity"
 )
 
-type Repository interface {
+type DBRepo interface {
 	GetUserByID(user *entity.User) error
 	UpdateUser(user *entity.User) error
 }

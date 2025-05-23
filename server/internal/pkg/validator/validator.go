@@ -6,13 +6,12 @@ import (
 	"net/http"
 	"strings"
 
-	validatorModule "github.com/go-playground/validator/v10"
-
-	enLocale "github.com/go-playground/locales/en"
+	enlocale "github.com/go-playground/locales/en"
 	ut "github.com/go-playground/universal-translator"
-	enTrans "github.com/go-playground/validator/v10/translations/en"
+	govalidator "github.com/go-playground/validator/v10"
+	entrans "github.com/go-playground/validator/v10/translations/en"
 
-	httpError "Filmer/server/internal/pkg/http_error"
+	"Filmer/server/internal/pkg/httperror"
 )
 
 // Validator interface for HTTP requests to REST API
@@ -22,18 +21,18 @@ type Validator interface {
 
 // Validator implementation
 type restValidator struct {
-	validatorInstance *validatorModule.Validate
+	validatorInstance *govalidator.Validate
 	translator        ut.Translator
 }
 
 // Validator constructor
 func NewValidator() Validator {
-	en := enLocale.New()
+	en := enlocale.New()
 	uni := ut.New(en, en)
 	trans, _ := uni.GetTranslator("en")
 
-	validate := validatorModule.New(validatorModule.WithRequiredStructEnabled())
-	err := enTrans.RegisterDefaultTranslations(validate, trans)
+	validate := govalidator.New(govalidator.WithRequiredStructEnabled())
+	err := entrans.RegisterDefaultTranslations(validate, trans)
 	if err != nil {
 		panic(err)
 	}
@@ -49,7 +48,7 @@ func (v restValidator) Validate(s any) error {
 	}
 
 	// assert error to validatorModule.ValidationErrors
-	var validateErrors validatorModule.ValidationErrors
+	var validateErrors govalidator.ValidationErrors
 	if !errors.As(err, &validateErrors) {
 		return err
 	}
@@ -66,5 +65,5 @@ func (v restValidator) Validate(s any) error {
 
 		transtaledStringSlice = append(transtaledStringSlice, key+": "+v)
 	}
-	return httpError.NewHTTPError(http.StatusBadRequest, strings.Join(transtaledStringSlice, " | "), fmt.Errorf("validate error"))
+	return httperror.NewHTTPError(http.StatusBadRequest, strings.Join(transtaledStringSlice, " | "), fmt.Errorf("validate error"))
 }

@@ -9,14 +9,13 @@ import (
 
 	fiber "github.com/gofiber/fiber/v2"
 
+	"Filmer/server/config"
 	authHTTP "Filmer/server/internal/app/auth/delivery/http"
 	movieHTTP "Filmer/server/internal/app/movie/delivery/http"
-	personalHTTP "Filmer/server/internal/app/personal/delivery/http"
-	userHTTP "Filmer/server/internal/app/user/delivery/http"
-	userMovieHTTP "Filmer/server/internal/app/user_movie/delivery/http"
-
-	"Filmer/server/config"
 	"Filmer/server/internal/app/server/middlewares"
+	personalHTTP "Filmer/server/internal/app/staff/delivery/http"
+	userHTTP "Filmer/server/internal/app/user/delivery/http"
+	userMovieHTTP "Filmer/server/internal/app/usermovie/delivery/http"
 	"Filmer/server/internal/pkg/cache"
 	"Filmer/server/internal/pkg/database"
 	"Filmer/server/internal/pkg/jsonify"

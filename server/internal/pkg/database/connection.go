@@ -8,7 +8,7 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	gormLogger "gorm.io/gorm/logger"
+	gormlogger "gorm.io/gorm/logger"
 
 	"Filmer/server/config"
 	"Filmer/server/internal/pkg/logger"
@@ -34,10 +34,10 @@ func NewCockroachClient(cfg *config.Config, appLogger logger.Logger) *gorm.DB {
 				return time.Now().UTC()
 			},
 			// disable NotFound errors logging
-			Logger: gormLogger.New(
+			Logger: gormlogger.New(
 				log.New(cfg.LogOutput.Error, "[SQL ERROR]\t", log.Ldate|log.Ltime),
-				gormLogger.Config{
-					LogLevel:                  gormLogger.Warn,
+				gormlogger.Config{
+					LogLevel:                  gormlogger.Warn,
 					IgnoreRecordNotFoundError: true,
 					Colorful:                  false,
 				},

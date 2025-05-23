@@ -9,12 +9,11 @@ import (
 
 	"Filmer/server/config"
 	"Filmer/server/internal/app/entity"
-	"Filmer/server/internal/pkg/utils"
-	"Filmer/server/internal/pkg/validator"
-
 	"Filmer/server/internal/app/user"
 	"Filmer/server/internal/app/user/repository"
 	"Filmer/server/internal/app/user/usecase"
+	"Filmer/server/internal/pkg/utils"
+	"Filmer/server/internal/pkg/validator"
 )
 
 // User handlers manager
@@ -27,7 +26,7 @@ type UserHandlerManager struct {
 func NewUserHandlerManager(cfg *config.Config, dbClient *gorm.DB,
 	validator validator.Validator) *UserHandlerManager {
 
-	userRepo := repository.NewRepository(dbClient)
+	userRepo := repository.NewDBRepo(dbClient)
 	userUC := usecase.NewUsecase(cfg, userRepo)
 
 	return &UserHandlerManager{
