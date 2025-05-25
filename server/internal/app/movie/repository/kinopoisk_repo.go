@@ -90,7 +90,7 @@ func (r kinopoiskRepo) getMovieInfoByKinopoiskID(movie *entity.Movie) error {
 		r.jsonify,
 	)
 	// send request and process response
-	rawFilmInfo := new(entity.RawMovieInfo)
+	rawFilmInfo := new(rawMovie)
 	err := apiClient.SendGET(rawFilmInfo)
 	if err != nil {
 		return fmt.Errorf("get movie info with kinopoisk API: %w", err)
@@ -133,7 +133,7 @@ func (r kinopoiskRepo) getMovieStaffByMovieKinopoiskID(
 		r.jsonify,
 	)
 
-	var rawFilmStaffSlice entity.RawMovieStaffSlice
+	var rawFilmStaffSlice rawMovieStaff
 	// send request and process response
 	err := apiClient.SendGET(&rawFilmStaffSlice)
 	if err != nil {

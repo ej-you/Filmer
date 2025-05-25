@@ -44,19 +44,3 @@ type Movie struct {
 func (Movie) TableName() string {
 	return "movies"
 }
-
-// for parsing API response
-//
-//easyjson:json
-type RawMovieInfo struct {
-	KinopoiskID     int     `json:"kinopoiskId"`
-	Title           string  `json:"nameRu"`
-	PosterURL       string  `json:"posterUrlPreview"`
-	WebURL          string  `json:"webUrl"`
-	RatingKinopoisk float64 `json:"ratingKinopoisk"`
-	Year            int     `json:"year"`
-	FilmLenMinutes  int     `json:"filmLength"`
-	Description     string  `json:"description"`
-	Type            string  `json:"type"`
-	Genres          []Genre `json:"genres"`
-}

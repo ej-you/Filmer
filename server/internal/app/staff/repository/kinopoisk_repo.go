@@ -56,7 +56,7 @@ func (r kinopoiskRepo) GetFullInfoByID(person *entity.PersonFull) error {
 		r.jsonify,
 	)
 	// send request and process response
-	rawPerson := &entity.RawPersonFull{}
+	rawPerson := &rawPersonFull{}
 	err := apiClient.SendGET(rawPerson)
 	if err != nil {
 		return fmt.Errorf("get person info with kinopoisk API: %w", err)
@@ -82,8 +82,8 @@ func (r kinopoiskRepo) GetFullInfoByID(person *entity.PersonFull) error {
 
 // Filter all person movies to two slices by director/actor movie key.
 // Skip duplicates for each of the slice.
-func filterRawMovieList(rawMovieList []entity.RawPersonFullMovie) (
-	allMoviesDirector []entity.RawPersonFullMovie, allMoviesActor []entity.RawPersonFullMovie) {
+func filterRawMovieList(rawMovieList []rawPersonFullMovie) (
+	allMoviesDirector []rawPersonFullMovie, allMoviesActor []rawPersonFullMovie) {
 
 	directorDupl := make(map[int]struct{})
 	actorDupl := make(map[int]struct{})
@@ -113,8 +113,7 @@ func filterRawMovieList(rawMovieList []entity.RawPersonFullMovie) (
 }
 
 // Full processing of "actor" or "director" person movie list.
-func processFilteredMovieList(
-	filteredMovieList []entity.RawPersonFullMovie) []entity.PersonFullMovie {
+func processFilteredMovieList(filteredMovieList []rawPersonFullMovie) []entity.PersonFullMovie {
 
 	// skip movie list if movies count is too small
 	if len(filteredMovieList) < personMoviesMinLimit {

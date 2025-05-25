@@ -45,21 +45,7 @@ func (ms MovieStaff) Value() (driver.Value, error) {
 	return easyjson.Marshal(ms)
 }
 
-// for parsing API response
-//
-//easyjson:json
-type RawMovieStaff struct {
-	StaffID       int    `json:"staffId"`
-	Name          string `json:"nameRu"`
-	Description   string `json:"description"`
-	ProfessionKey string `json:"professionKey"`
-	ImgURL        string `json:"posterUrl"`
-}
-
-//easyjson:json
-type RawMovieStaffSlice []RawMovieStaff
-
-// @description person movies for person full info
+// @description person movie for person full info
 //
 //easyjson:json
 type PersonFullMovie struct {
@@ -97,29 +83,4 @@ type PersonFull struct {
 	MoviesDirector []PersonFullMovie `json:"moviesDirector"`
 	// person movies in those he was an actor
 	MoviesActor []PersonFullMovie `json:"moviesActor"`
-}
-
-// for parsing API response
-//
-//easyjson:json
-type RawPersonFull struct {
-	PersonID   int                  `json:"personId"`
-	Name       string               `json:"nameRu"`
-	ImgURL     string               `json:"posterUrl"`
-	Sex        string               `json:"sex"`
-	Profession string               `json:"profession"`
-	Age        int                  `json:"age"`
-	Birthday   string               `json:"birthday"`
-	Death      string               `json:"death,omitempty"`
-	Facts      []string             `json:"facts"`
-	Movies     []RawPersonFullMovie `json:"films"`
-}
-
-//easyjson:json
-type RawPersonFullMovie struct {
-	ID            int    `json:"filmId"`
-	Name          string `json:"nameRu"`
-	Description   string `json:"description,omitempty"`
-	Rating        string `json:"rating"`
-	ProfessionKey string `json:"professionKey"`
 }
