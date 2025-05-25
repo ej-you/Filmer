@@ -62,7 +62,7 @@ func (u usecase) SearchMovies(searchedMovies *entity.SearchedMovies) error {
 	}
 	// if daily API limit is exhausted
 	if isLimitExhausted {
-		return httperror.NewHTTPError(
+		return httperror.New(
 			http.StatusPaymentRequired,
 			"daily API limit is exhausted",
 			fmt.Errorf("movieUsecase.SearchMovies: %s API limit", officialAPIName),
@@ -128,7 +128,7 @@ func (u usecase) GetMovieByKinopoiskID(movie *entity.Movie) (bool, error) {
 
 	// if movie was not found in DB and daily API limit is exhausted
 	if isLimitExhausted {
-		return false, httperror.NewHTTPError(
+		return false, httperror.New(
 			http.StatusPaymentRequired,
 			"daily API limit is exhausted",
 			fmt.Errorf("movieUsecase.GetMovieByKinopoiskID: %s API limit", unofficialAPIName),

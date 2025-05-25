@@ -12,7 +12,7 @@ import (
 	"Filmer/server/internal/app/user"
 	"Filmer/server/internal/app/user/repository"
 	"Filmer/server/internal/app/user/usecase"
-	"Filmer/server/internal/pkg/utils"
+	"Filmer/server/internal/pkg/token"
 	"Filmer/server/internal/pkg/validator"
 )
 
@@ -63,7 +63,7 @@ func (uhm UserHandlerManager) ChangePassword() fiber.Handler {
 		}
 
 		// get user ID from token
-		user.ID, err = utils.ParseUserIDFromContext(ctx)
+		user.ID, err = token.ParseUserIDFromContext(ctx)
 		if err != nil {
 			return fmt.Errorf("change password: %w", err)
 		}

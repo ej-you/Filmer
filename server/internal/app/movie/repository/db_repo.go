@@ -36,7 +36,7 @@ func (r dbRepo) CheckMovieExists(movie *entity.Movie) (bool, error) {
 		Where("id = ?", movie.ID).
 		Count(&foundMovie)
 	if err := selectCountResult.Error; err != nil {
-		return false, httperror.NewHTTPError(http.StatusInternalServerError,
+		return false, httperror.New(http.StatusInternalServerError,
 			"failed to find movie with given id", err)
 	}
 	// if movie was not found
@@ -58,7 +58,7 @@ func (r dbRepo) GetMovieByKinopoiskID(movie *entity.Movie) (bool, error) {
 	if err := selectResult.Error; err != nil {
 		// if NOT "Not found" error
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			return false, httperror.NewHTTPError(http.StatusInternalServerError,
+			return false, httperror.New(http.StatusInternalServerError,
 				"failed to get movie", err)
 		}
 		// if movie was not found
@@ -72,7 +72,7 @@ func (r dbRepo) SaveMovie(movie *entity.Movie) error {
 	// save movie in DB
 	createResult := r.dbClient.Create(movie)
 	if err := createResult.Error; err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError,
+		return httperror.New(http.StatusInternalServerError,
 			"failed to save movie", err)
 	}
 	return nil
@@ -83,7 +83,7 @@ func (r dbRepo) FullUpdateMovie(movie *entity.Movie) error {
 	// save movie in DB
 	updateResult := r.dbClient.Save(movie)
 	if err := updateResult.Error; err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError,
+		return httperror.New(http.StatusInternalServerError,
 			"failed to full update movie", err)
 	}
 	return nil

@@ -20,8 +20,9 @@ import (
 	authRepository "Filmer/server/internal/app/auth/repository"
 	authUsecase "Filmer/server/internal/app/auth/usecase"
 	"Filmer/server/internal/pkg/cache"
+	"Filmer/server/internal/pkg/errhandler"
 	"Filmer/server/internal/pkg/httperror"
-	"Filmer/server/internal/pkg/utils"
+	"Filmer/server/internal/pkg/token"
 )
 
 var _ MiddlewareManager = (*middlewareManager)(nil)
@@ -100,14 +101,14 @@ func (m middlewareManager) JWTAuth() fiber.Handler {
 			switch {
 			// if token expired error
 			case errors.Is(err, jwt.ErrTokenExpired):
-				err = httperror.NewHTTPError(http.StatusForbidden,
+				err = httperror.New(http.StatusForbidden,
 					"token is expired", err)
 			// if token is missing
 			case errors.Is(err, fiberJWT.ErrJWTMissingOrMalformed):
-				err = httperror.NewHTTPError(http.StatusUnauthorized,
+				err = httperror.New(http.StatusUnauthorized,
 					"token is missing or malformed", err)
 			}
-			return utils.CustomErrorHandler(ctx, err)
+			return errhandler.CustomErrorHandler(ctx, err)
 		},
 	})
 }
@@ -115,7 +116,7 @@ func (m middlewareManager) JWTAuth() fiber.Handler {
 // Next-step middleware after JWTAuth for restrict user access with blacklisted tokens.
 func (m middlewareManager) checkBlacklistedToken() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		token := utils.ParseRawTokenFromContext(ctx)
+		token := token.ParseRawTokenFromContext(ctx)
 		// check token is blacklisted
 		if err := m.authUC.RestrictBlacklistedToken(token); err != nil {
 			return err

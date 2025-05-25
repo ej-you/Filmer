@@ -7,7 +7,8 @@ import (
 	"Filmer/server/config"
 	"Filmer/server/internal/app/entity"
 	"Filmer/server/internal/pkg/httperror"
-	"Filmer/server/internal/pkg/utils"
+	"Filmer/server/internal/pkg/password"
+	"Filmer/server/internal/pkg/token"
 
 	"Filmer/server/internal/app/auth"
 )
@@ -37,7 +38,7 @@ func NewUsecase(cfg *config.Config,
 // Returns *entity.UserWithToken with filled given user struct and random-generated access token.
 func (u usecase) SignUp(user *entity.User) (*entity.UserWithToken, error) {
 	// hash password
-	passwordHash, err := utils.EncodePassword(user.Password)
+	passwordHash, err := password.Encode(user.Password)
 	if err != nil {
 		return nil, fmt.Errorf("authUsecase.SignUp: %w", err)
 	}
@@ -50,7 +51,7 @@ func (u usecase) SignUp(user *entity.User) (*entity.UserWithToken, error) {
 	}
 
 	// generate access token
-	accessToken, err := utils.ObtainToken(u.cfg, user.ID)
+	accessToken, err := token.New(u.cfg, user.ID)
 	if err != nil {
 		return nil, fmt.Errorf("authUsecase.SignUp: %w", err)
 	}
@@ -75,13 +76,13 @@ func (u usecase) Login(user *entity.User) (*entity.UserWithToken, error) {
 	}
 
 	// check entered password is correct
-	if !utils.PasswordIsCorrect(enteredPasswd, user.Password) {
-		return nil, httperror.NewHTTPError(http.StatusUnauthorized,
+	if !password.IsCorrect(enteredPasswd, user.Password) {
+		return nil, httperror.New(http.StatusUnauthorized,
 			"invalid password", fmt.Errorf("authUsecase.Login"))
 	}
 
 	// generate access token
-	accessToken, err := utils.ObtainToken(u.cfg, user.ID)
+	accessToken, err := token.New(u.cfg, user.ID)
 	if err != nil {
 		return nil, fmt.Errorf("authUsecase.Login: %w", err)
 	}
@@ -111,7 +112,7 @@ func (u usecase) RestrictBlacklistedToken(token string) error {
 	}
 	// return forbidden error if token is in blacklist
 	if isBlacklisted {
-		return httperror.NewHTTPError(http.StatusForbidden,
+		return httperror.New(http.StatusForbidden,
 			"token is not valid", fmt.Errorf("authUsecase.RestrictBlacklistedToken"))
 	}
 	return nil

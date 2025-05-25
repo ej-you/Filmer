@@ -1,3 +1,4 @@
+// Package cache provides storage interface for caching data.
 package cache
 
 import (

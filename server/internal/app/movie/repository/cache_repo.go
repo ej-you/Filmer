@@ -39,7 +39,7 @@ func (c cacheRepo) SetAPILimit(apiName string) error {
 	toNextDay := utils.ToNextDayDuration(time.Now().UTC())
 	err := c.cacheClient.Set(apiLimitPrefix+apiName, "true", toNextDay)
 	if err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError,
+		return httperror.New(http.StatusInternalServerError,
 			"failed to set api limit", err)
 	}
 	return nil
@@ -50,7 +50,7 @@ func (c cacheRepo) SetAPILimit(apiName string) error {
 func (c cacheRepo) IsAPILimitExhausted(apiName string) (bool, error) {
 	isExhausted, err := c.cacheClient.GetBool(apiLimitPrefix + apiName)
 	if err != nil {
-		return false, httperror.NewHTTPError(http.StatusInternalServerError,
+		return false, httperror.New(http.StatusInternalServerError,
 			"failed to get api limit value", err)
 	}
 	return isExhausted, nil
@@ -63,13 +63,13 @@ func (c cacheRepo) SetSearchMovies(searchedMovies *entity.SearchedMovies) error 
 	// serialize struct to JSON-data bytes
 	bytes, err := c.jsonify.Marshal(searchedMovies)
 	if err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError,
+		return httperror.New(http.StatusInternalServerError,
 			"failed to serialize search movies data", err)
 	}
 	// set cache key-value
 	err = c.cacheClient.Set(key, bytes, utils.ToNextDayDuration(time.Now().UTC()))
 	if err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError,
+		return httperror.New(http.StatusInternalServerError,
 			"failed to set search movies data", err)
 	}
 	return nil
@@ -85,7 +85,7 @@ func (c cacheRepo) GetSearchMovies(searchedMovies *entity.SearchedMovies) (bool,
 	// get bytes from cache
 	bytesData, err := c.cacheClient.GetBytes(key)
 	if err != nil {
-		return false, httperror.NewHTTPError(http.StatusInternalServerError,
+		return false, httperror.New(http.StatusInternalServerError,
 			"failed to get search movies data", err)
 	}
 	// if data was not found in cache
@@ -96,7 +96,7 @@ func (c cacheRepo) GetSearchMovies(searchedMovies *entity.SearchedMovies) (bool,
 	// deserialize JSON-data to struct
 	err = c.jsonify.Unmarshal(bytesData, searchedMovies)
 	if err != nil {
-		return false, httperror.NewHTTPError(http.StatusInternalServerError,
+		return false, httperror.New(http.StatusInternalServerError,
 			"failed to deserialize search movies data", err)
 	}
 	return true, nil

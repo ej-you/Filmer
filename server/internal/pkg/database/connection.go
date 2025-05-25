@@ -1,3 +1,4 @@
+// Package database provide *gorm.DB for interaction with the database through GORM methods.
 package database
 
 import (

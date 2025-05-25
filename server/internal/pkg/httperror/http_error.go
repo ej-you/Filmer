@@ -1,40 +1,42 @@
+// Package httperror provides interface for HTTP errors with
+// custom error code and user-friendly message.
 package httperror
 
 import (
 	"fmt"
 )
 
-// HTTPError interface
+var _ HTTPError = (*httpError)(nil)
+
 type HTTPError interface {
 	Error() string
 	UserFriendlyMessage() string
 	StatusCode() int
 }
 
-// HTTPError interface implementation
-type HTTPErr struct {
+// HTTPError implementation.
+type httpError struct {
 	statusCode int
 	message    string
 	causeErr   error
 }
 
-// HTTPError constructor
-func NewHTTPError(statusCode int, message string, causeErr error) HTTPError {
-	return &HTTPErr{
+func New(statusCode int, message string, causeErr error) HTTPError {
+	return &httpError{
 		statusCode: statusCode,
 		message:    message,
 		causeErr:   causeErr,
 	}
 }
 
-func (he HTTPErr) StatusCode() int {
+func (he httpError) StatusCode() int {
 	return he.statusCode
 }
 
-func (he HTTPErr) UserFriendlyMessage() string {
+func (he httpError) UserFriendlyMessage() string {
 	return he.message
 }
 
-func (he HTTPErr) Error() string {
+func (he httpError) Error() string {
 	return fmt.Sprintf("%s: %v", he.message, he.causeErr)
 }

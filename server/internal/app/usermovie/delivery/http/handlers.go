@@ -17,7 +17,7 @@ import (
 	"Filmer/server/internal/pkg/cache"
 	"Filmer/server/internal/pkg/jsonify"
 	"Filmer/server/internal/pkg/logger"
-	"Filmer/server/internal/pkg/utils"
+	"Filmer/server/internal/pkg/token"
 	"Filmer/server/internal/pkg/validator"
 )
 
@@ -85,7 +85,7 @@ func (umhm UserMovieHandlerManager) GetUserMovie() fiber.Handler {
 
 		// add necessary data to userMovie
 		// parse user ID from token from ctx
-		userMovie.UserID, err = utils.ParseUserIDFromContext(ctx)
+		userMovie.UserID, err = token.ParseUserIDFromContext(ctx)
 		if err != nil {
 			return fmt.Errorf("get movie info: %w", err)
 		}
@@ -193,7 +193,7 @@ func (umhm UserMovieHandlerManager) getMoviesWithCategory(ctx *fiber.Ctx,
 	}
 
 	// parse user ID from token from ctx
-	userMoviesWithCategory.UserID, err = utils.ParseUserIDFromContext(ctx)
+	userMoviesWithCategory.UserID, err = token.ParseUserIDFromContext(ctx)
 	if err != nil {
 		return fmt.Errorf("get movies from category %s: %w", userMoviesWithCategory.Category, err)
 	}

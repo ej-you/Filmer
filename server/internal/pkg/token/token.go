@@ -1,4 +1,5 @@
-package utils
+// Package token contains functions to obtain and parse JWT-tokens.
+package token
 
 import (
 	"fmt"
@@ -13,8 +14,10 @@ import (
 	"Filmer/server/internal/pkg/httperror"
 )
 
-// Generate new access token for user
-func ObtainToken(cfg *config.Config, userID uuid.UUID) (string, error) {
+const _accessTokenCtxKey = "accessToken" // key for access token value in fiber context
+
+// NewToken generates new access token for user.
+func New(cfg *config.Config, userID uuid.UUID) (string, error) {
 	tokenStruct := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": userID,
 		"exp": time.Now().UTC().Add(cfg.App.TokenExpired).Unix(),
@@ -22,36 +25,36 @@ func ObtainToken(cfg *config.Config, userID uuid.UUID) (string, error) {
 
 	tokenString, err := tokenStruct.SignedString([]byte(cfg.App.JwtSecret))
 	if err != nil {
-		return "", httperror.NewHTTPError(http.StatusInternalServerError,
+		return "", httperror.New(http.StatusInternalServerError,
 			"failed to obtain token", err)
 	}
 	return tokenString, nil
 }
 
-// Parse user ID from token saved in context
+// ParseUserIDFromContext parses user ID from token saved in context.
 func ParseUserIDFromContext(ctx *fiber.Ctx) (uuid.UUID, error) {
 	// parse token from ctx
-	accessToken, ok := ctx.Locals("accessToken").(*jwt.Token)
+	accessToken, ok := ctx.Locals(_accessTokenCtxKey).(*jwt.Token)
 	if !ok {
-		return uuid.Nil, httperror.NewHTTPError(http.StatusInternalServerError,
+		return uuid.Nil, httperror.New(http.StatusInternalServerError,
 			"failed to parse access token", fmt.Errorf("failed to parse access token"))
 	}
 	// parse user ID from token as string
 	stringUserID, err := accessToken.Claims.GetSubject()
 	if err != nil {
-		return uuid.Nil, httperror.NewHTTPError(http.StatusInternalServerError,
+		return uuid.Nil, httperror.New(http.StatusInternalServerError,
 			"failed to parse user id from token", err)
 	}
 	// convert string user ID to UUID
 	uuidUserID, err := uuid.Parse(stringUserID)
 	if err != nil {
-		return uuid.Nil, httperror.NewHTTPError(http.StatusInternalServerError,
+		return uuid.Nil, httperror.New(http.StatusInternalServerError,
 			"failed to parse user id", err)
 	}
 	return uuidUserID, nil
 }
 
-// Parse token saved in context
+// ParseRawTokenFromContext parses token saved in context
 func ParseRawTokenFromContext(ctx *fiber.Ctx) string {
-	return ctx.Locals("accessToken").(*jwt.Token).Raw
+	return ctx.Locals(_accessTokenCtxKey).(*jwt.Token).Raw
 }

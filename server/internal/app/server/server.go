@@ -18,9 +18,9 @@ import (
 	userMovieHTTP "Filmer/server/internal/app/usermovie/delivery/http"
 	"Filmer/server/internal/pkg/cache"
 	"Filmer/server/internal/pkg/database"
+	"Filmer/server/internal/pkg/errhandler"
 	"Filmer/server/internal/pkg/jsonify"
 	"Filmer/server/internal/pkg/logger"
-	"Filmer/server/internal/pkg/utils"
 	"Filmer/server/internal/pkg/validator"
 )
 
@@ -70,7 +70,7 @@ func (s fiberServer) Run() error {
 	// app init
 	fiberApp := fiber.New(fiber.Config{
 		AppName:      fmt.Sprintf("%s v1.0.0", s.cfg.App.Name),
-		ErrorHandler: utils.CustomErrorHandler,
+		ErrorHandler: errhandler.CustomErrorHandler,
 		JSONEncoder:  s.jsonify.Marshal,
 		JSONDecoder:  s.jsonify.Unmarshal,
 		// https://www.f5.com/company/blog/nginx/socket-sharding-nginx-release-1-9-1
@@ -83,7 +83,7 @@ func (s fiberServer) Run() error {
 	// cache init
 	appCache := cache.NewCache(s.cfg, s.log)
 	// input data validator init
-	validator := validator.NewValidator()
+	validator := validator.New()
 
 	// set up base middlewares
 	mwManager := middlewares.NewMiddlewareManager(s.cfg, appDB, appCache)

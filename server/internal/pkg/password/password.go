@@ -1,4 +1,5 @@
-package utils
+// Package password provides functions for working passwords and its hashes.
+package password
 
 import (
 	"net/http"
@@ -8,20 +9,20 @@ import (
 	"Filmer/server/internal/pkg/httperror"
 )
 
-// Encode given password
+// Encode encodes given password
 // Returns encoded password like a hash
-func EncodePassword(password []byte) ([]byte, error) {
+func Encode(password []byte) ([]byte, error) {
 	hash, err := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
 	if err != nil {
 		// probably, password is too long
-		return nil, httperror.NewHTTPError(http.StatusBadRequest, "failed to encode password", err)
+		return nil, httperror.New(http.StatusBadRequest, "failed to encode password", err)
 	}
 	return hash, nil
 }
 
-// Check the given password is equal to its hash from DB
+// IsCorrect checks the given password is equal to its hash from DB
 // Returns true, if password is equal
-func PasswordIsCorrect(password, hash []byte) bool {
+func IsCorrect(password, hash []byte) bool {
 	err := bcrypt.CompareHashAndPassword(hash, password)
 	return err == nil
 }

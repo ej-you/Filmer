@@ -34,9 +34,9 @@ func (r dbRepo) CreateUser(user *entity.User) error {
 	if err := createResult.Error; err != nil {
 		// if user with such email already exists
 		if strings.HasSuffix(err.Error(), "(SQLSTATE 23505)") {
-			return httperror.NewHTTPError(http.StatusConflict, "user with such email already exists", err)
+			return httperror.New(http.StatusConflict, "user with such email already exists", err)
 		}
-		return httperror.NewHTTPError(http.StatusInternalServerError, "failed to create user", err)
+		return httperror.New(http.StatusInternalServerError, "failed to create user", err)
 	}
 	return nil
 }
@@ -50,9 +50,9 @@ func (r dbRepo) GetUserByEmail(user *entity.User) error {
 	if err := selectResult.Error; err != nil {
 		// if user nof found error
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return httperror.NewHTTPError(http.StatusNotFound, "user with such email was not found", err)
+			return httperror.New(http.StatusNotFound, "user with such email was not found", err)
 		}
-		return httperror.NewHTTPError(http.StatusInternalServerError, "failed to get user by email", err)
+		return httperror.New(http.StatusInternalServerError, "failed to get user by email", err)
 	}
 	return nil
 }

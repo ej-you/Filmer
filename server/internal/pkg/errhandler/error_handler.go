@@ -1,4 +1,5 @@
-package utils
+// Package errhandler contains customa error handler func for fiber server.
+package errhandler
 
 import (
 	"errors"

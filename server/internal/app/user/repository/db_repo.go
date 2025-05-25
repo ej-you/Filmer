@@ -34,9 +34,9 @@ func (r dbRepo) GetUserByID(user *entity.User) error {
 	if err := selectResult.Error; err != nil {
 		// if user nof found error
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return httperror.NewHTTPError(http.StatusNotFound, "user with such id was not found", err)
+			return httperror.New(http.StatusNotFound, "user with such id was not found", err)
 		}
-		return httperror.NewHTTPError(http.StatusInternalServerError, "failed to get user by id", err)
+		return httperror.New(http.StatusInternalServerError, "failed to get user by id", err)
 	}
 	return nil
 }
@@ -46,7 +46,7 @@ func (r dbRepo) UpdateUser(user *entity.User) error {
 	// save user in DB
 	updateResult := r.dbClient.Save(user)
 	if err := updateResult.Error; err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError, "failed to full update user", err)
+		return httperror.New(http.StatusInternalServerError, "failed to full update user", err)
 	}
 	return nil
 }

@@ -1,3 +1,4 @@
+// Package logger provides Logger interface to log with different levels.
 package logger
 
 import (
@@ -7,7 +8,9 @@ import (
 	"Filmer/server/config"
 )
 
-// Logger interface
+var _ Logger = (*appLogger)(nil)
+
+// Logger interface.
 type Logger interface {
 	Debug(args ...any)
 	Debugf(template string, args ...any)
@@ -19,7 +22,7 @@ type Logger interface {
 	Fatalf(template string, args ...any)
 }
 
-// Logger implementation
+// Logger implementation.
 type appLogger struct {
 	debugLog *log.Logger
 	infoLog  *log.Logger
@@ -29,7 +32,6 @@ type appLogger struct {
 var once sync.Once
 var logger = new(appLogger)
 
-// Logger constructor
 func NewLogger(cfg *config.Config) Logger {
 	once.Do(func() {
 		logger.debugLog = log.New(cfg.LogOutput.Info, "[DEBUG]\t", log.Ldate|log.Ltime)

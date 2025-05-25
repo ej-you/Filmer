@@ -1,3 +1,4 @@
+// Package validator provides Validator interface to validate any struct.
 package validator
 
 import (
@@ -14,19 +15,20 @@ import (
 	"Filmer/server/internal/pkg/httperror"
 )
 
-// Validator interface for HTTP requests to REST API
+var _ Validator = (*appValidator)(nil)
+
+// Validator interface for HTTP requests to REST API.
 type Validator interface {
 	Validate(s any) error
 }
 
-// Validator implementation
-type restValidator struct {
+// Validator implementation.
+type appValidator struct {
 	validatorInstance *govalidator.Validate
 	translator        ut.Translator
 }
 
-// Validator constructor
-func NewValidator() Validator {
+func New() Validator {
 	en := enlocale.New()
 	uni := ut.New(en, en)
 	trans, _ := uni.GetTranslator("en")
@@ -37,11 +39,11 @@ func NewValidator() Validator {
 		panic(err)
 	}
 
-	return &restValidator{validate, trans}
+	return &appValidator{validate, trans}
 }
 
-// Validate given struct s (using pointer to this struct) with error handling to HTTPError
-func (v restValidator) Validate(s any) error {
+// Validate validates given struct s (using pointer to this struct) and returns validate errors.
+func (v appValidator) Validate(s any) error {
 	err := v.validatorInstance.Struct(s)
 	if err == nil { // NOT err
 		return nil
@@ -62,6 +64,6 @@ func (v restValidator) Validate(s any) error {
 	}
 
 	errMsg := strings.Join(transtaledStringSlice, " && ")
-	return httperror.NewHTTPError(http.StatusBadRequest,
+	return httperror.New(http.StatusBadRequest,
 		errMsg, fmt.Errorf("validate error"))
 }

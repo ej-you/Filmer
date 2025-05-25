@@ -31,7 +31,7 @@ func NewCacheRepository(cfg *config.Config, cacheClient cache.Cache) auth.CacheR
 func (acr authCacheRepository) SetTokenToBlacklist(token string) error {
 	err := acr.cacheClient.Set(blacklistKeyPrefix+token, "true", acr.cfg.App.TokenExpired)
 	if err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError,
+		return httperror.New(http.StatusInternalServerError,
 			"failed to add token to blacklist", err)
 	}
 	return nil
@@ -42,7 +42,7 @@ func (acr authCacheRepository) SetTokenToBlacklist(token string) error {
 func (acr authCacheRepository) TokenIsBlacklisted(token string) (bool, error) {
 	isBlacklisted, err := acr.cacheClient.GetBool(blacklistKeyPrefix + token)
 	if err != nil {
-		return false, httperror.NewHTTPError(http.StatusInternalServerError,
+		return false, httperror.New(http.StatusInternalServerError,
 			"failed to get blacklisted token", err)
 	}
 	return isBlacklisted, nil

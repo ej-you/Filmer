@@ -1,3 +1,4 @@
+// Package jsonify provides JSONify interface to marshal/unmarshal any structs.
 package jsonify
 
 import (
@@ -6,30 +7,28 @@ import (
 	"github.com/mailru/easyjson"
 )
 
-// JSON-serializer interface
 type JSONify interface {
-	Marshal(v interface{}) ([]byte, error)
-	Unmarshal(data []byte, v interface{}) error
+	Marshal(v any) ([]byte, error)
+	Unmarshal(data []byte, v any) error
 }
 
-// easyjson JSON-serializer
+// Easyjson JSON-serializer.
 type easyjsonJSONify struct{}
 
-// JSONify constructor
 func NewJSONify() JSONify {
 	return new(easyjsonJSONify)
 }
 
-// serialize JSON with easyjson
-func (ej easyjsonJSONify) Marshal(v interface{}) ([]byte, error) {
+// Marshal serializes JSON with easyjson.
+func (ej easyjsonJSONify) Marshal(v any) ([]byte, error) {
 	if m, ok := v.(easyjson.Marshaler); ok {
 		return easyjson.Marshal(m)
 	}
 	return nil, fmt.Errorf("the entity to serialize does not implement easyjson.Marshaler")
 }
 
-// deserialize JSON with easyjson
-func (ej easyjsonJSONify) Unmarshal(data []byte, v interface{}) error {
+// Unmarshal deserializes JSON with easyjson.
+func (ej easyjsonJSONify) Unmarshal(data []byte, v any) error {
 	if um, ok := v.(easyjson.Unmarshaler); ok {
 		return easyjson.Unmarshal(data, um)
 	}

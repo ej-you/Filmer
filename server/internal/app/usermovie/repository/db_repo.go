@@ -41,7 +41,7 @@ func (r dbRepo) GetUserMovie(userMovie *entity.UserMovie) (bool, error) {
 	if err := selectResult.Error; err != nil {
 		// if NOT "Not found" error
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
-			return false, httperror.NewHTTPError(http.StatusInternalServerError,
+			return false, httperror.New(http.StatusInternalServerError,
 				"failed to get user movie", err)
 		}
 		return false, nil
@@ -55,7 +55,7 @@ func (r dbRepo) GetUserMovie(userMovie *entity.UserMovie) (bool, error) {
 func (r dbRepo) FindOrCreateUserMovie(userMovie *entity.UserMovie) error {
 	selectResult := r.dbClient.Where(userMovie).FirstOrCreate(userMovie)
 	if err := selectResult.Error; err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError,
+		return httperror.New(http.StatusInternalServerError,
 			"failed to find or create user movie", err)
 	}
 	return nil
@@ -69,7 +69,7 @@ func (r dbRepo) UpdateUserMovieStared(userMovie *entity.UserMovie, newStared boo
 	// update stared
 	updateResult := r.dbClient.Model(userMovie).Update("stared", newStared)
 	if err := updateResult.Error; err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError,
+		return httperror.New(http.StatusInternalServerError,
 			"failed to update stared field of user movie", err)
 	}
 	return nil
@@ -83,7 +83,7 @@ func (r dbRepo) UpdateUserMovieStatus(userMovie *entity.UserMovie, newStatus int
 	// update status
 	updateResult := r.dbClient.Model(userMovie).Update("status", newStatus)
 	if err := updateResult.Error; err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError,
+		return httperror.New(http.StatusInternalServerError,
 			"failed to update status field of user movie", err)
 	}
 	return nil
@@ -128,7 +128,7 @@ func (r dbRepo) GetUserMoviesWithCategory(
 	// do select query
 	selectResult := selectQuery.Find(&userMoviesWithCategory.UserMovies)
 	if err := selectResult.Error; err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError,
+		return httperror.New(http.StatusInternalServerError,
 			"failed to get user movies with category", err)
 	}
 	return nil

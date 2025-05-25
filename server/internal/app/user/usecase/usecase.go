@@ -9,7 +9,7 @@ import (
 	"Filmer/server/internal/app/entity"
 	"Filmer/server/internal/app/user"
 	"Filmer/server/internal/pkg/httperror"
-	"Filmer/server/internal/pkg/utils"
+	"Filmer/server/internal/pkg/password"
 )
 
 var _ user.Usecase = (*usecase)(nil)
@@ -40,19 +40,19 @@ func (u usecase) ChangePassword(user *entity.User, newPassword []byte) error {
 		return fmt.Errorf("user usecase.ChangePassword: %w", err)
 	}
 	// check entered password is correct
-	if !utils.PasswordIsCorrect(enteredPasswd, user.Password) {
-		return httperror.NewHTTPError(http.StatusBadRequest,
+	if !password.IsCorrect(enteredPasswd, user.Password) {
+		return httperror.New(http.StatusBadRequest,
 			"invalid current password", fmt.Errorf("user usecase.ChangePassword"))
 	}
 	// if a newPassword is equal to the current user password
 	if bytes.Equal(newPassword, enteredPasswd) {
-		return httperror.NewHTTPError(http.StatusBadRequest,
+		return httperror.New(http.StatusBadRequest,
 			"cannot use the current password as a new password",
 			fmt.Errorf("user usecase.ChangePassword"))
 	}
 
 	// hash new user password
-	user.Password, err = utils.EncodePassword(newPassword)
+	user.Password, err = password.Encode(newPassword)
 	if err != nil {
 		return fmt.Errorf("user usecase.ChangePassword: %w", err)
 	}

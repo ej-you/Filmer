@@ -13,7 +13,7 @@ import (
 	"Filmer/server/internal/app/auth/usecase"
 	"Filmer/server/internal/app/entity"
 	"Filmer/server/internal/pkg/cache"
-	"Filmer/server/internal/pkg/utils"
+	"Filmer/server/internal/pkg/token"
 	"Filmer/server/internal/pkg/validator"
 )
 
@@ -122,7 +122,7 @@ func (ahm AuthHandlerManager) Login() fiber.Handler {
 func (ahm AuthHandlerManager) Logout() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		// parse access token
-		token := utils.ParseRawTokenFromContext(ctx)
+		token := token.ParseRawTokenFromContext(ctx)
 
 		// put token to blacklist
 		if err := ahm.authUC.Logout(token); err != nil {

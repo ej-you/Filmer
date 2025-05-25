@@ -62,7 +62,7 @@ func (u usecase) UpdateUserMovieStared(userMovie *entity.UserMovie, newStared bo
 	}
 	// if movie was not found
 	if !exists {
-		return httperror.NewHTTPError(http.StatusNotFound,
+		return httperror.New(http.StatusNotFound,
 			"movie was not found", fmt.Errorf("change movie stared to %v", newStared))
 	}
 
@@ -98,7 +98,7 @@ func (u usecase) UpdateUserMovieStatus(userMovie *entity.UserMovie, newStatus in
 	}
 	// if movie was not found
 	if !exists {
-		return httperror.NewHTTPError(http.StatusNotFound,
+		return httperror.New(http.StatusNotFound,
 			"movie was not found", fmt.Errorf("change movie status to %v", newStatus))
 	}
 
@@ -126,7 +126,7 @@ func (u usecase) UpdateUserMovieStatus(userMovie *entity.UserMovie, newStatus in
 func (u usecase) GetUserMoviesWithCategory(userMoviesCat *entity.UserMoviesWithCategory) error {
 	category := userMoviesCat.Category
 	if category != "want" && category != "watched" && category != "stared" {
-		return httperror.NewHTTPError(http.StatusInternalServerError,
+		return httperror.New(http.StatusInternalServerError,
 			"invalid movies category", fmt.Errorf("invalid movies category"))
 	}
 	if err := u.usermovieDBRepo.GetUserMoviesWithCategory(userMoviesCat); err != nil {

@@ -1,3 +1,5 @@
+// Package kinopoisk provides interface for sending requests and
+// parse responses from kinopoisk API.
 package kinopoisk
 
 import (
@@ -54,22 +56,22 @@ func (a apiGet) parseError(resp *http.Response) error {
 
 	// if 404 error code
 	if resp.StatusCode == http.StatusNotFound {
-		return httperror.NewHTTPError(http.StatusNotFound,
+		return httperror.New(http.StatusNotFound,
 			"movie not found", fmt.Errorf("got not found error"))
 	}
 
 	bytesErrorMessage, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError,
+		return httperror.New(http.StatusInternalServerError,
 			"parse error: failed to read error answer", err)
 	}
 	// decode response to struct
 	if err := a.jsonify.Unmarshal(bytesErrorMessage, &rawErr); err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError,
+		return httperror.New(http.StatusInternalServerError,
 			"parse error: failed to decode error answer", err)
 	}
 	// return processed error
-	return httperror.NewHTTPError(resp.StatusCode,
+	return httperror.New(resp.StatusCode,
 		rawErr.Message, fmt.Errorf("parsed error"))
 }
 
@@ -80,7 +82,7 @@ func (a apiGet) SendGET(outStruct any) error {
 	// create request
 	req, err := http.NewRequest("GET", a.url, http.NoBody)
 	if err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError,
+		return httperror.New(http.StatusInternalServerError,
 			"failed to send request", err)
 	}
 	// add API key to request headers
@@ -102,13 +104,13 @@ func (a apiGet) SendGET(outStruct any) error {
 	// wrap request for auto-retry
 	retryReq, err := retryHTTP.FromRequest(req)
 	if err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError,
+		return httperror.New(http.StatusInternalServerError,
 			"failed to wrap request for retry", err)
 	}
 	// send request
 	resp, err := client.Do(retryReq)
 	if err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError,
+		return httperror.New(http.StatusInternalServerError,
 			"failed to do request", err)
 	}
 	defer resp.Body.Close()
@@ -120,11 +122,11 @@ func (a apiGet) SendGET(outStruct any) error {
 	// if request is success - decode reqponse to struct
 	bytesData, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError,
+		return httperror.New(http.StatusInternalServerError,
 			"failed to read answer", err)
 	}
 	if err := a.jsonify.Unmarshal(bytesData, outStruct); err != nil {
-		return httperror.NewHTTPError(http.StatusInternalServerError,
+		return httperror.New(http.StatusInternalServerError,
 			"failed to decode answer", err)
 	}
 	return nil

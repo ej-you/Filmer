@@ -7,7 +7,7 @@ import (
 	fiber "github.com/gofiber/fiber/v2"
 
 	"Filmer/server/internal/app/entity"
-	"Filmer/server/internal/pkg/utils"
+	"Filmer/server/internal/pkg/token"
 )
 
 const (
@@ -119,7 +119,7 @@ func (umhm UserMovieHandlerManager) changeMovieStared(ctx *fiber.Ctx, newStared 
 	}
 	// add necessary data to userMovie
 	// parse user ID from token from ctx
-	userMovie.UserID, err = utils.ParseUserIDFromContext(ctx)
+	userMovie.UserID, err = token.ParseUserIDFromContext(ctx)
 	if err != nil {
 		return fmt.Errorf("change movie stared to %v: %w", newStared, err)
 	}
@@ -151,7 +151,7 @@ func (umhm UserMovieHandlerManager) changeMovieStatus(ctx *fiber.Ctx, newStatus 
 	}
 	// add necessary data to userMovie
 	// parse user ID from token from ctx
-	userMovie.UserID, err = utils.ParseUserIDFromContext(ctx)
+	userMovie.UserID, err = token.ParseUserIDFromContext(ctx)
 	if err != nil {
 		return fmt.Errorf("change movie status to %v: %w", newStatus, err)
 	}
