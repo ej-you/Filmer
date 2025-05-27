@@ -114,7 +114,6 @@ func filterRawMovieList(rawMovieList []rawPersonFullMovie) (
 
 // Full processing of "actor" or "director" person movie list.
 func processFilteredMovieList(filteredMovieList []rawPersonFullMovie) []entity.PersonFullMovie {
-
 	// skip movie list if movies count is too small
 	if len(filteredMovieList) < personMoviesMinLimit {
 		return nil
