@@ -6,7 +6,7 @@ import (
 
 	cli "github.com/urfave/cli/v3"
 
-	"Filmer/server/pkg/migrate"
+	"Filmer/server/internal/pkg/migrate"
 )
 
 // Down command instance.
@@ -31,17 +31,19 @@ func NewDown(migrateManager migrate.Migrate) *cli.Command {
 // Handler for down command.
 func newDownAction(migrateManager migrate.Migrate) cli.ActionFunc {
 	return func(_ context.Context, cmd *cli.Command) error {
+		var err error
 		step := cmd.Int("n")
+
 		if step == 0 {
 			fmt.Println("Rollback all migrations...")
-			if err := migrateManager.Down(); err != nil {
-				return err
-			}
+			err = migrateManager.Down()
 		} else {
 			fmt.Printf("Rollback %d migrations... \n", step)
-			if err := migrateManager.Step(-step); err != nil {
-				return err
-			}
+			err = migrateManager.Step(-step)
+		}
+
+		if err != nil {
+			return err
 		}
 		fmt.Println("Successfully!")
 		return nil

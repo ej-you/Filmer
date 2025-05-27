@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"Filmer/server/config"
-	"Filmer/server/internal/server"
+	"Filmer/server/internal/app/server"
 )
 
 func main() {

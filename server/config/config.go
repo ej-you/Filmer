@@ -26,7 +26,7 @@ type (
 		LogDir             string        `env:"LOG_DIR" env-default:"." env-description:"directory for log files (default: .)"`
 		CorsAllowedOrigins string        `env-required:"true" env:"SERVER_CORS_ALLOWED_ORIGINS" env-description:"cors allowed origins"`
 		CorsAllowedMethods string        `env-required:"true" env:"SERVER_CORS_ALLOWED_METHODS" env-description:"cors allowed methods"`
-		JwtSecret          string        `env-required:"true" env:"JWT_SECRET" env-description:"secret for JWT-token signature"`
+		JwtSecret          []byte        `env-required:"true" env:"JWT_SECRET" env-description:"secret for JWT-token signature"`
 		TokenExpired       time.Duration `env:"TOKEN_EXPIRED" env-default:"30m" env-description:"JWT-token expired duration (default: 30m)"`
 		KeepAliveTimeout   time.Duration `env:"KEEP_ALIVE_TIMEOUT" env-default:"60s"`
 	}

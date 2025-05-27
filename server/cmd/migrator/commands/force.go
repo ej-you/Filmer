@@ -6,7 +6,7 @@ import (
 
 	cli "github.com/urfave/cli/v3"
 
-	"Filmer/server/pkg/migrate"
+	"Filmer/server/internal/pkg/migrate"
 )
 
 // Force command instance.

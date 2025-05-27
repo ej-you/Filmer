@@ -11,7 +11,7 @@ import (
 
 	"Filmer/server/cmd/migrator/commands"
 	"Filmer/server/config"
-	"Filmer/server/pkg/migrate"
+	"Filmer/server/internal/pkg/migrate"
 )
 
 func main() {
@@ -27,7 +27,8 @@ func startMigrator() error {
 		return err
 	}
 	// create migrate manager
-	migrateManager, err := migrate.NewCockroachMigrate(cfg.Database.MigrationsURL, cfg.Database.ConnURL)
+	migrateManager, err := migrate.NewCockroachMigrate(
+		cfg.Database.MigrationsURL, cfg.Database.ConnURL)
 	if err != nil {
 		return err
 	}

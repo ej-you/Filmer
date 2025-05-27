@@ -6,7 +6,7 @@ import (
 
 	cli "github.com/urfave/cli/v3"
 
-	"Filmer/server/pkg/migrate"
+	"Filmer/server/internal/pkg/migrate"
 )
 
 // Up command instance.
@@ -31,18 +31,19 @@ func NewUp(migrateManager migrate.Migrate) *cli.Command {
 // Handler for up command.
 func newUpAction(migrateManager migrate.Migrate) cli.ActionFunc {
 	return func(_ context.Context, cmd *cli.Command) error {
+		var err error
 		step := cmd.Int("n")
 
 		if step == 0 {
 			fmt.Println("Apply all migrations...")
-			if err := migrateManager.Up(); err != nil {
-				return err
-			}
+			err = migrateManager.Up()
 		} else {
 			fmt.Printf("Apply %d migrations... \n", step)
-			if err := migrateManager.Step(step); err != nil {
-				return err
-			}
+			err = migrateManager.Step(step)
+		}
+
+		if err != nil {
+			return err
 		}
 		fmt.Println("Successfully!")
 		return nil
