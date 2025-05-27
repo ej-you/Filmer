@@ -95,7 +95,7 @@ func (m middlewareManager) Swagger() fiber.Handler {
 func (m middlewareManager) JWTAuth() fiber.Handler {
 	return fiberJWT.New(fiberJWT.Config{
 		ContextKey:     "accessToken",
-		SigningKey:     fiberJWT.SigningKey{Key: []byte(m.cfg.App.JwtSecret)},
+		SigningKey:     fiberJWT.SigningKey{Key: m.cfg.App.JwtSecret},
 		SuccessHandler: m.checkBlacklistedToken(),
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
 			switch {
