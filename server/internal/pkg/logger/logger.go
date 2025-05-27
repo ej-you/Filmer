@@ -20,6 +20,8 @@ type Logger interface {
 	Errorf(template string, args ...any)
 	Fatal(args ...any)
 	Fatalf(template string, args ...any)
+
+	Printf(template string, args ...any)
 }
 
 // Logger implementation.
@@ -71,4 +73,9 @@ func (l appLogger) Fatal(args ...any) {
 
 func (l appLogger) Fatalf(template string, args ...any) {
 	l.errorLog.Fatalf(template, args...)
+}
+
+// Printf implements database.Logger.
+func (l appLogger) Printf(template string, args ...any) {
+	l.Infof(template, args...)
 }

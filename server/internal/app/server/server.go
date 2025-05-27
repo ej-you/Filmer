@@ -79,7 +79,14 @@ func (s fiberServer) Run() error {
 	})
 
 	// DB client init
-	appDB := database.NewCockroachClient(s.cfg, s.log)
+	appDB, err := database.New(s.cfg.Database.ConnString,
+		database.WithLogger(s.log),
+		database.WithWarnLogLevel(),
+		database.WithDisableColorful(),
+		database.WithIgnoreNotFound())
+	if err != nil {
+		return err
+	}
 	// cache init
 	appCache := cache.NewCache(s.cfg, s.log)
 	// input data validator init
