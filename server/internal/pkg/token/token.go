@@ -10,20 +10,19 @@ import (
 	jwt "github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 
-	"Filmer/server/config"
 	"Filmer/server/internal/pkg/httperror"
 )
 
 const _accessTokenCtxKey = "accessToken" // key for access token value in fiber context
 
 // NewToken generates new access token for user.
-func New(cfg *config.Config, userID uuid.UUID) (string, error) {
+func New(secretKey []byte, expireDuration time.Duration, userID uuid.UUID) (string, error) {
 	tokenStruct := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": userID,
-		"exp": time.Now().UTC().Add(cfg.App.TokenExpired).Unix(),
+		"exp": time.Now().UTC().Add(expireDuration).Unix(),
 	})
 
-	tokenString, err := tokenStruct.SignedString([]byte(cfg.App.JwtSecret))
+	tokenString, err := tokenStruct.SignedString(secretKey)
 	if err != nil {
 		return "", httperror.New(http.StatusInternalServerError,
 			"failed to obtain token", err)

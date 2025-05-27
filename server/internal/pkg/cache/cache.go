@@ -8,13 +8,17 @@ import (
 	"time"
 
 	goredis "github.com/redis/go-redis/v9"
-
-	"Filmer/server/config"
-	"Filmer/server/internal/pkg/logger"
 )
 
-const checkConnCtxTimeout = 5 * time.Second // timeout for check conn ctx
-const cacheIOCtxTimeout = 2 * time.Second   // timeout for ctx for set/get funcs
+const (
+	checkConnCtxTimeout = 5 * time.Second // timeout for check conn ctx
+	cacheIOCtxTimeout   = 2 * time.Second // timeout for ctx for set/get funcs
+)
+
+// Internal interface used only for success connection log output.
+type Logger interface {
+	Printf(format string, args ...any)
+}
 
 // Cache interface for app cache
 type Cache interface {
@@ -25,7 +29,6 @@ type Cache interface {
 
 // Cache implementation through Redis
 type redisCache struct {
-	cfg   *config.Config
 	redis *goredis.Client
 }
 
@@ -33,13 +36,11 @@ var redisCacheInstance redisCache
 var once sync.Once
 
 // Cache constructor
-func NewCache(cfg *config.Config, log logger.Logger) Cache {
+func NewCache(connString string, log Logger) Cache {
 	once.Do(func() {
-		log.Infof("Process %d is connecting to redis on %s...", os.Getpid(), cfg.Cache.ConnString)
-
 		// create new client
 		redisCacheInstance.redis = goredis.NewClient(&goredis.Options{
-			Addr: cfg.Cache.ConnString,
+			Addr: connString,
 			DB:   0,
 		})
 		// redis requests context контекст для выполнения запросов к redis
@@ -51,9 +52,7 @@ func NewCache(cfg *config.Config, log logger.Logger) Cache {
 		if err != nil {
 			panic(err)
 		}
-		log.Infof("Process %d successfully connected to redis: PING - %s", os.Getpid(), pong)
-
-		redisCacheInstance.cfg = cfg
+		log.Printf("Process %d successfully connected to redis: PING - %s", os.Getpid(), pong)
 	})
 	return &redisCacheInstance
 }

@@ -51,7 +51,7 @@ func (u usecase) SignUp(user *entity.User) (*entity.UserWithToken, error) {
 	}
 
 	// generate access token
-	accessToken, err := token.New(u.cfg, user.ID)
+	accessToken, err := token.New(u.cfg.JwtSecret, u.cfg.TokenExpired, user.ID)
 	if err != nil {
 		return nil, fmt.Errorf("authUsecase.SignUp: %w", err)
 	}
@@ -82,7 +82,7 @@ func (u usecase) Login(user *entity.User) (*entity.UserWithToken, error) {
 	}
 
 	// generate access token
-	accessToken, err := token.New(u.cfg, user.ID)
+	accessToken, err := token.New(u.cfg.JwtSecret, u.cfg.TokenExpired, user.ID)
 	if err != nil {
 		return nil, fmt.Errorf("authUsecase.Login: %w", err)
 	}

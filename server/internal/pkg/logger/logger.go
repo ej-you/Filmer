@@ -2,10 +2,9 @@
 package logger
 
 import (
+	"io"
 	"log"
 	"sync"
-
-	"Filmer/server/config"
 )
 
 var _ Logger = (*appLogger)(nil)
@@ -34,11 +33,11 @@ type appLogger struct {
 var once sync.Once
 var logger = new(appLogger)
 
-func NewLogger(cfg *config.Config) Logger {
+func NewLogger(debugWriter, infoWriter, errorWriter io.Writer) Logger {
 	once.Do(func() {
-		logger.debugLog = log.New(cfg.LogOutput.Info, "[DEBUG]\t", log.Ldate|log.Ltime)
-		logger.infoLog = log.New(cfg.LogOutput.Info, "[INFO]\t", log.Ldate|log.Ltime)
-		logger.errorLog = log.New(cfg.LogOutput.Error, "[ERROR]\t", log.Ldate|log.Ltime)
+		logger.debugLog = log.New(debugWriter, "[DEBUG]\t", log.Ldate|log.Ltime)
+		logger.infoLog = log.New(infoWriter, "[INFO]\t", log.Ldate|log.Ltime)
+		logger.errorLog = log.New(errorWriter, "[ERROR]\t", log.Ldate|log.Ltime)
 	})
 	return logger
 }

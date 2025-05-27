@@ -15,7 +15,7 @@ func TestLogger(t *testing.T) {
 	}
 
 	fMessage := "message"
-	logger := NewLogger(cfg)
+	logger := NewLogger(cfg.LogOutput.Info, cfg.LogOutput.Info, cfg.LogOutput.Error)
 	t.Logf("logger type: %T", logger)
 
 	logger.Debug("debug sample")

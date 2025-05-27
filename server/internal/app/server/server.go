@@ -42,7 +42,7 @@ type fiberServer struct {
 func New(cfg *config.Config) Server {
 	return &fiberServer{
 		cfg:     cfg,
-		log:     logger.NewLogger(cfg),
+		log:     logger.NewLogger(cfg.LogOutput.Info, cfg.LogOutput.Info, cfg.LogOutput.Error),
 		jsonify: jsonify.NewJSONify(),
 	}
 }
@@ -88,7 +88,7 @@ func (s fiberServer) Run() error {
 		return err
 	}
 	// cache init
-	appCache := cache.NewCache(s.cfg, s.log)
+	appCache := cache.NewCache(s.cfg.Cache.ConnString, s.log)
 	// input data validator init
 	validator := validator.New()
 
