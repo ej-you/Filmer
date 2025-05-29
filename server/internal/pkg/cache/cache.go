@@ -1,4 +1,3 @@
-// Package cache provides storage interface for caching data.
 package cache
 
 import (
@@ -9,16 +8,6 @@ import (
 
 	goredis "github.com/redis/go-redis/v9"
 )
-
-const (
-	checkConnCtxTimeout = 5 * time.Second // timeout for check conn ctx
-	cacheIOCtxTimeout   = 2 * time.Second // timeout for ctx for set/get funcs
-)
-
-// Internal interface used only for success connection log output.
-type Logger interface {
-	Printf(format string, args ...any)
-}
 
 // Cache interface for app cache
 type Cache interface {
