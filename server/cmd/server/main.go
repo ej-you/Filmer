@@ -21,10 +21,10 @@ func startApp() error {
 		return err
 	}
 	// init server
-	server := server.New(cfg)
-	// if err != nil {
-	// 	return err
-	// }
+	server, err := server.New(cfg)
+	if err != nil {
+		return err
+	}
 	// run server
 	if err := server.Run(); err != nil {
 		return err

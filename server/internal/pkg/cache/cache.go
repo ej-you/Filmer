@@ -1,91 +1,80 @@
-// Package cache provides storage interface for caching data.
 package cache
 
-import (
-	"context"
-	"os"
-	"sync"
-	"time"
+// import (
+// 	"context"
+// 	"os"
+// 	"sync"
+// 	"time"
 
-	goredis "github.com/redis/go-redis/v9"
-)
+// 	goredis "github.com/redis/go-redis/v9"
+// )
 
-const (
-	checkConnCtxTimeout = 5 * time.Second // timeout for check conn ctx
-	cacheIOCtxTimeout   = 2 * time.Second // timeout for ctx for set/get funcs
-)
+// // Cache interface for app cache
+// type Cache interface {
+// 	Set(key string, value any, expiration time.Duration) error
+// 	GetBool(key string) (bool, error)
+// 	GetBytes(key string) ([]byte, error)
+// }
 
-// Internal interface used only for success connection log output.
-type Logger interface {
-	Printf(format string, args ...any)
-}
+// // Cache implementation through Redis
+// type redisCache struct {
+// 	redis *goredis.Client
+// }
 
-// Cache interface for app cache
-type Cache interface {
-	Set(key string, value any, expiration time.Duration) error
-	GetBool(key string) (bool, error)
-	GetBytes(key string) ([]byte, error)
-}
+// var redisCacheInstance redisCache
+// var once sync.Once
 
-// Cache implementation through Redis
-type redisCache struct {
-	redis *goredis.Client
-}
+// // Cache constructor
+// func NewCache(connString string, log Logger) Cache {
+// 	once.Do(func() {
+// 		// create new client
+// 		redisCacheInstance.redis = goredis.NewClient(&goredis.Options{
+// 			Addr: connString,
+// 			DB:   0,
+// 		})
+// 		// redis requests context контекст для выполнения запросов к redis
+// 		ctx, cancel := context.WithTimeout(context.Background(), checkConnCtxTimeout)
+// 		defer cancel()
 
-var redisCacheInstance redisCache
-var once sync.Once
+// 		// check connection
+// 		pong, err := redisCacheInstance.redis.Ping(ctx).Result()
+// 		if err != nil {
+// 			panic(err)
+// 		}
+// 		log.Printf("Process %d successfully connected to redis: PING - %s", os.Getpid(), pong)
+// 	})
+// 	return &redisCacheInstance
+// }
 
-// Cache constructor
-func NewCache(connString string, log Logger) Cache {
-	once.Do(func() {
-		// create new client
-		redisCacheInstance.redis = goredis.NewClient(&goredis.Options{
-			Addr: connString,
-			DB:   0,
-		})
-		// redis requests context контекст для выполнения запросов к redis
-		ctx, cancel := context.WithTimeout(context.Background(), checkConnCtxTimeout)
-		defer cancel()
+// // set key-value into redis with expiration time
+// func (rc redisCache) Set(key string, value any, expiration time.Duration) error {
+// 	ctx, cancel := context.WithTimeout(context.Background(), cacheIOCtxTimeout)
+// 	defer cancel()
+// 	return rc.redis.Set(ctx, key, value, expiration).Err()
+// }
 
-		// check connection
-		pong, err := redisCacheInstance.redis.Ping(ctx).Result()
-		if err != nil {
-			panic(err)
-		}
-		log.Printf("Process %d successfully connected to redis: PING - %s", os.Getpid(), pong)
-	})
-	return &redisCacheInstance
-}
+// // get bool value from redis with key
+// func (rc redisCache) GetBool(key string) (bool, error) {
+// 	ctx, cancel := context.WithTimeout(context.Background(), cacheIOCtxTimeout)
+// 	defer cancel()
+// 	value, err := rc.redis.Get(ctx, key).Bool()
 
-// set key-value into redis with expiration time
-func (rc redisCache) Set(key string, value any, expiration time.Duration) error {
-	ctx, cancel := context.WithTimeout(context.Background(), cacheIOCtxTimeout)
-	defer cancel()
-	return rc.redis.Set(ctx, key, value, expiration).Err()
-}
+// 	// if NOT "Not found" error
+// 	if err != nil && !goredis.HasErrorPrefix(err, "redis: nil") {
+// 		return false, err
+// 	}
+// 	return value, nil
+// }
 
-// get bool value from redis with key
-func (rc redisCache) GetBool(key string) (bool, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), cacheIOCtxTimeout)
-	defer cancel()
-	value, err := rc.redis.Get(ctx, key).Bool()
+// // get bytes value from redis with key
+// func (rc redisCache) GetBytes(key string) ([]byte, error) {
+// 	ctx, cancel := context.WithTimeout(context.Background(), cacheIOCtxTimeout)
+// 	defer cancel()
+// 	value, err := rc.redis.Get(ctx, key).Bytes()
 
-	// if NOT "Not found" error
-	if err != nil && !goredis.HasErrorPrefix(err, "redis: nil") {
-		return false, err
-	}
-	return value, nil
-}
-
-// get bytes value from redis with key
-func (rc redisCache) GetBytes(key string) ([]byte, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), cacheIOCtxTimeout)
-	defer cancel()
-	value, err := rc.redis.Get(ctx, key).Bytes()
-
-	// if NOT "Not found" error
-	if err != nil && !goredis.HasErrorPrefix(err, "redis: nil") {
-		return nil, err
-	}
-	return value, nil
-}
+// 	// if NOT "Not found" error
+// 	if err != nil && !goredis.HasErrorPrefix(err, "redis: nil") {
+// 		return nil, err
+// 	}
+// 	return value, nil
+// }

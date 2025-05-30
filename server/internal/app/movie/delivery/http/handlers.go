@@ -26,7 +26,7 @@ type MovieHandlerManager struct {
 }
 
 // MovieHandlerManager constructor
-func NewMovieHandlerManager(cfg *config.Config, jsonify jsonify.JSONify, logger logger.Logger, dbClient *gorm.DB, cache cache.Cache,
+func NewMovieHandlerManager(cfg *config.Config, jsonify jsonify.JSONify, logger logger.Logger, dbClient *gorm.DB, cache cache.Storage,
 	validator validator.Validator) *MovieHandlerManager {
 
 	movieRepo := repository.NewDBRepo(dbClient)

@@ -159,7 +159,7 @@ definitions:
         type: string
     type: object
   entity.PersonFullMovie:
-    description: person movies for person full info
+    description: person movie for person full info
     properties:
       id:
         description: movie kinopoisk ID
@@ -870,10 +870,10 @@ paths:
       summary: Поиск фильмов
       tags:
       - movie
-  /personal/full-info/{personID}:
+  /staff/full-info/{personID}:
     get:
       description: Получение информации о личности по её ID
-      operationId: kinopoisk-get-person-info
+      operationId: kinopoisk-get-staff-info
       parameters:
       - description: ID личности
         in: path
@@ -899,7 +899,7 @@ paths:
       - JWT: []
       summary: Получение информации о личности
       tags:
-      - personal
+      - staff
   /user/change-password:
     post:
       description: Установка нового пароля юзеру с подтверждением через старый пароль

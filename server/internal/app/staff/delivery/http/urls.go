@@ -8,22 +8,22 @@ import (
 )
 
 // Personal router.
-type PersonalRouter struct {
+type StaffRouter struct {
 	mwManager              middlewares.MiddlewareManager
-	personalHandlerManager *PersonalHandlerManager
+	personalHandlerManager *StaffHandlerManager
 }
 
-func NewPersonalRouter(mwManager middlewares.MiddlewareManager,
-	personalHandlerManager *PersonalHandlerManager) *PersonalRouter {
+func NewStaffRouter(mwManager middlewares.MiddlewareManager,
+	staffHandlerManager *StaffHandlerManager) *StaffRouter {
 
-	return &PersonalRouter{
+	return &StaffRouter{
 		mwManager:              mwManager,
-		personalHandlerManager: personalHandlerManager,
+		personalHandlerManager: staffHandlerManager,
 	}
 }
 
 // Set routes for handlers in mRouter.personalHandlerManager
-func (p PersonalRouter) SetRoutes(router fiber.Router) {
-	restricted := router.Use(p.mwManager.JWTAuth())
-	restricted.Get("/full-info/:personID", p.personalHandlerManager.GetPersonInfo())
+func (s StaffRouter) SetRoutes(router fiber.Router) {
+	restricted := router.Use(s.mwManager.JWTAuth(), s.mwManager.Cache())
+	restricted.Get("/full-info/:personID", s.personalHandlerManager.GetPersonInfo())
 }

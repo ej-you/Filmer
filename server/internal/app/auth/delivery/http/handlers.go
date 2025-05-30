@@ -23,12 +23,11 @@ type AuthHandlerManager struct {
 	authUC    auth.Usecase
 }
 
-// AuthHandlerManager constructor
-func NewAuthHandlerManager(cfg *config.Config, dbClient *gorm.DB, cacheClient cache.Cache,
+func NewAuthHandlerManager(cfg *config.Config, dbClient *gorm.DB, cacheStorage cache.Storage,
 	validator validator.Validator) *AuthHandlerManager {
 
 	authRepo := repository.NewDBRepo(dbClient)
-	authCacheRepo := repository.NewCacheRepository(cfg, cacheClient)
+	authCacheRepo := repository.NewCacheRepository(cfg, cacheStorage)
 	authUC := usecase.NewUsecase(cfg, authRepo, authCacheRepo)
 
 	return &AuthHandlerManager{

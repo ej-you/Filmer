@@ -5,8 +5,8 @@ import (
 )
 
 type CacheRepo interface {
-	SetPersonInfo(person *entity.PersonFull) error
-	GetPersonInfo(person *entity.PersonFull) (bool, error)
+	// SetPersonInfo(person *entity.PersonFull) error
+	// GetPersonInfo(person *entity.PersonFull) (bool, error)
 }
 
 type KinopoiskRepo interface {
