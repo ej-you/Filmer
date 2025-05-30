@@ -12,12 +12,14 @@ COPY ./go.mod .
 COPY ./go.sum .
 RUN go mod download
 
-# copy project files to container
-COPY . .
-
 # compile migrator
+COPY ./cmd/migrator .
+COPY ./config .
+COPY ./internal/pkg/migrate .
 RUN go build -o ./migrator ./cmd/migrator/main.go
+
 # compile app
+COPY . .
 RUN go build -o ./server ./cmd/server/main.go
 
 # ---
