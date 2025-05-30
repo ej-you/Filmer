@@ -703,7 +703,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/personal/full-info/{personID}": {
+        "/staff/full-info/{personID}": {
             "get": {
                 "security": [
                     {
@@ -712,10 +712,10 @@ const docTemplate = `{
                 ],
                 "description": "Получение информации о личности по её ID",
                 "tags": [
-                    "personal"
+                    "staff"
                 ],
                 "summary": "Получение информации о личности",
-                "operationId": "kinopoisk-get-person-info",
+                "operationId": "kinopoisk-get-staff-info",
                 "parameters": [
                     {
                         "type": "integer",
@@ -1000,7 +1000,7 @@ const docTemplate = `{
             }
         },
         "entity.PersonFullMovie": {
-            "description": "person movies for person full info",
+            "description": "person movie for person full info",
             "type": "object",
             "properties": {
                 "id": {

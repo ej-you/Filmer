@@ -23,7 +23,7 @@ func NewMovieRouter(mwManager middlewares.MiddlewareManager,
 }
 
 // Set routes for handlers in mRouter.movieHandlerManager
-func (mRouter MovieRouter) SetRoutes(router fiber.Router) {
-	restricted := router.Use(mRouter.mwManager.JWTAuth())
-	restricted.Get("/search", mRouter.movieHandlerManager.SearchFilms())
+func (m MovieRouter) SetRoutes(router fiber.Router) {
+	restricted := router.Use(m.mwManager.JWTAuth(), m.mwManager.Cache())
+	restricted.Get("/search", m.movieHandlerManager.SearchFilms())
 }

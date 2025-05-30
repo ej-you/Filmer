@@ -8,12 +8,13 @@ import (
 	"syscall"
 
 	fiber "github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 
 	"Filmer/server/config"
 	authHTTP "Filmer/server/internal/app/auth/delivery/http"
 	movieHTTP "Filmer/server/internal/app/movie/delivery/http"
 	"Filmer/server/internal/app/server/middlewares"
-	personalHTTP "Filmer/server/internal/app/staff/delivery/http"
+	staffHTTP "Filmer/server/internal/app/staff/delivery/http"
 	userHTTP "Filmer/server/internal/app/user/delivery/http"
 	userMovieHTTP "Filmer/server/internal/app/usermovie/delivery/http"
 	"Filmer/server/internal/pkg/cache"
@@ -33,18 +34,41 @@ type Server interface {
 
 // Fiber server.
 type fiberServer struct {
-	cfg     *config.Config
-	log     logger.Logger
-	jsonify jsonify.JSONify
+	cfg          *config.Config
+	log          logger.Logger
+	jsonify      jsonify.JSONify
+	validate     validator.Validator
+	dbStorage    *gorm.DB
+	cacheStorage cache.Storage
 }
 
 // Server constructor.
-func New(cfg *config.Config) Server {
-	return &fiberServer{
-		cfg:     cfg,
-		log:     logger.NewLogger(cfg.LogOutput.Info, cfg.LogOutput.Info, cfg.LogOutput.Error),
-		jsonify: jsonify.NewJSONify(),
+func New(cfg *config.Config) (Server, error) {
+	log := logger.NewLogger(cfg.LogOutput.Info, cfg.LogOutput.Info, cfg.LogOutput.Error)
+
+	// DB storage init
+	dbStorage, err := database.New(cfg.Database.ConnString,
+		database.WithLogger(log),
+		database.WithWarnLogLevel(),
+		database.WithDisableColorful(),
+		database.WithIgnoreNotFound())
+	if err != nil {
+		return nil, err
 	}
+	// cache storage init
+	cacheStorage, err := cache.NewStorage(cfg.Cache.ConnString, log)
+	if err != nil {
+		return nil, err
+	}
+
+	return &fiberServer{
+		cfg:          cfg,
+		log:          log,
+		jsonify:      jsonify.NewJSONify(),
+		dbStorage:    dbStorage,
+		cacheStorage: cacheStorage,
+		validate:     validator.New(),
+	}, nil
 }
 
 //	@title			Filmer API
@@ -66,7 +90,7 @@ func New(cfg *config.Config) Server {
 // @in							header
 // @name						Authorization
 // @description				JWT security accessToken. Please, add it in the format "Bearer {AccessToken}" to authorize your requests.
-func (s fiberServer) Run() error {
+func (s *fiberServer) Run() error {
 	// app init
 	fiberApp := fiber.New(fiber.Config{
 		AppName:      fmt.Sprintf("%s v1.0.0", s.cfg.App.Name),
@@ -78,22 +102,8 @@ func (s fiberServer) Run() error {
 		ServerHeader: s.cfg.App.Name,
 	})
 
-	// DB client init
-	appDB, err := database.New(s.cfg.Database.ConnString,
-		database.WithLogger(s.log),
-		database.WithWarnLogLevel(),
-		database.WithDisableColorful(),
-		database.WithIgnoreNotFound())
-	if err != nil {
-		return err
-	}
-	// cache init
-	appCache := cache.NewCache(s.cfg.Cache.ConnString, s.log)
-	// input data validator init
-	validator := validator.New()
-
 	// set up base middlewares
-	mwManager := middlewares.NewMiddlewareManager(s.cfg, appDB, appCache)
+	mwManager := middlewares.NewMiddlewareManager(s.cfg, s.dbStorage, s.cacheStorage)
 	fiberApp.Use(mwManager.Logger())
 	fiberApp.Use(mwManager.Recover())
 	fiberApp.Use(mwManager.CORS())
@@ -102,28 +112,28 @@ func (s fiberServer) Run() error {
 	// set up handlers
 	apiV1 := fiberApp.Group("/api/v1")
 	// auth
-	authHandlerManager := authHTTP.NewAuthHandlerManager(s.cfg, appDB, appCache, validator)
+	authHandlerManager := authHTTP.NewAuthHandlerManager(s.cfg,
+		s.dbStorage, s.cacheStorage, s.validate)
 	authRouter := authHTTP.NewAuthRouter(mwManager, authHandlerManager)
 	authRouter.SetRoutes(apiV1.Group("/auth"))
 	// movie
 	movieHandlerManager := movieHTTP.NewMovieHandlerManager(s.cfg, s.jsonify, s.log,
-		appDB, appCache, validator)
+		s.dbStorage, s.cacheStorage, s.validate)
 	movieRouter := movieHTTP.NewMovieRouter(mwManager, movieHandlerManager)
 	movieRouter.SetRoutes(apiV1.Group("/kinopoisk/films"))
 	// user movie
 	userMovieHandlerManager := userMovieHTTP.NewUserMovieHandlerManager(s.cfg, s.jsonify, s.log,
-		appDB, appCache, validator)
+		s.dbStorage, s.cacheStorage, s.validate)
 	userMovieRouter := userMovieHTTP.NewUserMovieRouter(mwManager, userMovieHandlerManager)
 	userMovieRouter.SetRoutes(apiV1.Group("/films"))
 	// user
-	userHandlerManager := userHTTP.NewUserHandlerManager(s.cfg, appDB, validator)
+	userHandlerManager := userHTTP.NewUserHandlerManager(s.cfg, s.dbStorage, s.validate)
 	userRouter := userHTTP.NewUserRouter(mwManager, userHandlerManager)
 	userRouter.SetRoutes(apiV1.Group("/user"))
-	// personal
-	personalHandlerManager := personalHTTP.NewPersonalHandlerManager(s.cfg, s.jsonify, s.log,
-		appCache, validator)
-	personalRouter := personalHTTP.NewPersonalRouter(mwManager, personalHandlerManager)
-	personalRouter.SetRoutes(apiV1.Group("/personal"))
+	// staff
+	staffHandlerManager := staffHTTP.NewStaffHandlerManager(s.cfg, s.jsonify, s.log, s.validate)
+	staffRouter := staffHTTP.NewStaffRouter(mwManager, staffHandlerManager)
+	staffRouter.SetRoutes(apiV1.Group("/staff"))
 
 	// handle shutdown process signals
 	quit := make(chan os.Signal, 1)

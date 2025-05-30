@@ -11,26 +11,24 @@ import (
 	"Filmer/server/internal/app/staff"
 	personalRepository "Filmer/server/internal/app/staff/repository"
 	personalUsecase "Filmer/server/internal/app/staff/usecase"
-	"Filmer/server/internal/pkg/cache"
 	"Filmer/server/internal/pkg/jsonify"
 	"Filmer/server/internal/pkg/logger"
 	"Filmer/server/internal/pkg/validator"
 )
 
 // Personal handlers manager.
-type PersonalHandlerManager struct {
+type StaffHandlerManager struct {
 	validator  validator.Validator
 	personalUC staff.Usecase
 }
 
-func NewPersonalHandlerManager(cfg *config.Config, jsonify jsonify.JSONify, logger logger.Logger,
-	cache cache.Cache, validator validator.Validator) *PersonalHandlerManager {
+func NewStaffHandlerManager(cfg *config.Config, jsonify jsonify.JSONify,
+	logger logger.Logger, validator validator.Validator) *StaffHandlerManager {
 
-	movieCacheRepo := personalRepository.NewCacheRepository(cache, jsonify)
 	movieKinopoiskWebAPIRepo := personalRepository.NewKinopoiskRepo(cfg, jsonify)
-	personalUC := personalUsecase.New(logger, movieCacheRepo, movieKinopoiskWebAPIRepo)
+	personalUC := personalUsecase.New(logger, movieKinopoiskWebAPIRepo)
 
-	return &PersonalHandlerManager{
+	return &StaffHandlerManager{
 		validator:  validator,
 		personalUC: personalUC,
 	}
@@ -38,9 +36,9 @@ func NewPersonalHandlerManager(cfg *config.Config, jsonify jsonify.JSONify, logg
 
 // @summary		Получение информации о личности
 // @description	Получение информации о личности по её ID
-// @router			/personal/full-info/{personID} [get]
-// @id				kinopoisk-get-person-info
-// @tags			personal
+// @router			/staff/full-info/{personID} [get]
+// @id				kinopoisk-get-staff-info
+// @tags			staff
 // @security		JWT
 // @param			personID	path		int	true	"ID личности"
 // @success		200			{object}	entity.PersonFull
@@ -49,7 +47,7 @@ func NewPersonalHandlerManager(cfg *config.Config, jsonify jsonify.JSONify, logg
 // @failure		403			"Истекший или невалидный токен"
 // @failure		404			"Личность не найдена"
 // @failure		429			"Слишком много запросов. Лимит 5 запросов в секунду"
-func (p PersonalHandlerManager) GetPersonInfo() fiber.Handler {
+func (p StaffHandlerManager) GetPersonInfo() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		// var err error
 		dataIn := &getPersonInfoIn{}

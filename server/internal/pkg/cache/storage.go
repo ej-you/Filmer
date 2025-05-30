@@ -41,7 +41,7 @@ func NewStorage(connString string, logger Logger) (Storage, error) {
 		return nil, err
 	}
 
-	logger.Printf("Process %d successfully connected to redis", os.Getpid())
+	logger.Printf("Process %d successfully connected to redis!", os.Getpid())
 	return &redisStorage{
 		client: client,
 	}, nil

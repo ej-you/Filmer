@@ -46,15 +46,6 @@ func NewUsecase(cfg *config.Config, logger logger.Logger, movieDBRepo movie.DBRe
 // Query (searchedMovies.Query) and page (searchedMovies.Page) must be presented
 // Fill given searchedMovies struct
 func (u usecase) SearchMovies(searchedMovies *entity.SearchedMovies) error {
-	// get searched movies from cache
-	found, err := u.movieCacheRepo.GetSearchMovies(searchedMovies)
-	if found {
-		return nil
-	}
-	if err != nil {
-		u.logger.Errorf("movieUsecase.SearchMovies: get from cache: %v", err)
-	}
-
 	// check API limit is exhausted
 	isLimitExhausted, err := u.movieCacheRepo.IsAPILimitExhausted(officialAPIName)
 	if err != nil {
@@ -70,18 +61,11 @@ func (u usecase) SearchMovies(searchedMovies *entity.SearchedMovies) error {
 	}
 
 	// get searched movies from API
-	if err = u.movieKinopoiskRepo.SearchMovies(searchedMovies); err != nil {
+	if err := u.movieKinopoiskRepo.SearchMovies(searchedMovies); err != nil {
 		// set API limit to cache if gotten error is 402 error
 		return fmt.Errorf("movieUsecase.SearchMovies: %w",
 			u.setAPILimitIfPaymentError(err, officialAPIName))
 	}
-
-	// save searched movies to cache
-	err = u.movieCacheRepo.SetSearchMovies(searchedMovies)
-	if err != nil {
-		u.logger.Errorf("movieUsecase.SearchMovies: set to cache: %v", err)
-	}
-
 	return nil
 }
 

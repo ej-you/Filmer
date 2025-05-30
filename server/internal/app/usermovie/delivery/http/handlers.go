@@ -36,12 +36,12 @@ type UserMovieHandlerManager struct {
 // UserMovieHandlerManager constructor
 func NewUserMovieHandlerManager(cfg *config.Config,
 	jsonify jsonify.JSONify, logger logger.Logger,
-	dbClient *gorm.DB, cache cache.Cache,
+	dbClient *gorm.DB, cacheStorage cache.Storage,
 	validator validator.Validator) *UserMovieHandlerManager {
 
 	// init movie usecase
 	movieDBRepo := movieRepository.NewDBRepo(dbClient)
-	movieCacheRepo := movieRepository.NewCacheRepo(cache, jsonify)
+	movieCacheRepo := movieRepository.NewCacheRepo(cacheStorage, jsonify)
 	movieKinopoiskRepo := movieRepository.NewKinopoiskRepo(cfg, jsonify)
 	movieUC := movieUsecase.NewUsecase(cfg, logger,
 		movieDBRepo, movieCacheRepo, movieKinopoiskRepo)
