@@ -15,8 +15,6 @@ type DBRepo interface {
 type CacheRepo interface {
 	SetAPILimit(apiName string) error
 	IsAPILimitExhausted(apiName string) (bool, error)
-	// SetSearchMovies(searchedMovies *entity.SearchedMovies) error
-	// GetSearchMovies(searchedMovies *entity.SearchedMovies) (bool, error)
 }
 
 type KinopoiskRepo interface {

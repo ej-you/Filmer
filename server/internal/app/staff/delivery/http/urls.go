@@ -1,4 +1,4 @@
-// Package http contains http router and handlers for personal usecase.
+// Package http contains http router and handlers for staff usecase.
 package http
 
 import (
@@ -7,7 +7,6 @@ import (
 	"Filmer/server/internal/app/server/middlewares"
 )
 
-// Personal router.
 type StaffRouter struct {
 	mwManager              middlewares.MiddlewareManager
 	personalHandlerManager *StaffHandlerManager
@@ -22,8 +21,8 @@ func NewStaffRouter(mwManager middlewares.MiddlewareManager,
 	}
 }
 
-// Set routes for handlers in mRouter.personalHandlerManager
-func (s StaffRouter) SetRoutes(router fiber.Router) {
-	restricted := router.Use(s.mwManager.JWTAuth(), s.mwManager.Cache())
-	restricted.Get("/full-info/:personID", s.personalHandlerManager.GetPersonInfo())
+// SetRoutes sets routes for handlers in staff handler manager.
+func (r StaffRouter) SetRoutes(router fiber.Router) {
+	restricted := router.Use(r.mwManager.JWTAuth(), r.mwManager.Cache())
+	restricted.Get("/full-info/:personID", r.personalHandlerManager.GetPersonInfo())
 }

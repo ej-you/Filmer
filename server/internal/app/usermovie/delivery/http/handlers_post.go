@@ -29,9 +29,9 @@ const (
 // @failure		401		"Пустой или неправильный токен"
 // @failure		403		"Истекший или невалидный токен"
 // @failure		404		"Фильм не найден"
-func (umhm UserMovieHandlerManager) Star() fiber.Handler {
+func (h UserMovieHandlerManager) Star() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		return umhm.changeMovieStared(ctx, starConst)
+		return h.changeMovieStared(ctx, starConst)
 	}
 }
 
@@ -46,9 +46,9 @@ func (umhm UserMovieHandlerManager) Star() fiber.Handler {
 // @failure		401		"Пустой или неправильный токен"
 // @failure		403		"Истекший или невалидный токен"
 // @failure		404		"Фильм не найден"
-func (umhm UserMovieHandlerManager) Unstar() fiber.Handler {
+func (h UserMovieHandlerManager) Unstar() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		return umhm.changeMovieStared(ctx, unstarConst)
+		return h.changeMovieStared(ctx, unstarConst)
 	}
 }
 
@@ -63,9 +63,9 @@ func (umhm UserMovieHandlerManager) Unstar() fiber.Handler {
 // @failure		401		"Пустой или неправильный токен"
 // @failure		403		"Истекший или невалидный токен"
 // @failure		404		"Фильм не найден"
-func (umhm UserMovieHandlerManager) Clear() fiber.Handler {
+func (h UserMovieHandlerManager) Clear() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		return umhm.changeMovieStatus(ctx, clearConst)
+		return h.changeMovieStatus(ctx, clearConst)
 	}
 }
 
@@ -80,9 +80,9 @@ func (umhm UserMovieHandlerManager) Clear() fiber.Handler {
 // @failure		401		"Пустой или неправильный токен"
 // @failure		403		"Истекший или невалидный токен"
 // @failure		404		"Фильм не найден"
-func (umhm UserMovieHandlerManager) SetWant() fiber.Handler {
+func (h UserMovieHandlerManager) SetWant() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		return umhm.changeMovieStatus(ctx, wantConst)
+		return h.changeMovieStatus(ctx, wantConst)
 	}
 }
 
@@ -97,14 +97,14 @@ func (umhm UserMovieHandlerManager) SetWant() fiber.Handler {
 // @failure		401		"Пустой или неправильный токен"
 // @failure		403		"Истекший или невалидный токен"
 // @failure		404		"Фильм не найден"
-func (umhm UserMovieHandlerManager) SetWatched() fiber.Handler {
+func (h UserMovieHandlerManager) SetWatched() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		return umhm.changeMovieStatus(ctx, watchedConst)
+		return h.changeMovieStatus(ctx, watchedConst)
 	}
 }
 
 // change stared field value in user movie
-func (umhm UserMovieHandlerManager) changeMovieStared(ctx *fiber.Ctx, newStared bool) error {
+func (h UserMovieHandlerManager) changeMovieStared(ctx *fiber.Ctx, newStared bool) error {
 	var err error
 	dataIn := new(setFilmCategoryIn)
 	userMovie := new(entity.UserMovie)
@@ -114,7 +114,7 @@ func (umhm UserMovieHandlerManager) changeMovieStared(ctx *fiber.Ctx, newStared 
 		return fmt.Errorf("change movie stared to %v: %w", newStared, err)
 	}
 	// validate parsed data
-	if err = umhm.validator.Validate(dataIn); err != nil {
+	if err = h.validator.Validate(dataIn); err != nil {
 		return fmt.Errorf("change movie stared to %v: %w", newStared, err)
 	}
 	// add necessary data to userMovie
@@ -126,7 +126,7 @@ func (umhm UserMovieHandlerManager) changeMovieStared(ctx *fiber.Ctx, newStared 
 	userMovie.MovieID = dataIn.MovieID
 
 	// change stared to newStared
-	err = umhm.userMovieUC.UpdateUserMovieStared(userMovie, newStared)
+	err = h.userMovieUC.UpdateUserMovieStared(userMovie, newStared)
 	if err != nil {
 		return err
 	}
@@ -136,7 +136,7 @@ func (umhm UserMovieHandlerManager) changeMovieStared(ctx *fiber.Ctx, newStared 
 }
 
 // change status field value in user movie
-func (umhm UserMovieHandlerManager) changeMovieStatus(ctx *fiber.Ctx, newStatus int8) error {
+func (h UserMovieHandlerManager) changeMovieStatus(ctx *fiber.Ctx, newStatus int8) error {
 	var err error
 	dataIn := new(setFilmCategoryIn)
 	userMovie := new(entity.UserMovie)
@@ -146,7 +146,7 @@ func (umhm UserMovieHandlerManager) changeMovieStatus(ctx *fiber.Ctx, newStatus 
 		return fmt.Errorf("change movie status to %v: %w", newStatus, err)
 	}
 	// validate parsed data
-	if err = umhm.validator.Validate(dataIn); err != nil {
+	if err = h.validator.Validate(dataIn); err != nil {
 		return fmt.Errorf("change movie status to %v: %w", newStatus, err)
 	}
 	// add necessary data to userMovie
@@ -158,7 +158,7 @@ func (umhm UserMovieHandlerManager) changeMovieStatus(ctx *fiber.Ctx, newStatus 
 	userMovie.MovieID = dataIn.MovieID
 
 	// change status to newStatus
-	err = umhm.userMovieUC.UpdateUserMovieStatus(userMovie, newStatus)
+	err = h.userMovieUC.UpdateUserMovieStatus(userMovie, newStatus)
 	if err != nil {
 		return err
 	}

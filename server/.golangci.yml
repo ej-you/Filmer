@@ -110,6 +110,10 @@ linters:
       - linters: # more readable for swagger tags
           - lll
         path: internal/app/server/server\.go
+      - linters: # more readable
+          - goconst
+        path: internal/app/entity/genre\.go
+        text: "string `genres` has 4 occurrences, make it a constant"
     paths:
       - docs
       - build

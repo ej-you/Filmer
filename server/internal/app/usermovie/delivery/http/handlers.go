@@ -27,13 +27,11 @@ const (
 	getWatchedConst = "watched"
 )
 
-// User movie handlers manager
 type UserMovieHandlerManager struct {
 	validator   validator.Validator
 	userMovieUC usermovie.Usecase
 }
 
-// UserMovieHandlerManager constructor
 func NewUserMovieHandlerManager(cfg *config.Config,
 	jsonify jsonify.JSONify, logger logger.Logger,
 	dbClient *gorm.DB, cacheStorage cache.Storage,
@@ -68,7 +66,7 @@ func NewUserMovieHandlerManager(cfg *config.Config,
 // @failure		403			"Истекший или невалидный токен"
 // @failure		404			"Фильм не найден"
 // @failure		429			"Слишком много запросов. Лимит 5 запросов в секунду"
-func (umhm UserMovieHandlerManager) GetUserMovie() fiber.Handler {
+func (h UserMovieHandlerManager) GetUserMovie() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		var err error
 		dataIn := new(getFilmInfoIn)
@@ -79,7 +77,7 @@ func (umhm UserMovieHandlerManager) GetUserMovie() fiber.Handler {
 			return fmt.Errorf("get movie info: %w", err)
 		}
 		// validate parsed data
-		if err = umhm.validator.Validate(dataIn); err != nil {
+		if err = h.validator.Validate(dataIn); err != nil {
 			return fmt.Errorf("get movie info: %w", err)
 		}
 
@@ -93,7 +91,7 @@ func (umhm UserMovieHandlerManager) GetUserMovie() fiber.Handler {
 		userMovie.Movie = &entity.Movie{KinopoiskID: dataIn.KinopoiskID}
 
 		// find user movie with movie data (from DB or from API)
-		err = umhm.userMovieUC.GetUserMovieByKinopoiskID(userMovie)
+		err = h.userMovieUC.GetUserMovieByKinopoiskID(userMovie)
 		if err != nil {
 			return err
 		}
@@ -119,10 +117,10 @@ func (umhm UserMovieHandlerManager) GetUserMovie() fiber.Handler {
 // @success		200			{object}	entity.UserMoviesWithCategory
 // @failure		401			"Пустой или неправильный токен"
 // @failure		403			"Истекший или невалидный токен"
-func (umhm UserMovieHandlerManager) Stared() fiber.Handler {
+func (h UserMovieHandlerManager) Stared() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		userMoviesWithCategory := &entity.UserMoviesWithCategory{Category: getStaredConst}
-		return umhm.getMoviesWithCategory(ctx, userMoviesWithCategory)
+		return h.getMoviesWithCategory(ctx, userMoviesWithCategory)
 	}
 }
 
@@ -144,10 +142,10 @@ func (umhm UserMovieHandlerManager) Stared() fiber.Handler {
 // @success		200			{object}	entity.UserMoviesWithCategory
 // @failure		401			"Пустой или неправильный токен"
 // @failure		403			"Истекший или невалидный токен"
-func (umhm UserMovieHandlerManager) Want() fiber.Handler {
+func (h UserMovieHandlerManager) Want() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		userMoviesWithCategory := &entity.UserMoviesWithCategory{Category: getWantConst}
-		return umhm.getMoviesWithCategory(ctx, userMoviesWithCategory)
+		return h.getMoviesWithCategory(ctx, userMoviesWithCategory)
 	}
 }
 
@@ -169,15 +167,15 @@ func (umhm UserMovieHandlerManager) Want() fiber.Handler {
 // @success		200			{object}	entity.UserMoviesWithCategory
 // @failure		401			"Пустой или неправильный токен"
 // @failure		403			"Истекший или невалидный токен"
-func (umhm UserMovieHandlerManager) Watched() fiber.Handler {
+func (h UserMovieHandlerManager) Watched() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		userMoviesWithCategory := &entity.UserMoviesWithCategory{Category: getWatchedConst}
-		return umhm.getMoviesWithCategory(ctx, userMoviesWithCategory)
+		return h.getMoviesWithCategory(ctx, userMoviesWithCategory)
 	}
 }
 
 // get user movies from certain category
-func (umhm UserMovieHandlerManager) getMoviesWithCategory(ctx *fiber.Ctx,
+func (h UserMovieHandlerManager) getMoviesWithCategory(ctx *fiber.Ctx,
 	userMoviesWithCategory *entity.UserMoviesWithCategory) error {
 
 	var err error
@@ -188,7 +186,7 @@ func (umhm UserMovieHandlerManager) getMoviesWithCategory(ctx *fiber.Ctx,
 		return fmt.Errorf("get movies from category %s: %w", userMoviesWithCategory.Category, err)
 	}
 	// validate parsed data
-	if err = umhm.validator.Validate(dataIn); err != nil {
+	if err = h.validator.Validate(dataIn); err != nil {
 		return fmt.Errorf("get movies from category %s: %w", userMoviesWithCategory.Category, err)
 	}
 
@@ -203,7 +201,7 @@ func (umhm UserMovieHandlerManager) getMoviesWithCategory(ctx *fiber.Ctx,
 	userMoviesWithCategory.Pagination = &dataIn.UserMoviesPagination
 
 	// get user movies with given category and settings
-	err = umhm.userMovieUC.GetUserMoviesWithCategory(userMoviesWithCategory)
+	err = h.userMovieUC.GetUserMoviesWithCategory(userMoviesWithCategory)
 	if err != nil {
 		return err
 	}

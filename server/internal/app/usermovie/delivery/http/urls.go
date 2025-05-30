@@ -6,13 +6,11 @@ import (
 	"Filmer/server/internal/app/server/middlewares"
 )
 
-// User movie router
 type UserMovieRouter struct {
 	mwManager               middlewares.MiddlewareManager
 	userMovieHandlerManager *UserMovieHandlerManager
 }
 
-// UserMovieRouter constructor
 func NewUserMovieRouter(mwManager middlewares.MiddlewareManager,
 	userMovieHandlerManager *UserMovieHandlerManager) *UserMovieRouter {
 
@@ -22,19 +20,19 @@ func NewUserMovieRouter(mwManager middlewares.MiddlewareManager,
 	}
 }
 
-// Set routes for handlers in umRouter.userMovieHandlerManager
-func (umRouter UserMovieRouter) SetRoutes(router fiber.Router) {
-	restricted := router.Use(umRouter.mwManager.JWTAuth())
-	restricted.Get("/full-info/:kinopoiskID", umRouter.userMovieHandlerManager.GetUserMovie())
+// SetRoutes sets routes for handlers in user-movie handler manager.
+func (r UserMovieRouter) SetRoutes(router fiber.Router) {
+	restricted := router.Use(r.mwManager.JWTAuth())
+	restricted.Get("/full-info/:kinopoiskID", r.userMovieHandlerManager.GetUserMovie())
 
-	restricted.Get("/stared", umRouter.userMovieHandlerManager.Stared())
-	restricted.Get("/want", umRouter.userMovieHandlerManager.Want())
-	restricted.Get("/watched", umRouter.userMovieHandlerManager.Watched())
+	restricted.Get("/stared", r.userMovieHandlerManager.Stared())
+	restricted.Get("/want", r.userMovieHandlerManager.Want())
+	restricted.Get("/watched", r.userMovieHandlerManager.Watched())
 
-	restricted.Post("/:movieID/star", umRouter.userMovieHandlerManager.Star())
-	restricted.Post("/:movieID/unstar", umRouter.userMovieHandlerManager.Unstar())
+	restricted.Post("/:movieID/star", r.userMovieHandlerManager.Star())
+	restricted.Post("/:movieID/unstar", r.userMovieHandlerManager.Unstar())
 
-	restricted.Post("/:movieID/want", umRouter.userMovieHandlerManager.SetWant())
-	restricted.Post("/:movieID/watched", umRouter.userMovieHandlerManager.SetWatched())
-	restricted.Post("/:movieID/clear", umRouter.userMovieHandlerManager.Clear())
+	restricted.Post("/:movieID/want", r.userMovieHandlerManager.SetWant())
+	restricted.Post("/:movieID/watched", r.userMovieHandlerManager.SetWatched())
+	restricted.Post("/:movieID/clear", r.userMovieHandlerManager.Clear())
 }
