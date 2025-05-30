@@ -16,13 +16,11 @@ import (
 	"Filmer/server/internal/pkg/validator"
 )
 
-// User handlers manager
 type UserHandlerManager struct {
 	validator validator.Validator
 	userUC    user.Usecase
 }
 
-// UserHandlerManager constructor
 func NewUserHandlerManager(cfg *config.Config, dbClient *gorm.DB,
 	validator validator.Validator) *UserHandlerManager {
 
@@ -47,7 +45,7 @@ func NewUserHandlerManager(cfg *config.Config, dbClient *gorm.DB,
 // @failure		401	"Пустой или неправильный токен"
 // @failure		403	"Истекший или невалидный токен"
 // @failure		404	"Текущий юзер не найден"
-func (uhm UserHandlerManager) ChangePassword() fiber.Handler {
+func (h UserHandlerManager) ChangePassword() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		var err error
 		dataIn := new(changePasswordIn)
@@ -58,7 +56,7 @@ func (uhm UserHandlerManager) ChangePassword() fiber.Handler {
 			return fmt.Errorf("change password: %w", err)
 		}
 		// validate parsed data
-		if err = uhm.validator.Validate(dataIn); err != nil {
+		if err = h.validator.Validate(dataIn); err != nil {
 			return fmt.Errorf("change password: %w", err)
 		}
 
@@ -70,7 +68,7 @@ func (uhm UserHandlerManager) ChangePassword() fiber.Handler {
 		user.Password = []byte(dataIn.CurrentPassword)
 
 		// change user password
-		if err := uhm.userUC.ChangePassword(user, []byte(dataIn.NewPassword)); err != nil {
+		if err := h.userUC.ChangePassword(user, []byte(dataIn.NewPassword)); err != nil {
 			return err
 		}
 		return ctx.Status(http.StatusNoContent).Send(nil)

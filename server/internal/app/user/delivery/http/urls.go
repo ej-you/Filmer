@@ -6,13 +6,11 @@ import (
 	"Filmer/server/internal/app/server/middlewares"
 )
 
-// User router
 type UserRouter struct {
 	mwManager          middlewares.MiddlewareManager
 	userHandlerManager *UserHandlerManager
 }
 
-// UserRouter constructor
 func NewUserRouter(mwManager middlewares.MiddlewareManager,
 	userHandlerManager *UserHandlerManager) *UserRouter {
 
@@ -22,8 +20,8 @@ func NewUserRouter(mwManager middlewares.MiddlewareManager,
 	}
 }
 
-// Set routes for handlers in uRouter.userHandlerManager
-func (uRouter UserRouter) SetRoutes(router fiber.Router) {
-	restricted := router.Use(uRouter.mwManager.JWTAuth())
-	restricted.Post("/change-password", uRouter.userHandlerManager.ChangePassword())
+// SetRoutes sets routes for handlers in user handler manager.
+func (r UserRouter) SetRoutes(router fiber.Router) {
+	restricted := router.Use(r.mwManager.JWTAuth())
+	restricted.Post("/change-password", r.userHandlerManager.ChangePassword())
 }

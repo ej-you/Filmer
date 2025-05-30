@@ -62,6 +62,5 @@ func (u usecase) ChangePassword(user *entity.User, newPassword []byte) error {
 	if err != nil {
 		return fmt.Errorf("user usecase.ChangePassword: %w", err)
 	}
-
 	return nil
 }

@@ -19,13 +19,11 @@ import (
 	"Filmer/server/internal/pkg/validator"
 )
 
-// Movie handlers manager
 type MovieHandlerManager struct {
 	validator validator.Validator
 	movieUC   movie.Usecase
 }
 
-// MovieHandlerManager constructor
 func NewMovieHandlerManager(cfg *config.Config, jsonify jsonify.JSONify, logger logger.Logger, dbClient *gorm.DB, cache cache.Storage,
 	validator validator.Validator) *MovieHandlerManager {
 
@@ -54,7 +52,7 @@ func NewMovieHandlerManager(cfg *config.Config, jsonify jsonify.JSONify, logger 
 // @failure		403		"Истекший или невалидный токен"
 // @failure		404		"Фильмы не найдены"
 // @failure		429		"Слишком много запросов. Лимит 5 запросов в секунду"
-func (mhm MovieHandlerManager) SearchFilms() fiber.Handler {
+func (h MovieHandlerManager) SearchFilms() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		var err error
 		dataIn := new(searchFilmsIn)
@@ -65,13 +63,13 @@ func (mhm MovieHandlerManager) SearchFilms() fiber.Handler {
 			return fmt.Errorf("search films: %w", err)
 		}
 		// validate parsed data
-		if err = mhm.validator.Validate(dataIn); err != nil {
+		if err = h.validator.Validate(dataIn); err != nil {
 			return fmt.Errorf("search films: %w", err)
 		}
 		// get data from API
 		searchedMovies.Query = strings.ToLower(dataIn.Query)
 		searchedMovies.Page = dataIn.Page
-		err = mhm.movieUC.SearchMovies(searchedMovies)
+		err = h.movieUC.SearchMovies(searchedMovies)
 		if err != nil {
 			return err
 		}

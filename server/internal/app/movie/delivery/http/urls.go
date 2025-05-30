@@ -6,13 +6,11 @@ import (
 	"Filmer/server/internal/app/server/middlewares"
 )
 
-// Movie router
 type MovieRouter struct {
 	mwManager           middlewares.MiddlewareManager
 	movieHandlerManager *MovieHandlerManager
 }
 
-// MovieRouter constructor
 func NewMovieRouter(mwManager middlewares.MiddlewareManager,
 	movieHandlerManager *MovieHandlerManager) *MovieRouter {
 
@@ -22,8 +20,8 @@ func NewMovieRouter(mwManager middlewares.MiddlewareManager,
 	}
 }
 
-// Set routes for handlers in mRouter.movieHandlerManager
-func (m MovieRouter) SetRoutes(router fiber.Router) {
-	restricted := router.Use(m.mwManager.JWTAuth(), m.mwManager.Cache())
-	restricted.Get("/search", m.movieHandlerManager.SearchFilms())
+// SetRoutes sets routes for handlers in movie handler manager.
+func (r MovieRouter) SetRoutes(router fiber.Router) {
+	restricted := router.Use(r.mwManager.JWTAuth(), r.mwManager.Cache())
+	restricted.Get("/search", r.movieHandlerManager.SearchFilms())
 }

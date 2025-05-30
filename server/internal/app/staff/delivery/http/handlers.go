@@ -16,7 +16,6 @@ import (
 	"Filmer/server/internal/pkg/validator"
 )
 
-// Personal handlers manager.
 type StaffHandlerManager struct {
 	validator  validator.Validator
 	personalUC staff.Usecase
@@ -47,7 +46,7 @@ func NewStaffHandlerManager(cfg *config.Config, jsonify jsonify.JSONify,
 // @failure		403			"Истекший или невалидный токен"
 // @failure		404			"Личность не найдена"
 // @failure		429			"Слишком много запросов. Лимит 5 запросов в секунду"
-func (p StaffHandlerManager) GetPersonInfo() fiber.Handler {
+func (h StaffHandlerManager) GetPersonInfo() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		// var err error
 		dataIn := &getPersonInfoIn{}
@@ -58,13 +57,13 @@ func (p StaffHandlerManager) GetPersonInfo() fiber.Handler {
 			return fmt.Errorf("get person info: %w", err)
 		}
 		// validate parsed data
-		if err := p.validator.Validate(dataIn); err != nil {
+		if err := h.validator.Validate(dataIn); err != nil {
 			return fmt.Errorf("get person info: %w", err)
 		}
 
 		personInfo.ID = dataIn.PersonID
 		// get person info (from cache or from API)
-		if err := p.personalUC.GetByID(personInfo); err != nil {
+		if err := h.personalUC.GetByID(personInfo); err != nil {
 			return err
 		}
 		return ctx.Status(http.StatusOK).JSON(personInfo)

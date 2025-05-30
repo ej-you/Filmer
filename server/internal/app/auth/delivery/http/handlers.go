@@ -17,7 +17,6 @@ import (
 	"Filmer/server/internal/pkg/validator"
 )
 
-// Auth handlers manager
 type AuthHandlerManager struct {
 	validator validator.Validator
 	authUC    auth.Usecase
@@ -46,7 +45,7 @@ func NewAuthHandlerManager(cfg *config.Config, dbClient *gorm.DB, cacheStorage c
 // @param			authIn	body		authIn	true	"authIn"
 // @success		201		{object}	entity.UserWithToken
 // @failure		409		"Юзер с введенной почтой уже зарегистрирован"
-func (ahm AuthHandlerManager) SignUp() fiber.Handler {
+func (h AuthHandlerManager) SignUp() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		var err error
 		dataIn := new(authIn)
@@ -57,14 +56,14 @@ func (ahm AuthHandlerManager) SignUp() fiber.Handler {
 			return fmt.Errorf("sign up: %w", err)
 		}
 		// validate parsed data
-		if err = ahm.validator.Validate(dataIn); err != nil {
+		if err = h.validator.Validate(dataIn); err != nil {
 			return fmt.Errorf("sign up: %w", err)
 		}
 
 		user.Email = dataIn.Email
 		user.Password = []byte(dataIn.Password)
 		// sign up new user
-		userWithToken, err := ahm.authUC.SignUp(user)
+		userWithToken, err := h.authUC.SignUp(user)
 		if err != nil {
 			return err
 		}
@@ -83,7 +82,7 @@ func (ahm AuthHandlerManager) SignUp() fiber.Handler {
 // @success		200		{object}	entity.UserWithToken
 // @failure		401		"Неверный пароль для учетной записи юзера"
 // @failure		404		"Юзер с введенной почтой не найден"
-func (ahm AuthHandlerManager) Login() fiber.Handler {
+func (h AuthHandlerManager) Login() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		var err error
 		dataIn := new(authIn)
@@ -94,14 +93,14 @@ func (ahm AuthHandlerManager) Login() fiber.Handler {
 			return fmt.Errorf("login user: %w", err)
 		}
 		// validate parsed data
-		if err = ahm.validator.Validate(dataIn); err != nil {
+		if err = h.validator.Validate(dataIn); err != nil {
 			return fmt.Errorf("login user: %w", err)
 		}
 
 		user.Email = dataIn.Email
 		user.Password = []byte(dataIn.Password)
 		// log in existing user
-		userWithToken, err := ahm.authUC.Login(user)
+		userWithToken, err := h.authUC.Login(user)
 		if err != nil {
 			return err
 		}
@@ -118,13 +117,13 @@ func (ahm AuthHandlerManager) Login() fiber.Handler {
 // @success		204	"No Content"
 // @failure		401	"Пустой или неправильный токен"
 // @failure		403	"Истекший или невалидный токен"
-func (ahm AuthHandlerManager) Logout() fiber.Handler {
+func (h AuthHandlerManager) Logout() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		// parse access token
 		token := token.ParseRawTokenFromContext(ctx)
 
 		// put token to blacklist
-		if err := ahm.authUC.Logout(token); err != nil {
+		if err := h.authUC.Logout(token); err != nil {
 			return err
 		}
 		return ctx.Status(http.StatusNoContent).Send(nil)
