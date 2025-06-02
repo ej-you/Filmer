@@ -64,3 +64,12 @@ func (u usecase) ChangePassword(user *entity.User, newPassword []byte) error {
 	}
 	return nil
 }
+
+// GetActivity returns all users activity for admin-panel.
+func (u usecase) GetActivity() (entity.UsersActivity, error) {
+	activity, err := u.userDBRepo.GetActivity()
+	if err != nil {
+		return nil, fmt.Errorf("user usecase.GetActivity: %w", err)
+	}
+	return activity, nil
+}

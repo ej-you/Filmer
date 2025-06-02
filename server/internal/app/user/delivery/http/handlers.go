@@ -74,3 +74,20 @@ func (h UserHandlerManager) ChangePassword() fiber.Handler {
 		return ctx.Status(http.StatusNoContent).Send(nil)
 	}
 }
+
+// @summary		Получение активности юзеров
+// @description	Получение для каждого юзера количества фильмов в категориях "избранное", "хочу посмотреть" и "поcмотрел"
+// @router			/user/all/activity [get]
+// @id				user-all-activity
+// @tags			user
+// @success		200	{object}	entity.UsersActivity
+func (h UserHandlerManager) GetActivity() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		// get users activity
+		activity, err := h.userUC.GetActivity()
+		if err != nil {
+			return err
+		}
+		return ctx.JSON(activity)
+	}
+}

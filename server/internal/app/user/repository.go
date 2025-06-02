@@ -7,4 +7,5 @@ import (
 type DBRepo interface {
 	GetUserByID(user *entity.User) error
 	UpdateUser(user *entity.User) error
+	GetActivity() (entity.UsersActivity, error)
 }

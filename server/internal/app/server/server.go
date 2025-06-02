@@ -51,7 +51,8 @@ func New(cfg *config.Config) (Server, error) {
 		database.WithLogger(log),
 		database.WithWarnLogLevel(),
 		database.WithDisableColorful(),
-		database.WithIgnoreNotFound())
+		database.WithIgnoreNotFound(),
+		database.WithTranslateError())
 	if err != nil {
 		return nil, err
 	}

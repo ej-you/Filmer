@@ -265,6 +265,30 @@ definitions:
         example: user@gmail.com
         type: string
     type: object
+  entity.UserActivity:
+    description: received data about one user activity (for admin-panel)
+    properties:
+      createdAt:
+        description: create user datetime (RFC3339 format)
+        example: "2025-02-02T22:00:07.225526936Z"
+        type: string
+      email:
+        description: user email
+        example: user@gmail.com
+        type: string
+      stared:
+        description: stared user movies
+        example: 5
+        type: integer
+      want:
+        description: user movies in "want" list
+        example: 25
+        type: integer
+      watched:
+        description: user movies in "watched" list
+        example: 50
+        type: integer
+    type: object
   entity.UserMovie:
     description: user movie received data
     properties:
@@ -900,6 +924,22 @@ paths:
       summary: Получение информации о личности
       tags:
       - staff
+  /user/all/activity:
+    get:
+      description: Получение для каждого юзера количества фильмов в категориях "избранное",
+        "хочу посмотреть" и "поcмотрел"
+      operationId: user-all-activity
+      responses:
+        "200":
+          description: OK
+          schema:
+            description: received data about all users activity
+            items:
+              $ref: '#/definitions/entity.UserActivity'
+            type: array
+      summary: Получение активности юзеров
+      tags:
+      - user
   /user/change-password:
     post:
       description: Установка нового пароля юзеру с подтверждением через старый пароль

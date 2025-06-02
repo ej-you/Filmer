@@ -747,6 +747,28 @@
                 }
             }
         },
+        "/user/all/activity": {
+            "get": {
+                "description": "Получение для каждого юзера количества фильмов в категориях \"избранное\", \"хочу посмотреть\" и \"поcмотрел\"",
+                "tags": [
+                    "user"
+                ],
+                "summary": "Получение активности юзеров",
+                "operationId": "user-all-activity",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "description": "received data about all users activity",
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/entity.UserActivity"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user/change-password": {
             "post": {
                 "security": [
@@ -1142,6 +1164,37 @@
                     "description": "user email",
                     "type": "string",
                     "example": "user@gmail.com"
+                }
+            }
+        },
+        "entity.UserActivity": {
+            "description": "received data about one user activity (for admin-panel)",
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "description": "create user datetime (RFC3339 format)",
+                    "type": "string",
+                    "example": "2025-02-02T22:00:07.225526936Z"
+                },
+                "email": {
+                    "description": "user email",
+                    "type": "string",
+                    "example": "user@gmail.com"
+                },
+                "stared": {
+                    "description": "stared user movies",
+                    "type": "integer",
+                    "example": 5
+                },
+                "want": {
+                    "description": "user movies in \"want\" list",
+                    "type": "integer",
+                    "example": 25
+                },
+                "watched": {
+                    "description": "user movies in \"watched\" list",
+                    "type": "integer",
+                    "example": 50
                 }
             }
         },

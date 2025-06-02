@@ -22,6 +22,8 @@ func NewUserRouter(mwManager middlewares.MiddlewareManager,
 
 // SetRoutes sets routes for handlers in user handler manager.
 func (r UserRouter) SetRoutes(router fiber.Router) {
+	router.Get("/all/activity", r.userHandlerManager.GetActivity())
+
 	restricted := router.Use(r.mwManager.JWTAuth())
 	restricted.Post("/change-password", r.userHandlerManager.ChangePassword())
 }

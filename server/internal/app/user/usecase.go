@@ -6,4 +6,5 @@ import (
 
 type Usecase interface {
 	ChangePassword(user *entity.User, newPassword []byte) error
+	GetActivity() (entity.UsersActivity, error)
 }
