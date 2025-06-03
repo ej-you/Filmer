@@ -32,7 +32,7 @@ RUN mkdir /logs
 WORKDIR /app
 # copy compiled file, templates and static files
 COPY --from=build /go/src/app_client .
-COPY --from=build /go/src/web ./web
+COPY ./web ./web
 
 # run app
 CMD ["/bin/sh", "-c", "/app/app_client 2>> /logs/error-log.log"]
