@@ -6,6 +6,8 @@
 
 ## About [nginx](./nginx/README.md)
 
+## About [admin-panel](./admin/README.md)
+
 ### TODO
 
 - [x] Change interface language to Russian (`ru_locale` branch)

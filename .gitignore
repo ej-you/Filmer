@@ -9,3 +9,7 @@ env/
 # local
 /.vscode
 notes.txt
+
+# local tests
+test.docker-compose.yml
+prometheus.yml

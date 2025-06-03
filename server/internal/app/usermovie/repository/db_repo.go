@@ -13,7 +13,7 @@ import (
 	"Filmer/server/internal/pkg/httperror"
 )
 
-const paginationLimit = 10 // user movies per page
+const _paginationLimit = 10 // user movies per page
 
 var _ usermovie.DBRepo = (*dbRepo)(nil)
 
@@ -112,10 +112,10 @@ func (r dbRepo) GetUserMoviesWithCategory(
 		Table("user_movies").
 		Distinct("user_movies.*, movies.title, movies.rating, movies.year").
 		InnerJoins("INNER JOIN movies ON user_movies.movie_id = movies.id").
-		Where(categoryCond).
-		Where("user_id = ?", userMoviesWithCategory.UserID)
-	selectQuery = r.addSort(selectQuery, userMoviesWithCategory.Sort)
+		Where("user_id = ?", userMoviesWithCategory.UserID).
+		Where(categoryCond)
 	selectQuery = r.addFilter(selectQuery, userMoviesWithCategory.Filter)
+	selectQuery = r.addSort(selectQuery, userMoviesWithCategory.Sort)
 	selectQuery = r.addPagination(selectQuery, userMoviesWithCategory.Pagination)
 	// add preloading data from dependent tables
 	selectQuery = selectQuery.
@@ -132,23 +132,6 @@ func (r dbRepo) GetUserMoviesWithCategory(
 			"failed to get user movies with category", err)
 	}
 	return nil
-}
-
-// Add sort to select query.
-func (r *dbRepo) addSort(selectQuery *gorm.DB, sort *entity.UserMoviesSort) *gorm.DB {
-	// sort by updated_at field if sorf field is not defined
-	if sort.SortField == "" {
-		sort.SortField = "updated_at"
-	}
-
-	if sort.SortField == "updated_at" && sort.SortOrder == "" {
-		// set desc order if sorf field is updated_at and sort order is not defined
-		sort.SortOrder = "desc"
-	} else if sort.SortOrder == "" {
-		// set asc order if sorf field is defined but sort order is not defined
-		sort.SortOrder = "asc"
-	}
-	return selectQuery.Order(fmt.Sprintf("%s %s", sort.SortField, sort.SortOrder))
 }
 
 // Add filter to select query.
@@ -178,6 +161,23 @@ func (r *dbRepo) addFilter(selectQuery *gorm.DB, filter *entity.UserMoviesFilter
 	return selectQuery
 }
 
+// Add sort to select query.
+func (r *dbRepo) addSort(selectQuery *gorm.DB, sort *entity.UserMoviesSort) *gorm.DB {
+	// sort by updated_at field if sorf field is not defined
+	if sort.SortField == "" || sort.SortField == "updated_at" {
+		sort.SortField = "user_movies.updated_at"
+	}
+
+	if sort.SortField == "user_movies.updated_at" && sort.SortOrder == "" {
+		// set desc order if sorf field is updated_at and sort order is not defined
+		sort.SortOrder = "desc"
+	} else if sort.SortOrder == "" {
+		// set asc order if sorf field is defined but sort order is not defined
+		sort.SortOrder = "asc"
+	}
+	return selectQuery.Order(fmt.Sprintf("%s %s", sort.SortField, sort.SortOrder))
+}
+
 // Add pagination to select query (add after all filters).
 func (r *dbRepo) addPagination(selectQuery *gorm.DB,
 	pagination *entity.UserMoviesPagination) *gorm.DB {
@@ -187,10 +187,14 @@ func (r *dbRepo) addPagination(selectQuery *gorm.DB,
 		pagination.Page = 1
 	}
 	// set amount limit for page
-	pagination.Limit = paginationLimit
+	pagination.Limit = _paginationLimit
 
-	// get all user movies amount (suitable for filters)
-	selectQuery.Count(&pagination.Total)
+	// use distinct to exclude duplicates due to fact that one movie
+	// can has several genres from filter of select query
+	selectQuery.
+		Session(&gorm.Session{}). // to avoid intersection of main and "count" queries
+		Distinct("movies.id").
+		Count(&pagination.Total) // get all user movies amount
 	// calc pages amount
 	pagination.Pages = int(math.Ceil(float64(pagination.Total) / float64(pagination.Limit)))
 

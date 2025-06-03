@@ -28,7 +28,7 @@ FROM alpine:3.21 AS run
 RUN mkdir /logs
 
 WORKDIR /app
-# copy compiled file, files for swagger and wallet data
+# copy compiled file, templates and static files
 COPY --from=build /go/src/app_client .
 COPY --from=build /go/src/web ./web
 

@@ -35,3 +35,25 @@ type UserWithToken struct {
 	// access token, generated after success auth
 	AccessToken string `json:"accessToken" example:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDA3NjA0MzIsInVzZXJJRCI6IjU4MzU0ZGJhLWUyY2MtNDI4My04MjAxLWNjZGRiZTkzOGExNSJ9.VwA9d9lao0Xgl5c3H9VNM8JVtUKDs47YEItb6MZlkCw"`
 }
+
+// @description received data about one user activity (for admin-panel)
+//
+//easyjson:json
+type UserActivity struct {
+	// user email
+	Email string `json:"email" example:"user@gmail.com"`
+	// create user datetime (RFC3339 format)
+	CreatedAt time.Time `json:"createdAt" example:"2025-02-02T22:00:07.225526936Z"`
+
+	// stared user movies
+	Stared int `json:"stared" example:"5"`
+	// user movies in "want" list
+	Want int `json:"want" example:"25"`
+	// user movies in "watched" list
+	Watched int `json:"watched" example:"50"`
+}
+
+// @description received data about all users activity
+//
+//easyjson:json
+type UsersActivity []UserActivity
