@@ -110,12 +110,20 @@ func (r dbRepo) GetUserMoviesWithCategory(
 	// base select params
 	selectQuery := r.dbClient.
 		Table("user_movies").
-		Distinct("user_movies.*, movies.title, movies.rating, movies.year").
+		// Distinct("user_movies.*, movies.title, movies.rating, movies.year").
+		Distinct("user_movies.updated_at, movies.id").
 		InnerJoins("INNER JOIN movies ON user_movies.movie_id = movies.id").
+		// Group("user_movies.movie_id, movies.id, user_movies.updated_at").
+
+		// //Distinct("user_movies.updated_at, user_movies.*, movies.title, movies.rating, movies.year").
+		// Distinct("user_movies.updated_at, movies.id").
+		// InnerJoins("INNER JOIN movies ON user_movies.movie_id = movies.id").
+		// //Group("user_movies.movie_id, movies.id, user_movies.updated_at").
+
 		Where(categoryCond).
 		Where("user_id = ?", userMoviesWithCategory.UserID)
-	selectQuery = r.addSort(selectQuery, userMoviesWithCategory.Sort)
 	selectQuery = r.addFilter(selectQuery, userMoviesWithCategory.Filter)
+	selectQuery = r.addSort(selectQuery, userMoviesWithCategory.Sort)
 	selectQuery = r.addPagination(selectQuery, userMoviesWithCategory.Pagination)
 	// add preloading data from dependent tables
 	selectQuery = selectQuery.
@@ -137,11 +145,11 @@ func (r dbRepo) GetUserMoviesWithCategory(
 // Add sort to select query.
 func (r *dbRepo) addSort(selectQuery *gorm.DB, sort *entity.UserMoviesSort) *gorm.DB {
 	// sort by updated_at field if sorf field is not defined
-	if sort.SortField == "" {
-		sort.SortField = "updated_at"
+	if sort.SortField == "" || sort.SortField == "updated_at" {
+		sort.SortField = "user_movies.updated_at"
 	}
 
-	if sort.SortField == "updated_at" && sort.SortOrder == "" {
+	if sort.SortField == "user_movies.updated_at" && sort.SortOrder == "" {
 		// set desc order if sorf field is updated_at and sort order is not defined
 		sort.SortOrder = "desc"
 	} else if sort.SortOrder == "" {
@@ -190,9 +198,16 @@ func (r *dbRepo) addPagination(selectQuery *gorm.DB,
 	pagination.Limit = paginationLimit
 
 	// get all user movies amount (suitable for filters)
-	selectQuery.Count(&pagination.Total)
+	// (uses distinct to exclude duplicates due to fact that one movie can has some genres
+	// from filter of select query)
+	selectQuery.Distinct("movies.id").Count(&pagination.Total)
 	// calc pages amount
 	pagination.Pages = int(math.Ceil(float64(pagination.Total) / float64(pagination.Limit)))
+
+	fmt.Printf("Total: %v | ", pagination.Total)
+	fmt.Printf("Limit: %v | ", pagination.Limit)
+	fmt.Printf("Page: %v | ", pagination.Page)
+	fmt.Printf("Pages: %v \n", pagination.Pages)
 
 	// add pagination params to select query
 	return selectQuery.Limit(pagination.Limit).Offset((pagination.Page - 1) * pagination.Limit)
