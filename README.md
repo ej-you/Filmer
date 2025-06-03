@@ -18,10 +18,10 @@
 - [x] Add log rotation for server
 - [x] Add to user category pages filter by substring
 - [x] Add director/actor page with his movies
+- [x] Add `step-down` flag for one step migrations rollback to migrator
+- [x] Add an admin panel to monitor user activity
 - [ ] Add related movies to movie page
 - [ ] Add popular movies (or recomendations or random "daily" movie) to the main page
 - [ ] Add the ability to recomend the movie to another user
 - [ ] Add the ability to browse recomended movies from other users
-- [x] Add `step-down` flag for one step migrations rollback to migrator
 - [ ] Add OpenID auth
-- [ ] Add an admin panel to monitor user activity
