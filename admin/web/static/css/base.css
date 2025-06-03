@@ -1,0 +1,65 @@
+:root {
+	--white: #ceceb5;
+	--dark-white: #6f6f6f;
+	--light-gray: #2e2e2e;
+	--gray: #2a2a2a;
+	--dark-gray: #1b1b1b;
+	--light-black: #111111;
+
+	--green: #82b423;
+	--light-red: #ab785b;
+}
+
+body {
+	background-color: var(--dark-gray);
+	color: var(--white);
+
+	font-family: Helvetica;
+}
+
+h1 {
+	font-size: 55px;
+	font-weight: bold;
+	user-select: none;
+}
+
+header {
+	margin: 40px auto;
+}
+
+.title,
+.subtitle {
+	text-align: center;
+}
+
+.subtitle {
+	font-size: 30px;
+	user-select: none;
+	margin: 10px;
+}
+
+/* text with accent (used in span) */
+.accent {
+	font-style: italic;
+	color: var(--light-red);
+}
+
+/* main container */
+.content {
+	text-align: center;
+}
+
+.content>* {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.flex-content {
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+}
+
+.resize-content {
+	width: 70%;
+}

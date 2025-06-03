@@ -7,11 +7,9 @@ By default it's "admin" - "admin".
 ## Needed `env` variables
 
 ```dotenv
-ADMIN_PANEL_PORT=3001
+ADMIN_PANEL_PORT=3002
+KEEP_ALIVE_TIMEOUT="5s"
+GIN_MODE="release"
 
 REST_API_HOST="https://example.com"
-TOKEN_EXPIRED="1m"
-
-ADMIN_USERNAME="admin"
-ADMIN_PASSWORD="admin"
 ```

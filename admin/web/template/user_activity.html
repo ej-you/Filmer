@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/user_activity.css">
+    <title>Users activity | Filmer-admin</title>
+</head>
+
+<body>
+    <header>
+        <h1 class="title">Filmer-admin</h1>
+        <h3 class="subtitle"><span class="accent">Users activity</span></h3>
+    </header>
+
+    <div class="content flex-content">
+        <div class="resize-content all-user-blocks">
+            {{range .usersActivity}}
+            <div class="user-block">
+                <p class="user-email"><span class="accent">User:</span> {{.Email}}</p>
+                <p class="user-created-at">({{.PrettyCreatedAt}})</p>
+                <p class="user-stared"><span class="accent">Stared:</span> {{.Stared}}</p>
+                <p class="user-want"><span class="accent">Want:</span> {{.Want}}</p>
+                <p class="user-watched"><span class="accent">Watched:</span> {{.Watched}}</p>
+            </div>
+            {{end}}
+        </div>
+    </div>
+</body>
+
+</html>
