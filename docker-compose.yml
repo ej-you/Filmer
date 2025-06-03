@@ -60,6 +60,21 @@ services:
     depends_on:
       - server
 
+  admin:
+    build:
+      context: ./admin
+      dockerfile: ./build/Dockerfile
+    container_name: filmer_admin
+    restart: always
+    env_file:
+      - ./admin/config/.env
+    ports:
+      - "127.0.0.1:8882:3002"
+    networks:
+      main_network:
+    depends_on:
+      - server
+
   nginx:
     build:
       context: ./nginx

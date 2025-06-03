@@ -13,7 +13,9 @@ COPY ./go.sum .
 RUN go mod download
 
 # compile app
-COPY . .
+COPY ./cmd ./cmd
+COPY ./config ./config
+COPY ./internal ./internal
 RUN go build -o ./admin_panel ./cmd/admin_panel/main.go
 
 # ---
@@ -27,9 +29,9 @@ WORKDIR /app
 RUN mkdir /app/logs
 ENV LOG_DIR=/app/logs
 
-# copy compiled app and migrator files, files for swagger and migrations
+# copy compiled app web files
 COPY --from=build /go/src/admin_panel .
-COPY --from=build /go/src/web ./web
+COPY ./web ./web
 
 # run app
 CMD ["/bin/sh", "-c", "/app/admin_panel"]
