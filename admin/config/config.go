@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/ilyakaznacheev/cleanenv"
 )
@@ -14,10 +13,8 @@ type (
 	}
 
 	App struct {
-		Name         string        `env:"APP_NAME" env-default:"Filmer admin-panel" env-description:"app name for client (default: Filmer admin-panel)"`
-		Port         string        `env:"ADMIN_PANEL_PORT" env-default:"8080" env-description:"admin-panel port (default: 8080)"`
-		TokenExpired time.Duration `env:"TOKEN_EXPIRED" env-default:"30m" env-description:"REST API token expired duration (default: 30m)"`
-		CookieSecure bool          `env:"COOKIES_SECURE" env-default:"false" env-description:"Set secure=true for cookies (default: false)"`
+		Name string `env:"APP_NAME" env-default:"Filmer admin-panel" env-description:"app name for client (default: Filmer admin-panel)"`
+		Port string `env:"ADMIN_PANEL_PORT" env-default:"8080" env-description:"admin-panel port (default: 8080)"`
 	}
 
 	RestAPI struct {
