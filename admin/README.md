@@ -1,8 +1,7 @@
 # Filmer admin-panel
 
 It's supposed to run `admin-panel` in a closed network.
-So there is only one admin. Username and password for him should be specified in ENV-variables.
-By default it's "admin" - "admin".
+So there is no auth.
 
 ## Needed `env` variables
 
