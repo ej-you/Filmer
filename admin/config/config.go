@@ -1,7 +1,10 @@
+// Package config provides loading config data from
+// external sources like env variables.
 package config
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/ilyakaznacheev/cleanenv"
 )
@@ -13,8 +16,9 @@ type (
 	}
 
 	App struct {
-		Name string `env:"APP_NAME" env-default:"Filmer admin-panel" env-description:"app name for client (default: Filmer admin-panel)"`
-		Port string `env:"ADMIN_PANEL_PORT" env-default:"8080" env-description:"admin-panel port (default: 8080)"`
+		Name             string        `env:"APP_NAME" env-default:"Filmer admin-panel" env-description:"app name for client (default: Filmer admin-panel)"`
+		Port             string        `env:"ADMIN_PANEL_PORT" env-default:"8080" env-description:"admin-panel port (default: 8080)"`
+		KeepAliveTimeout time.Duration `env:"KEEP_ALIVE_TIMEOUT" env-default:"60s" env-description:"timeout for force shutdown (default: 60s)"`
 	}
 
 	RestAPI struct {
