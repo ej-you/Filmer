@@ -1,7 +1,6 @@
 .env
 .golangci.yml
 
-web/
 Dockerfile
 Makefile
 
