@@ -57,7 +57,7 @@ func (a ginApp) Run() error {
 	// user
 	userAPIRepo := repo.NewUserAPIRepo(a.cfg.RestAPI.Host)
 	userUC := usecase.NewUserUsecase(userAPIRepo)
-	httpController.RegisterUserEndpoints(mainRouterGroup, userUC)
+	httpController.RegisterUserEndpoints(mainRouterGroup, userUC, a.log)
 
 	// create server to run
 	server := &http.Server{

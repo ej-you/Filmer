@@ -11,7 +11,8 @@
 	padding: 25px;
 
 	display: grid;
-	grid-template-columns: 40% auto repeat(3, 135px);
+	grid-template-columns: 40% 1fr auto auto auto;
+	gap: 20px;
 }
 
 .user-block>p {
