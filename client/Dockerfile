@@ -13,7 +13,9 @@ COPY ./go.sum .
 RUN go mod download
 
 # copy project files to container
-COPY . .
+COPY ./internal ./internal
+COPY ./config ./config
+COPY ./cmd ./cmd
 
 # compile app
 RUN go build -o ./app_client ./cmd/app/main.go
