@@ -53,7 +53,7 @@ func (a ginApp) Run() error {
 
 	// set up handlers
 	mainRouterGroup := router.Group("/")
-	// router.LoadHTMLGlob("./web/template/*")
+	router.LoadHTMLGlob("./web/template/*")
 	// user
 	userAPIRepo := repo.NewUserAPIRepo(a.cfg.RestAPI.Host)
 	userUC := usecase.NewUserUsecase(userAPIRepo)

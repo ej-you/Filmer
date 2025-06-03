@@ -1,0 +1,33 @@
+.all-user-blocks {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.user-block {
+	background-color: var(--dark-gray);
+	box-shadow: 0px 0px 25px 1px var(--light-black);
+	border-radius: 15px;
+	padding: 25px;
+
+	display: grid;
+	grid-template-columns: 40% auto repeat(3, 135px);
+}
+
+.user-block>p {
+	text-align: left;
+	cursor: default;
+	font-size: 20px;
+}
+
+.user-created-at {
+	color: var(--dark-gray);
+}
+
+.user-block:hover {
+	background-color: var(--gray);
+}
+
+.user-block:hover .user-created-at {
+	color: var(--white);
+}
