@@ -45,9 +45,18 @@
 	margin-bottom: 15px;
 }
 
+#filter-form {
+	height: 1451px;
+}
+
+
 .setting-header {
 	font-size: 25px;
 	color: var(--light-red);
+}
+
+#order-settings>.setting-header {
+	margin-bottom: 15px;
 }
 
 .sort-field-link {
