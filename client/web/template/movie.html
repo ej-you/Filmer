@@ -136,7 +136,7 @@
 	<h3 class="movie-staff-header">Режиссёры:</h3>
 	<div class="movie-persons movie-directors">
 		{% for director in movie.staff.directors %}
-		<a class="person" href="/filmer/personal/info/{{ director.id|floatformat:0 }}">
+		<a class="person" href="/filmer/staff/info/{{ director.id|floatformat:0 }}">
 			<div class="person-poster">
 				<img src='{{ director.imgUrl|default:"/static/img/non_poster.svg" }}'>
 			</div>
