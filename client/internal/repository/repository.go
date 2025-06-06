@@ -13,7 +13,7 @@ type RestAPI interface {
 	SignUp(body AuthIn) (*APIResponse, error)
 	Logout(authToken string) error
 	ChangePassword(authToken string, body ChangePasswordIn) error
-	// personal
+	// staff
 	GetPerson(authToken string, kinopoiskID int) (*APIResponse, error)
 }
 

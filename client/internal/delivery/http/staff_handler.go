@@ -12,21 +12,21 @@ import (
 	restAPI "Filmer/client/internal/repository/restapi"
 )
 
-// Manager for personal subroutes handlers.
-type personalHandlerManager struct {
+// Manager for staff subroutes handlers.
+type staffHandlerManager struct {
 	cfg *config.Config
 	api repository.RestAPI
 }
 
-func newPersonalHandlerManager(cfg *config.Config) *personalHandlerManager {
-	return &personalHandlerManager{
+func newStaffHandlerManager(cfg *config.Config) *staffHandlerManager {
+	return &staffHandlerManager{
 		cfg: cfg,
 		api: restAPI.NewRestAPI(cfg),
 	}
 }
 
 // Render person page
-func (p personalHandlerManager) personGET(ctx *fiber.Ctx) error {
+func (p staffHandlerManager) personGET(ctx *fiber.Ctx) error {
 	var err error
 	// parse person ID from path
 	personID, err := ctx.ParamsInt("personID")
