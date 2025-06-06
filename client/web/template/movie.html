@@ -150,7 +150,7 @@
 	<h3 class="movie-staff-header">Актёры:</h3>
 	<div class="movie-persons movie-actors">
 		{% for actor in movie.staff.actors %}
-		<a class="person" href="/filmer/personal/info/{{ actor.id|floatformat:0 }}">
+		<a class="person" href="/filmer/staff/info/{{ actor.id|floatformat:0 }}">
 			<div class="person-poster">
 				<img src='{{ actor.imgUrl|default:"/static/img/non_poster.svg" }}'>
 			</div>
