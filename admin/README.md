@@ -1,7 +1,7 @@
 # Filmer admin-panel
 
-It's supposed to run `admin-panel` in a closed network.
-So there is no auth.
+> It's supposed to run `admin-panel` in a closed network.
+> So there is no auth.
 
 ## Needed `env` variables
 
