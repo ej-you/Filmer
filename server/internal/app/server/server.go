@@ -132,7 +132,8 @@ func (s *fiberServer) Run() error {
 	userRouter := userHTTP.NewUserRouter(mwManager, userHandlerManager)
 	userRouter.SetRoutes(apiV1.Group("/user"))
 	// staff
-	staffHandlerManager := staffHTTP.NewStaffHandlerManager(s.cfg, s.jsonify, s.log, s.validate)
+	staffHandlerManager := staffHTTP.NewStaffHandlerManager(s.cfg, s.jsonify, s.log,
+		s.cacheStorage, s.validate)
 	staffRouter := staffHTTP.NewStaffRouter(mwManager, staffHandlerManager)
 	staffRouter.SetRoutes(apiV1.Group("/staff"))
 

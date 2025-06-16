@@ -15,7 +15,6 @@ require (
 	github.com/hashicorp/go-retryablehttp v0.7.7
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/mailru/easyjson v0.9.0
-	github.com/pkg/errors v0.9.1
 	github.com/redis/go-redis/v9 v9.7.1
 	github.com/stretchr/testify v1.10.0
 	github.com/swaggo/swag v1.16.4

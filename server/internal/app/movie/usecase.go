@@ -9,5 +9,5 @@ type Usecase interface {
 
 	CheckMovieExists(movie *entity.Movie) (bool, error)
 	GetMovieByKinopoiskID(movie *entity.Movie) (bool, error)
-	SaveMovie(movie *entity.Movie) error
+	FullUpdate(movie *entity.Movie) error
 }
