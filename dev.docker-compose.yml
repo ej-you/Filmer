@@ -22,9 +22,24 @@ services:
       filmer_network:
     command: "start-single-node --insecure"
 
+  rabbitmq:
+    image: rabbitmq:4.1.1-management-alpine
+    container_name: filmer_rabbitmq
+    restart: always
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    env_file:
+      - ./rabbitmq/.env
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq:rw
+    networks:
+      filmer_network:
+
 networks:
   filmer_network:
     driver: bridge
 
 volumes:
   cockroach_data:
+  rabbitmq_data:

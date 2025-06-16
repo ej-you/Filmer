@@ -4,9 +4,13 @@
 
 ## About [client](./client/README.md)
 
-## About [nginx](./nginx/README.md)
+## About [Nginx](./nginx/README.md)
 
 ## About [admin-panel](./admin/README.md)
+
+## About [Rabbit MQ](./rabbitmq/README.md)
+
+## About [movie-sync](./movie_sync/README.md)
 
 ### TODO
 
