@@ -3,7 +3,7 @@ package rabbitmq
 import (
 	"fmt"
 
-	"github.com/rabbitmq/amqp091-go"
+	amqp "github.com/rabbitmq/amqp091-go"
 )
 
 var _ Producer = (*producer)(nil)
@@ -55,7 +55,7 @@ func (p *producer) PublishText(content []byte) error {
 		p.queueName,
 		false, // false means no error if message is not match any queue
 		false, // (deprecated)
-		amqp091.Publishing{
+		amqp.Publishing{
 			ContentType: "text/plain",
 			Body:        content,
 		},
