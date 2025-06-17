@@ -30,14 +30,14 @@ func NewProducer(client *Client, queueName string) Producer {
 // PublishText sends text message to RabbitMQ.
 func (p *producer) PublishText(content []byte) error {
 	// open channel
-	ch, err := p.client.NewChannel()
+	channel, err := p.client.NewChannel()
 	if err != nil {
 		return fmt.Errorf("open chan: %w", err)
 	}
-	defer ch.Close()
+	defer channel.Close()
 
 	// set up queue
-	_, err = ch.QueueDeclare(
+	_, err = channel.QueueDeclare(
 		p.queueName,
 		false, // false means that queue is stored in memory (temporary)
 		false, // false means that queue will exist until it is clearly removed
@@ -50,7 +50,7 @@ func (p *producer) PublishText(content []byte) error {
 	}
 
 	// send message
-	err = ch.Publish(
+	err = channel.Publish(
 		"",
 		p.queueName,
 		false, // false means no error if message is not match any queue

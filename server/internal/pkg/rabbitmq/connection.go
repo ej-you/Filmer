@@ -1,3 +1,6 @@
+// Package rabbitmq provides client for connection to RabbitMQ and
+// Producer interface to send messages to RabbitMQ.
+// AMQP protocol is used for all these actions.
 package rabbitmq
 
 import (
