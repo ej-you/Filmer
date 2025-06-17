@@ -25,6 +25,21 @@ services:
       main_network:
     command: "start-single-node --insecure"
 
+  rabbitmq:
+    image: rabbitmq:4.1.1-management-alpine
+    container_name: filmer_rabbitmq
+    restart: always
+    ports:
+      - "127.0.0.1:8883:15672"
+    expose:
+      - "5672"
+    env_file:
+      - ./rabbitmq/.env
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq:rw
+    networks:
+      filmer_network:
+
   server:
     build:
       context: ./server
@@ -33,6 +48,7 @@ services:
     restart: always
     env_file:
       - ./server/.env
+      - ./rabbitmq/.env
     expose:
       - "3000"
     volumes:
@@ -40,8 +56,9 @@ services:
     networks:
       main_network:
     depends_on:
-      - cockroach
       - redis
+      - cockroach
+      - rabbitmq
 
   client:
     build:
@@ -95,5 +112,6 @@ networks:
 volumes:
   redis_data:
   cockroach_data:
+  rabbitmq_data:
   server_logs:
   client_logs:

@@ -16,6 +16,7 @@ type (
 		App
 		Cache
 		Database
+		RabbitMQ
 		KinopoiskAPI
 		LogOutput
 	}
@@ -47,6 +48,14 @@ type (
 		ConnURL       string
 	}
 
+	RabbitMQ struct {
+		User     string `env-required:"true" env:"RABBITMQ_DEFAULT_USER" env-description:"RabbitMQ user"`
+		Password string `env-required:"true" env:"RABBITMQ_DEFAULT_PASS" env-description:"RabbitMQ name"`
+		Host     string `env-required:"true" env:"RABBITMQ_HOST" env-description:"RabbitMQ host"`
+		Port     string `env-required:"true" env:"RABBITMQ_PORT" env-description:"RabbitMQ port"`
+		ConnURL  string
+	}
+
 	KinopoiskAPI struct {
 		UnofficialKey string        `env-required:"true" env:"KINOPOISK_API_UNOFFICIAL_KEY" env-description:"key from Kinopoisk API Unofficial"`
 		Key           string        `env-required:"true" env:"KINOPOISK_API_KEY" env-description:"key from Kinopoisk API"`
@@ -66,6 +75,7 @@ func New() (*Config, error) {
 	if err := cleanenv.ReadEnv(cfg); err != nil {
 		return nil, fmt.Errorf("load config: %w", err)
 	}
+	cfg.Cache.ConnString = fmt.Sprintf("%s:%s", cfg.Cache.Host, cfg.Cache.Port)
 	cfg.Database.ConnString = fmt.Sprintf(
 		"user=%s host=%s port=%s dbname=%s sslmode=disable",
 		cfg.Database.User,
@@ -80,7 +90,13 @@ func New() (*Config, error) {
 		cfg.Database.Port,
 		cfg.Database.Name,
 	)
-	cfg.Cache.ConnString = fmt.Sprintf("%s:%s", cfg.Cache.Host, cfg.Cache.Port)
+	cfg.RabbitMQ.ConnURL = fmt.Sprintf(
+		"amqp://%s:%s@%s:%s/",
+		cfg.RabbitMQ.User,
+		cfg.RabbitMQ.Password,
+		cfg.RabbitMQ.Host,
+		cfg.RabbitMQ.Port,
+	)
 
 	cfg.LogOutput.Info = &lumberjack.Logger{
 		Filename:   cfg.App.LogDir + "/info.log",
