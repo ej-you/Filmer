@@ -12,6 +12,7 @@ import (
 
 	"Filmer/server/config"
 	authHTTP "Filmer/server/internal/app/auth/delivery/http"
+	"Filmer/server/internal/app/movie/adapter/amqp"
 	movieHTTP "Filmer/server/internal/app/movie/delivery/http"
 	"Filmer/server/internal/app/server/middlewares"
 	staffHTTP "Filmer/server/internal/app/staff/delivery/http"
@@ -22,6 +23,7 @@ import (
 	"Filmer/server/internal/pkg/errhandler"
 	"Filmer/server/internal/pkg/jsonify"
 	"Filmer/server/internal/pkg/logger"
+	"Filmer/server/internal/pkg/rabbitmq"
 	"Filmer/server/internal/pkg/validator"
 )
 
@@ -40,6 +42,7 @@ type fiberServer struct {
 	validate     validator.Validator
 	dbStorage    *gorm.DB
 	cacheStorage cache.Storage
+	rabbitClient *rabbitmq.Client
 }
 
 // Server constructor.
@@ -61,14 +64,19 @@ func New(cfg *config.Config) (Server, error) {
 	if err != nil {
 		return nil, err
 	}
+	rabbitClient, err := rabbitmq.NewClient(cfg.RabbitMQ.ConnURL)
+	if err != nil {
+		return nil, err
+	}
 
 	return &fiberServer{
 		cfg:          cfg,
 		log:          log,
 		jsonify:      jsonify.NewJSONify(),
+		validate:     validator.New(),
 		dbStorage:    dbStorage,
 		cacheStorage: cacheStorage,
-		validate:     validator.New(),
+		rabbitClient: rabbitClient,
 	}, nil
 }
 
@@ -110,6 +118,12 @@ func (s *fiberServer) Run() error {
 	fiberApp.Use(mwManager.CORS())
 	fiberApp.Use(mwManager.Swagger())
 
+	// init adapters
+	movieAMQPAdapter, err := amqp.NewMovieAdapter(s.rabbitClient)
+	if err != nil {
+		return fmt.Errorf("init movie adapter: %w", err)
+	}
+
 	// set up handlers
 	apiV1 := fiberApp.Group("/api/v1")
 	// auth
@@ -119,12 +133,12 @@ func (s *fiberServer) Run() error {
 	authRouter.SetRoutes(apiV1.Group("/auth"))
 	// movie
 	movieHandlerManager := movieHTTP.NewMovieHandlerManager(s.cfg, s.jsonify, s.log,
-		s.dbStorage, s.cacheStorage, s.validate)
+		s.dbStorage, s.cacheStorage, movieAMQPAdapter, s.validate)
 	movieRouter := movieHTTP.NewMovieRouter(mwManager, movieHandlerManager)
 	movieRouter.SetRoutes(apiV1.Group("/kinopoisk/films"))
 	// user movie
 	userMovieHandlerManager := userMovieHTTP.NewUserMovieHandlerManager(s.cfg, s.jsonify, s.log,
-		s.dbStorage, s.cacheStorage, s.validate)
+		s.dbStorage, s.cacheStorage, movieAMQPAdapter, s.validate)
 	userMovieRouter := userMovieHTTP.NewUserMovieRouter(mwManager, userMovieHandlerManager)
 	userMovieRouter.SetRoutes(apiV1.Group("/films"))
 	// user
@@ -154,6 +168,8 @@ func (s *fiberServer) Run() error {
 			handledSignal.String(), os.Getpid())
 		// shutdown app
 		fiberApp.ShutdownWithTimeout(s.cfg.App.KeepAliveTimeout)
+		// shutdown app resources
+		s.shutdown()
 		shutdownDone <- struct{}{}
 	}()
 
@@ -166,4 +182,16 @@ func (s *fiberServer) Run() error {
 	<-shutdownDone
 	s.log.Infof("Server process %d shutdown successfully!", os.Getpid())
 	return nil
+}
+
+// shutdown gracefully stops running app resources.
+// This method used in Run method for gracefully shutdown.
+// After app is stopped it cannot be run again.
+func (s *fiberServer) shutdown() {
+	if err := s.cacheStorage.Close(); err != nil {
+		s.log.Errorf("Close cache connection: %v", err)
+	}
+	if err := s.rabbitClient.Close(); err != nil {
+		s.log.Errorf("Close RabbitMQ connection: %v", err)
+	}
 }

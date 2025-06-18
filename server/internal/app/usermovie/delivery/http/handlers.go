@@ -11,6 +11,7 @@ import (
 	"Filmer/server/internal/app/entity"
 	kinopoiskrepo "Filmer/server/internal/app/kinopoisk/repository"
 	kinopoiskusecase "Filmer/server/internal/app/kinopoisk/usecase"
+	"Filmer/server/internal/app/movie/adapter/amqp"
 	movierepo "Filmer/server/internal/app/movie/repository"
 	movieusecase "Filmer/server/internal/app/movie/usecase"
 	"Filmer/server/internal/app/usermovie"
@@ -36,7 +37,7 @@ type UserMovieHandlerManager struct {
 
 func NewUserMovieHandlerManager(cfg *config.Config,
 	jsonify jsonify.JSONify, logger logger.Logger,
-	dbClient *gorm.DB, cacheStorage cache.Storage,
+	dbClient *gorm.DB, cacheStorage cache.Storage, movieAMQPAdapter *amqp.MovieAdapter,
 	validator validator.Validator) *UserMovieHandlerManager {
 
 	// init kinopoisk usecase
@@ -46,7 +47,7 @@ func NewUserMovieHandlerManager(cfg *config.Config,
 	movieDBRepo := movierepo.NewDBRepo(dbClient)
 	movieKinopoiskRepo := movierepo.NewKinopoiskRepo(cfg, jsonify)
 	movieUC := movieusecase.NewUsecase(cfg, logger,
-		movieDBRepo, movieKinopoiskRepo, kinopoiskUC)
+		movieDBRepo, movieKinopoiskRepo, movieAMQPAdapter, kinopoiskUC)
 	// init user movie usecase
 	userMovieRepo := repository.NewDBRepo(dbClient)
 	userMovieUC := usecase.NewUsecase(userMovieRepo, movieUC)

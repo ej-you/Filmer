@@ -52,7 +52,7 @@ func TestCreateProducer(t *testing.T) {
 func TestPublishText(t *testing.T) {
 	t.Log("Publish text message")
 
-	// use [:] to convert uuid to byte slice
+	// use [:] to correct convert uuid to byte slice
 	err := _producer.PublishText(_messageData[:])
 	require.NoError(t, err, "publish message")
 }

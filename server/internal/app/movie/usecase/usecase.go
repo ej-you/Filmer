@@ -10,6 +10,7 @@ import (
 	"Filmer/server/internal/app/entity"
 	"Filmer/server/internal/app/kinopoisk"
 	"Filmer/server/internal/app/movie"
+	"Filmer/server/internal/app/movie/adapter/amqp"
 	"Filmer/server/internal/pkg/httperror"
 	"Filmer/server/internal/pkg/logger"
 	"Filmer/server/internal/pkg/utils"
@@ -23,18 +24,21 @@ type usecase struct {
 	logger             logger.Logger
 	movieDBRepo        movie.DBRepo
 	movieKinopoiskRepo movie.KinopoiskRepo
+	movieAMQPAdapter   *amqp.MovieAdapter
 	kinopoiskUC        kinopoisk.Usecase
 }
 
 // Returns movie.Usecase interface.
 func NewUsecase(cfg *config.Config, logger logger.Logger, movieDBRepo movie.DBRepo,
-	movieKinopoiskRepo movie.KinopoiskRepo, kinopoiskUC kinopoisk.Usecase) movie.Usecase {
+	movieKinopoiskRepo movie.KinopoiskRepo, movieAMQPAdapter *amqp.MovieAdapter,
+	kinopoiskUC kinopoisk.Usecase) movie.Usecase {
 
 	return &usecase{
 		cfg:                cfg,
 		logger:             logger,
 		movieDBRepo:        movieDBRepo,
 		movieKinopoiskRepo: movieKinopoiskRepo,
+		movieAMQPAdapter:   movieAMQPAdapter,
 		kinopoiskUC:        kinopoiskUC,
 	}
 }
@@ -94,14 +98,7 @@ func (u *usecase) GetMovieByKinopoiskID(movie *entity.Movie) (bool, error) {
 	}
 
 	if foundMovie && !isLimitReached {
-		// if DB data is outdated AND daily API limit is NOT reached
-		expiredAt := movie.UpdatedAt.Add(u.cfg.KinopoiskAPI.DataExpired).UTC()
-		now := time.Now().UTC()
-		if now.After(expiredAt) {
-			// TODO: use message broker for update movie info in background
-			// go u.updateMovieData(movie)
-			fmt.Println("*** Use message broker ***")
-		}
+		u.backgroundUpdate(movie)
 	}
 	if foundMovie {
 		return true, nil
@@ -141,4 +138,20 @@ func (u *usecase) FullUpdate(movie *entity.Movie) error {
 		return fmt.Errorf("save movie: %w", err)
 	}
 	return nil
+}
+
+// backgroundUpdate checks that movie data is outdated.
+// If so, it sends message with movie ID to RabbitMQ
+// for background update by another service.
+func (u *usecase) backgroundUpdate(movie *entity.Movie) {
+	// if DB data is outdated AND daily API limit is NOT reached
+	expiredAt := movie.UpdatedAt.Add(u.cfg.KinopoiskAPI.DataExpired).UTC()
+	now := time.Now().UTC()
+	if now.After(expiredAt) {
+		// send message with movie ID to RabbitMQ
+		u.logger.Infof("Run %s movie background update", movie.ID.String())
+		if err := u.movieAMQPAdapter.SendID(movie.ID); err != nil {
+			u.logger.Errorf("Send message for bg update of %s movie: %v", movie.ID.String(), err)
+		}
+	}
 }
