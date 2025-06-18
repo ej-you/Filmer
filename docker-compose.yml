@@ -38,7 +38,7 @@ services:
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq:rw
     networks:
-      filmer_network:
+      main_network:
 
   server:
     build:
