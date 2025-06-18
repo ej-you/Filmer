@@ -13,7 +13,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"Filmer/movie_sync/config"
-	"Filmer/movie_sync/internal/app/adapters/amqp"
+	"Filmer/movie_sync/internal/app/adapter/amqp"
 	"Filmer/movie_sync/internal/app/repo"
 	"Filmer/movie_sync/internal/app/usecase"
 	"Filmer/movie_sync/internal/pkg/rabbitmq"
@@ -57,7 +57,10 @@ func (a application) Run() error {
 	// init usecases
 	movieUC := usecase.NewMovieUsecase(movieAPIRepo)
 	// init adapters
-	movieAdapter := amqp.NewMovieAdapter(a.rabbitClient, movieUC)
+	movieAdapter, err := amqp.NewMovieAdapter(a.rabbitClient, movieUC)
+	if err != nil {
+		return fmt.Errorf("init movie adapter: %w", err)
+	}
 
 	// handle shutdown process signals
 	quit := make(chan os.Signal, 1)

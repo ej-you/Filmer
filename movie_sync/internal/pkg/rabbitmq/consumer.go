@@ -24,11 +24,31 @@ type consumer struct {
 }
 
 // NewConsumer creates new Consumer.
-func NewConsumer(client *Client, queueName string) Consumer {
+func NewConsumer(client *Client, queueName string) (Consumer, error) {
+	// open channel (to set up queue)
+	channel, err := client.newChannel()
+	if err != nil {
+		return nil, fmt.Errorf("open chan: %w", err)
+	}
+	defer channel.Close()
+
+	// set up queue
+	_, err = channel.QueueDeclare(
+		queueName,
+		false, // false means that queue is stored in memory (temporary)
+		false, // false means that queue will exist until it is clearly removed
+		false, // false means that queue is public (for all connections)
+		false, // false means waiting for RabbitMQ confirm that queue is created
+		nil,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("declare queue: %w", err)
+	}
+
 	return &consumer{
 		client:    client,
 		queueName: queueName,
-	}
+	}, nil
 }
 
 // Consume gets messages from RabbitMQ and handle them with handler.

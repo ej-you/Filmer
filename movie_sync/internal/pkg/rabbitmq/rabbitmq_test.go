@@ -28,7 +28,10 @@ func TestMain(m *testing.M) {
 		log.Fatalf("connect to RabbitMQ: %v", err)
 	}
 	// create consumer
-	_consumer = NewConsumer(client, _queueName)
+	_consumer, err = NewConsumer(client, _queueName)
+	if err != nil {
+		log.Fatalf("init consumer: %v", err)
+	}
 	exitCode := m.Run()
 	// close connection
 	if err := client.Close(); err != nil {

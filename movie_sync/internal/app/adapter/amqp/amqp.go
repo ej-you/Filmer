@@ -21,12 +21,17 @@ type MovieAdapter struct {
 	movieUC  usecase.MovieUsecase
 }
 
-func NewMovieAdapter(rabbitClient *rabbitmq.Client, movieUC usecase.MovieUsecase) *MovieAdapter {
-	consumer := rabbitmq.NewConsumer(rabbitClient, _queueName)
+func NewMovieAdapter(rabbitClient *rabbitmq.Client,
+	movieUC usecase.MovieUsecase) (*MovieAdapter, error) {
+
+	consumer, err := rabbitmq.NewConsumer(rabbitClient, _queueName)
+	if err != nil {
+		return nil, fmt.Errorf("init consumer: %w", err)
+	}
 	return &MovieAdapter{
 		consumer: consumer,
 		movieUC:  movieUC,
-	}
+	}, nil
 }
 
 // Start starts RabbitMQ consumer of movies to update.
