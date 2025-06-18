@@ -3,6 +3,7 @@ package rabbitmq
 import (
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
 )
 
@@ -12,6 +13,8 @@ const (
 )
 
 var (
+	_messageData = uuid.MustParse("f86f517b-e509-42d4-a1f3-b8cc769cb938")
+
 	_client   *Client
 	_producer Producer
 )
@@ -40,13 +43,16 @@ func TestCloseConn(t *testing.T) {
 func TestCreateProducer(t *testing.T) {
 	t.Log("Create new RabbitMQ producer")
 
-	_producer = NewProducer(_client, _queueName)
+	var err error
+	_producer, err = NewProducer(_client, _queueName)
+	require.NoError(t, err, "init producer")
 	t.Log("Producer was created successfully!")
 }
 
 func TestPublishText(t *testing.T) {
 	t.Log("Publish text message")
 
-	err := _producer.PublishText([]byte("Hello, world!"))
+	// use [:] to convert uuid to byte slice
+	err := _producer.PublishText(_messageData[:])
 	require.NoError(t, err, "publish message")
 }

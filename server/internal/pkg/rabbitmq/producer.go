@@ -20,25 +20,17 @@ type producer struct {
 }
 
 // NewProducer creates new Producer.
-func NewProducer(client *Client, queueName string) Producer {
-	return &producer{
-		client:    client,
-		queueName: queueName,
-	}
-}
-
-// PublishText sends text message to RabbitMQ.
-func (p *producer) PublishText(content []byte) error {
-	// open channel
-	channel, err := p.client.NewChannel()
+func NewProducer(client *Client, queueName string) (Producer, error) {
+	// open channel (to set up queue)
+	channel, err := client.newChannel()
 	if err != nil {
-		return fmt.Errorf("open chan: %w", err)
+		return nil, fmt.Errorf("open chan: %w", err)
 	}
 	defer channel.Close()
 
 	// set up queue
 	_, err = channel.QueueDeclare(
-		p.queueName,
+		queueName,
 		false, // false means that queue is stored in memory (temporary)
 		false, // false means that queue will exist until it is clearly removed
 		false, // false means that queue is public (for all connections)
@@ -46,8 +38,23 @@ func (p *producer) PublishText(content []byte) error {
 		nil,
 	)
 	if err != nil {
-		return fmt.Errorf("declare queue: %w", err)
+		return nil, fmt.Errorf("declare queue: %w", err)
 	}
+
+	return &producer{
+		client:    client,
+		queueName: queueName,
+	}, nil
+}
+
+// PublishText sends text message to RabbitMQ.
+func (p *producer) PublishText(content []byte) error {
+	// open channel
+	channel, err := p.client.newChannel()
+	if err != nil {
+		return fmt.Errorf("open chan: %w", err)
+	}
+	defer channel.Close()
 
 	// send message
 	err = channel.Publish(

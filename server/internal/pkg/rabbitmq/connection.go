@@ -39,7 +39,7 @@ func (c *Client) Close() error {
 	return nil
 }
 
-// NewChannel returns new channel of RabbitMQ connection.
-func (c *Client) NewChannel() (*amqp.Channel, error) {
+// newChannel returns new channel of RabbitMQ connection.
+func (c *Client) newChannel() (*amqp.Channel, error) {
 	return c.conn.Channel()
 }
