@@ -894,6 +894,26 @@ paths:
       summary: Поиск фильмов
       tags:
       - movie
+  /kinopoisk/films/update-movie/{movieID}:
+    post:
+      description: Полное обновление информации о фильме из Kinopoisk API.
+      operationId: kinopoisk-update-movie
+      parameters:
+      - description: UUID фильма из БД
+        in: path
+        name: movieID
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+        "402":
+          description: Превышен дневной лимит запросов к Kinopoisk API
+        "404":
+          description: Фильм не найден
+      summary: Обновление информации о фильме
+      tags:
+      - movie
   /staff/full-info/{personID}:
     get:
       description: Получение информации о личности по её ID

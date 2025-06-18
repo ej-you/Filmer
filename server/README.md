@@ -35,6 +35,8 @@ DB_PORT=26257
 DB_NAME="filmer_db"
 ```
 
+> Also used env vars for [RabbitMQ](../rabbitmq/README.md)
+
 ---
 
 ## Deploy

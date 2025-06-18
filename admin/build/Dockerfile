@@ -25,11 +25,8 @@ RUN go build -o ./admin_panel ./cmd/admin_panel/main.go
 FROM alpine:3.22 AS run
 
 WORKDIR /app
-# make dir for logs
-RUN mkdir /app/logs
-ENV LOG_DIR=/app/logs
 
-# copy compiled app web files
+# copy compiled app and web files
 COPY --from=build /go/src/admin_panel .
 COPY ./web ./web
 

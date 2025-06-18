@@ -6,15 +6,11 @@ import (
 
 type DBRepo interface {
 	CheckMovieExists(movie *entity.Movie) (bool, error)
+	GetKinopoiskID(movie *entity.Movie) error
 
 	GetMovieByKinopoiskID(movie *entity.Movie) (bool, error)
 	SaveMovie(movie *entity.Movie) error
 	FullUpdateMovie(movie *entity.Movie) error
-}
-
-type CacheRepo interface {
-	SetAPILimit(apiName string) error
-	IsAPILimitExhausted(apiName string) (bool, error)
 }
 
 type KinopoiskRepo interface {

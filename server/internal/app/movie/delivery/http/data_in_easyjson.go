@@ -17,7 +17,75 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson8e1dc130DecodeFilmerServerInternalMovieDeliveryHttp(in *jlexer.Lexer, out *searchFilmsIn) {
+func easyjson8e1dc130DecodeFilmerServerInternalAppMovieDeliveryHttp(in *jlexer.Lexer, out *updateMovieIn) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeFieldName(false)
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "MovieID":
+			if data := in.UnsafeBytes(); in.Ok() {
+				in.AddError((out.MovieID).UnmarshalText(data))
+			}
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson8e1dc130EncodeFilmerServerInternalAppMovieDeliveryHttp(out *jwriter.Writer, in updateMovieIn) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"MovieID\":"
+		out.RawString(prefix[1:])
+		out.RawText((in.MovieID).MarshalText())
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v updateMovieIn) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjson8e1dc130EncodeFilmerServerInternalAppMovieDeliveryHttp(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v updateMovieIn) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjson8e1dc130EncodeFilmerServerInternalAppMovieDeliveryHttp(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *updateMovieIn) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjson8e1dc130DecodeFilmerServerInternalAppMovieDeliveryHttp(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *updateMovieIn) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjson8e1dc130DecodeFilmerServerInternalAppMovieDeliveryHttp(l, v)
+}
+func easyjson8e1dc130DecodeFilmerServerInternalAppMovieDeliveryHttp1(in *jlexer.Lexer, out *searchFilmsIn) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -50,7 +118,7 @@ func easyjson8e1dc130DecodeFilmerServerInternalMovieDeliveryHttp(in *jlexer.Lexe
 		in.Consumed()
 	}
 }
-func easyjson8e1dc130EncodeFilmerServerInternalMovieDeliveryHttp(out *jwriter.Writer, in searchFilmsIn) {
+func easyjson8e1dc130EncodeFilmerServerInternalAppMovieDeliveryHttp1(out *jwriter.Writer, in searchFilmsIn) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -70,23 +138,23 @@ func easyjson8e1dc130EncodeFilmerServerInternalMovieDeliveryHttp(out *jwriter.Wr
 // MarshalJSON supports json.Marshaler interface
 func (v searchFilmsIn) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson8e1dc130EncodeFilmerServerInternalMovieDeliveryHttp(&w, v)
+	easyjson8e1dc130EncodeFilmerServerInternalAppMovieDeliveryHttp1(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v searchFilmsIn) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson8e1dc130EncodeFilmerServerInternalMovieDeliveryHttp(w, v)
+	easyjson8e1dc130EncodeFilmerServerInternalAppMovieDeliveryHttp1(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *searchFilmsIn) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson8e1dc130DecodeFilmerServerInternalMovieDeliveryHttp(&r, v)
+	easyjson8e1dc130DecodeFilmerServerInternalAppMovieDeliveryHttp1(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *searchFilmsIn) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson8e1dc130DecodeFilmerServerInternalMovieDeliveryHttp(l, v)
+	easyjson8e1dc130DecodeFilmerServerInternalAppMovieDeliveryHttp1(l, v)
 }

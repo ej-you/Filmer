@@ -37,13 +37,29 @@ func (r dbRepo) CheckMovieExists(movie *entity.Movie) (bool, error) {
 		Count(&foundMovie)
 	if err := selectCountResult.Error; err != nil {
 		return false, httperror.New(http.StatusInternalServerError,
-			"failed to find movie with given id", err)
+			"find movie with given id", err)
 	}
-	// if movie was not found
-	if foundMovie == 0 {
-		return false, nil
+	return foundMovie != 0, nil
+}
+
+// GetKinopoiskID gets kinopoisk ID for movie by given ID (without getting other info).
+// Movie ID must be presented (movie.ID).
+// Fill KinopoiskID field of given struct. Returns 404 error if movie was not found.
+func (r dbRepo) GetKinopoiskID(movie *entity.Movie) error {
+	selectResult := r.dbClient.
+		Select("kinopoisk_id").
+		Where("id = ?", movie.ID).
+		First(movie)
+	if err := selectResult.Error; err != nil {
+		// if movie was not found
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return httperror.New(http.StatusNotFound,
+				"movie not found", err)
+		}
+		return httperror.New(http.StatusInternalServerError,
+			"get movie", err)
 	}
-	return true, nil
+	return nil
 }
 
 // Get movie by its kinopoisk ID.
@@ -59,7 +75,7 @@ func (r dbRepo) GetMovieByKinopoiskID(movie *entity.Movie) (bool, error) {
 		// if NOT "Not found" error
 		if !errors.Is(err, gorm.ErrRecordNotFound) {
 			return false, httperror.New(http.StatusInternalServerError,
-				"failed to get movie", err)
+				"get movie", err)
 		}
 		// if movie was not found
 		return false, nil
@@ -73,18 +89,19 @@ func (r dbRepo) SaveMovie(movie *entity.Movie) error {
 	createResult := r.dbClient.Create(movie)
 	if err := createResult.Error; err != nil {
 		return httperror.New(http.StatusInternalServerError,
-			"failed to save movie", err)
+			"save movie", err)
 	}
 	return nil
 }
 
 // Full update existing movie in DB.
+// Movie ID must be presented (so, PK is presented then data will update).
 func (r dbRepo) FullUpdateMovie(movie *entity.Movie) error {
 	// save movie in DB
 	updateResult := r.dbClient.Save(movie)
 	if err := updateResult.Error; err != nil {
 		return httperror.New(http.StatusInternalServerError,
-			"failed to full update movie", err)
+			"full update movie", err)
 	}
 	return nil
 }

@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson8e1dc130DecodeFilmerServerInternalUserDeliveryHttp(in *jlexer.Lexer, out *changePasswordIn) {
+func easyjson8e1dc130DecodeFilmerServerInternalAppUserDeliveryHttp(in *jlexer.Lexer, out *changePasswordIn) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -50,7 +50,7 @@ func easyjson8e1dc130DecodeFilmerServerInternalUserDeliveryHttp(in *jlexer.Lexer
 		in.Consumed()
 	}
 }
-func easyjson8e1dc130EncodeFilmerServerInternalUserDeliveryHttp(out *jwriter.Writer, in changePasswordIn) {
+func easyjson8e1dc130EncodeFilmerServerInternalAppUserDeliveryHttp(out *jwriter.Writer, in changePasswordIn) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -70,23 +70,23 @@ func easyjson8e1dc130EncodeFilmerServerInternalUserDeliveryHttp(out *jwriter.Wri
 // MarshalJSON supports json.Marshaler interface
 func (v changePasswordIn) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson8e1dc130EncodeFilmerServerInternalUserDeliveryHttp(&w, v)
+	easyjson8e1dc130EncodeFilmerServerInternalAppUserDeliveryHttp(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v changePasswordIn) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson8e1dc130EncodeFilmerServerInternalUserDeliveryHttp(w, v)
+	easyjson8e1dc130EncodeFilmerServerInternalAppUserDeliveryHttp(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *changePasswordIn) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson8e1dc130DecodeFilmerServerInternalUserDeliveryHttp(&r, v)
+	easyjson8e1dc130DecodeFilmerServerInternalAppUserDeliveryHttp(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *changePasswordIn) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson8e1dc130DecodeFilmerServerInternalUserDeliveryHttp(l, v)
+	easyjson8e1dc130DecodeFilmerServerInternalAppUserDeliveryHttp(l, v)
 }

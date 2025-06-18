@@ -22,6 +22,8 @@ func NewMovieRouter(mwManager middlewares.MiddlewareManager,
 
 // SetRoutes sets routes for handlers in movie handler manager.
 func (r MovieRouter) SetRoutes(router fiber.Router) {
+	router.Post("/update-movie/:movieID", r.movieHandlerManager.UpdateMovie())
+
 	restricted := router.Use(r.mwManager.JWTAuth(), r.mwManager.Cache())
 	restricted.Get("/search", r.movieHandlerManager.SearchFilms())
 }

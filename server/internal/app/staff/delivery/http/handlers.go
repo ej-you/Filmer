@@ -8,28 +8,36 @@ import (
 
 	"Filmer/server/config"
 	"Filmer/server/internal/app/entity"
+	kinopoiskrepo "Filmer/server/internal/app/kinopoisk/repository"
+	kinopoiskusecase "Filmer/server/internal/app/kinopoisk/usecase"
 	"Filmer/server/internal/app/staff"
-	personalRepository "Filmer/server/internal/app/staff/repository"
-	personalUsecase "Filmer/server/internal/app/staff/usecase"
+	personalrepo "Filmer/server/internal/app/staff/repository"
+	personalusecase "Filmer/server/internal/app/staff/usecase"
+	"Filmer/server/internal/pkg/cache"
 	"Filmer/server/internal/pkg/jsonify"
 	"Filmer/server/internal/pkg/logger"
 	"Filmer/server/internal/pkg/validator"
 )
 
 type StaffHandlerManager struct {
-	validator  validator.Validator
-	personalUC staff.Usecase
+	validator validator.Validator
+	staffUC   staff.Usecase
 }
 
 func NewStaffHandlerManager(cfg *config.Config, jsonify jsonify.JSONify,
-	logger logger.Logger, validator validator.Validator) *StaffHandlerManager {
+	logger logger.Logger, cache cache.Storage,
+	validator validator.Validator) *StaffHandlerManager {
 
-	movieKinopoiskWebAPIRepo := personalRepository.NewKinopoiskRepo(cfg, jsonify)
-	personalUC := personalUsecase.New(logger, movieKinopoiskWebAPIRepo)
+	// init kinopoisk usecase
+	kinopoiskCacheRepo := kinopoiskrepo.NewCacheRepo(cache)
+	kinopoiskUC := kinopoiskusecase.NewUsecase(kinopoiskCacheRepo)
+	// init staff usecase
+	staffKinopoiskRepo := personalrepo.NewKinopoiskRepo(cfg, jsonify)
+	staffUC := personalusecase.New(logger, staffKinopoiskRepo, kinopoiskUC)
 
 	return &StaffHandlerManager{
-		validator:  validator,
-		personalUC: personalUC,
+		validator: validator,
+		staffUC:   staffUC,
 	}
 }
 
@@ -63,7 +71,7 @@ func (h StaffHandlerManager) GetPersonInfo() fiber.Handler {
 
 		personInfo.ID = dataIn.PersonID
 		// get person info (from cache or from API)
-		if err := h.personalUC.GetByID(personInfo); err != nil {
+		if err := h.staffUC.GetByID(personInfo); err != nil {
 			return err
 		}
 		return ctx.Status(http.StatusOK).JSON(personInfo)

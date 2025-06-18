@@ -700,6 +700,36 @@
                 }
             }
         },
+        "/kinopoisk/films/update-movie/{movieID}": {
+            "post": {
+                "description": "Полное обновление информации о фильме из Kinopoisk API.",
+                "tags": [
+                    "movie"
+                ],
+                "summary": "Обновление информации о фильме",
+                "operationId": "kinopoisk-update-movie",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "UUID фильма из БД",
+                        "name": "movieID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "402": {
+                        "description": "Превышен дневной лимит запросов к Kinopoisk API"
+                    },
+                    "404": {
+                        "description": "Фильм не найден"
+                    }
+                }
+            }
+        },
         "/staff/full-info/{personID}": {
             "get": {
                 "security": [

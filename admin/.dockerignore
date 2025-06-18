@@ -2,6 +2,7 @@ config/.env
 .golangci.yml
 
 build/
+web/
 Makefile
 
 README.md
