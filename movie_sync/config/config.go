@@ -14,12 +14,6 @@ type (
 		RestAPI
 	}
 
-	// App struct {
-	// 	Name             string        `env:"APP_NAME" env-default:"Filmer admin-panel" env-description:"app name for client (default: Filmer admin-panel)"`
-	// 	Port             string        `env:"ADMIN_PANEL_PORT" env-default:"8080" env-description:"admin-panel port (default: 8080)"`
-	// 	KeepAliveTimeout time.Duration `env:"KEEP_ALIVE_TIMEOUT" env-default:"60s" env-description:"timeout for force shutdown (default: 60s)"`
-	// }
-
 	RabbitMQ struct {
 		User     string `env-required:"true" env:"RABBITMQ_DEFAULT_USER" env-description:"RabbitMQ user"`
 		Password string `env-required:"true" env:"RABBITMQ_DEFAULT_PASS" env-description:"RabbitMQ name"`

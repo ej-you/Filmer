@@ -38,7 +38,6 @@ func (r *movieAPIRepo) FullUpdate(movie *entity.Movie) error {
 		SetRetryCount(_retryCount).
 		SetRetryWaitTime(_retryInitTime).
 		SetRetryMaxWaitTime(_retryMaxTime)
-		// TODO: try SetError
 	// do request to REST API
 	_, err := client.R().
 		Post(r.host + "/api/v1/kinopoisk/films/update-movie/" + movie.ID())
