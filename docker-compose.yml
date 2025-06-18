@@ -92,6 +92,20 @@ services:
     depends_on:
       - server
 
+  movie-sync:
+    build:
+      context: ./movie_sync
+      dockerfile: ./build/Dockerfile
+    container_name: filmer_movie_sync
+    restart: always
+    env_file:
+      - ./movie_sync/config/.env
+      - ./rabbitmq/.env
+    networks:
+      main_network:
+    depends_on:
+      - server
+
   nginx:
     build:
       context: ./nginx
