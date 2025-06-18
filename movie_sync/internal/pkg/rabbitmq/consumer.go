@@ -35,7 +35,7 @@ func NewConsumer(client *Client, queueName string) Consumer {
 // This method is blocking. When the ctx will be canceled, consumer will be canceled too.
 func (c *consumer) Consume(ctx context.Context, handler ConsumeHandler) error {
 	// open channel
-	channel, err := c.client.NewChannel()
+	channel, err := c.client.newChannel()
 	if err != nil {
 		return fmt.Errorf("open chan: %w", err)
 	}

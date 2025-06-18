@@ -31,8 +31,6 @@ services:
       - "5672:5672"
     env_file:
       - ./rabbitmq/.env
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq:rw
     networks:
       filmer_network:
 
@@ -42,4 +40,3 @@ networks:
 
 volumes:
   cockroach_data:
-  rabbitmq_data:
