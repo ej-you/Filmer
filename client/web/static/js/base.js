@@ -162,7 +162,7 @@ function setPageMovingHistory(pageMovingHistory) {
 
 // Returns true if current page is movie page or person page
 function isMovieOrPersonPage(currentPath) {
-	return currentPath.startsWith("/filmer/user-movie/info") || currentPath.startsWith("/filmer/personal/info")
+	return currentPath.startsWith("/filmer/user-movie/info") || currentPath.startsWith("/filmer/staff/info")
 }
 
 document.addEventListener("DOMContentLoaded", function () {
