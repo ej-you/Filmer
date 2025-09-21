@@ -24,6 +24,7 @@
 - [x] Add director/actor page with his movies
 - [x] Add `step-down` flag for one step migrations rollback to migrator
 - [x] Add an admin panel to monitor user activity
+- [ ] Add popup-hints for icons
 - [ ] Fix frontend bug: hyphenation of long words on the phone
 - [ ] Add related movies to movie page
 - [ ] Add popular movies (or recomendations or random "daily" movie) to the main page
