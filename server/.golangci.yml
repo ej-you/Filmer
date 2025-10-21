@@ -114,6 +114,10 @@ linters:
           - goconst
         path: internal/app/entity/genre\.go
         text: "string `genres` has 4 occurrences, make it a constant"
+      - linters: # disable person movies limits (min and max)
+          - unused
+        path: internal/app/staff/repository/kinopoisk_repo\.go
+        text: "const personMoviesM[ia][nx]Limit is unused"
     paths:
       - docs
       - build

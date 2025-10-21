@@ -115,17 +115,17 @@ func filterRawMovieList(rawMovieList []rawPersonFullMovie) (
 // Full processing of "actor" or "director" person movie list.
 func processFilteredMovieList(filteredMovieList []rawPersonFullMovie) []entity.PersonFullMovie {
 	// skip movie list if movies count is too small
-	if len(filteredMovieList) < personMoviesMinLimit {
-		return nil
-	}
+	// if len(filteredMovieList) < personMoviesMinLimit {
+	// 	return nil
+	// }
 	// sort movies slice by rating descending
 	sort.Slice(filteredMovieList, func(i, j int) bool {
 		return filteredMovieList[i].Rating > filteredMovieList[j].Rating
 	})
 	// cut to max size
-	if len(filteredMovieList) > personMoviesMaxLimit {
-		filteredMovieList = filteredMovieList[:personMoviesMaxLimit]
-	}
+	// if len(filteredMovieList) > personMoviesMaxLimit {
+	// 	filteredMovieList = filteredMovieList[:personMoviesMaxLimit]
+	// }
 	// process movies in list
 	processedMovieList := make([]entity.PersonFullMovie, len(filteredMovieList))
 	for i, rawMovie := range filteredMovieList {
