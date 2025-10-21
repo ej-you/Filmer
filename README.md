@@ -24,7 +24,7 @@
 - [x] Add director/actor page with his movies
 - [x] Add `step-down` flag for one step migrations rollback to migrator
 - [x] Add an admin panel to monitor user activity
-- [ ] Drop limit for actor's movies and director's movies
+- [x] Drop limit for actor's movies and director's movies
 - [ ] Add popup-hints for icons
 - [ ] Fix frontend bug: hyphenation of long words on the phone
 - [ ] Add related movies to movie page
