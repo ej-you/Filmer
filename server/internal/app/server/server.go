@@ -123,33 +123,8 @@ func (s *fiberServer) Run() error {
 	if err != nil {
 		return fmt.Errorf("init movie adapter: %w", err)
 	}
-
 	// set up handlers
-	apiV1 := fiberApp.Group("/api/v1")
-	// auth
-	authHandlerManager := authHTTP.NewAuthHandlerManager(s.cfg,
-		s.dbStorage, s.cacheStorage, s.validate)
-	authRouter := authHTTP.NewAuthRouter(mwManager, authHandlerManager)
-	authRouter.SetRoutes(apiV1.Group("/auth"))
-	// movie
-	movieHandlerManager := movieHTTP.NewMovieHandlerManager(s.cfg, s.jsonify, s.log,
-		s.dbStorage, s.cacheStorage, movieAMQPAdapter, s.validate)
-	movieRouter := movieHTTP.NewMovieRouter(mwManager, movieHandlerManager)
-	movieRouter.SetRoutes(apiV1.Group("/kinopoisk/films"))
-	// user movie
-	userMovieHandlerManager := userMovieHTTP.NewUserMovieHandlerManager(s.cfg, s.jsonify, s.log,
-		s.dbStorage, s.cacheStorage, movieAMQPAdapter, s.validate)
-	userMovieRouter := userMovieHTTP.NewUserMovieRouter(mwManager, userMovieHandlerManager)
-	userMovieRouter.SetRoutes(apiV1.Group("/films"))
-	// user
-	userHandlerManager := userHTTP.NewUserHandlerManager(s.cfg, s.dbStorage, s.validate)
-	userRouter := userHTTP.NewUserRouter(mwManager, userHandlerManager)
-	userRouter.SetRoutes(apiV1.Group("/user"))
-	// staff
-	staffHandlerManager := staffHTTP.NewStaffHandlerManager(s.cfg, s.jsonify, s.log,
-		s.cacheStorage, s.validate)
-	staffRouter := staffHTTP.NewStaffRouter(mwManager, staffHandlerManager)
-	staffRouter.SetRoutes(apiV1.Group("/staff"))
+	s.registerEndpointsV1(fiberApp, mwManager, movieAMQPAdapter)
 
 	// handle shutdown process signals
 	quit := make(chan os.Signal, 1)
@@ -182,6 +157,37 @@ func (s *fiberServer) Run() error {
 	<-shutdownDone
 	s.log.Infof("Server process %d shutdown successfully!", os.Getpid())
 	return nil
+}
+
+// registerEndpointsV1 reqisters all API-v1 endpoints.
+func (s *fiberServer) registerEndpointsV1(fiberApp *fiber.App,
+	mwManager middlewares.MiddlewareManager, movieAMQPAdapter *amqp.MovieAdapter) {
+
+	apiV1 := fiberApp.Group("/api/v1")
+	// auth
+	authHandlerManager := authHTTP.NewAuthHandlerManager(s.cfg,
+		s.dbStorage, s.cacheStorage, s.validate)
+	authRouter := authHTTP.NewAuthRouter(mwManager, authHandlerManager)
+	authRouter.SetRoutes(apiV1.Group("/auth"))
+	// movie
+	movieHandlerManager := movieHTTP.NewMovieHandlerManager(s.cfg, s.jsonify, s.log,
+		s.dbStorage, s.cacheStorage, movieAMQPAdapter, s.validate)
+	movieRouter := movieHTTP.NewMovieRouter(mwManager, movieHandlerManager)
+	movieRouter.SetRoutes(apiV1.Group("/kinopoisk/films"))
+	// user movie
+	userMovieHandlerManager := userMovieHTTP.NewUserMovieHandlerManager(s.cfg, s.jsonify, s.log,
+		s.dbStorage, s.cacheStorage, movieAMQPAdapter, s.validate)
+	userMovieRouter := userMovieHTTP.NewUserMovieRouter(mwManager, userMovieHandlerManager)
+	userMovieRouter.SetRoutes(apiV1.Group("/films"))
+	// user
+	userHandlerManager := userHTTP.NewUserHandlerManager(s.cfg, s.dbStorage, s.validate)
+	userRouter := userHTTP.NewUserRouter(mwManager, userHandlerManager)
+	userRouter.SetRoutes(apiV1.Group("/user"))
+	// staff
+	staffHandlerManager := staffHTTP.NewStaffHandlerManager(s.cfg, s.jsonify, s.log,
+		s.cacheStorage, s.validate)
+	staffRouter := staffHTTP.NewStaffRouter(mwManager, staffHandlerManager)
+	staffRouter.SetRoutes(apiV1.Group("/staff"))
 }
 
 // shutdown gracefully stops running app resources.
