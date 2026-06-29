@@ -32,3 +32,4 @@
 - [ ] Add the ability to recomend the movie to another user
 - [ ] Add the ability to browse recomended movies from other users
 - [ ] Add OpenID auth
+- [ ] Add ability to recover password

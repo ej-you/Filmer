@@ -16,7 +16,7 @@ type Person struct {
 	// person name
 	Name string `json:"name" example:"Киану Ривз"`
 	// person role (if person is actor)
-	Role *string `json:"role,ommitempty" example:"Neo"`
+	Role *string `json:"role,omitempty" example:"Neo"`
 	// person img URL
 	ImgURL string `json:"imgUrl" example:"https://st.kp.yandex.net/images/actor_iphone/iphone360_7836.jpg"`
 }
