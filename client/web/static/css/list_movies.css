@@ -62,6 +62,8 @@
 .movie-info-item label {
 	color: var(--light-red);
 	margin-right: 5px;
+
+	word-wrap: normal;
 }
 
 .movie-genre-list {
