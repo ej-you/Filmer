@@ -26,7 +26,7 @@
 - [x] Add an admin panel to monitor user activity
 - [x] Drop limit for actor's movies and director's movies
 - [ ] Add popup-hints for icons
-- [ ] Fix frontend bug: hyphenation of long words on the phone
+- [x] Fix frontend bug: hyphenation of long words on the phone
 - [ ] Add related movies to movie page
 - [ ] Add popular movies (or recomendations or random "daily" movie) to the main page
 - [ ] Add the ability to recomend the movie to another user
