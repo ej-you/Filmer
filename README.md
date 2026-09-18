@@ -25,7 +25,7 @@
 - [x] Add `step-down` flag for one step migrations rollback to migrator
 - [x] Add an admin panel to monitor user activity
 - [x] Drop limit for actor's movies and director's movies
-- [ ] Add popup-hints for icons
+- [x] Add popup-hints for icons
 - [x] Fix frontend bug: hyphenation of long words on the phone
 - [ ] Add related movies to movie page
 - [ ] Add popular movies (or recomendations or random "daily" movie) to the main page
